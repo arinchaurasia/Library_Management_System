@@ -37,7 +37,7 @@ function signInWithGoogle() {
     if (isSigningIn) return;
     
     if (!auth || !googleProvider) {
-        handleGuestSignIn("Firebase Auth is not initialized.");
+        alert("Firebase Auth is not initialized. Please refresh or check connection.");
         return;
     }
     
@@ -52,51 +52,8 @@ function signInWithGoogle() {
             return;
         }
         
-        if (confirm("Google Sign-In Notice: " + error.message + "\n\nWould you like to sign in as Guest / Demo Student instead?")) {
-            handleGuestSignIn();
-        }
+        alert("Google Sign-In Error: " + error.message);
     });
-}
-
-function handleGuestSignIn(reason) {
-    var defaultName = localStorage.getItem("guest_user_name") || "Student User";
-    var defaultId = localStorage.getItem("guest_admission_id") || ("ADM-" + Math.floor(100000 + Math.random() * 900000));
-    
-    var msg = (reason ? reason + "\n\n" : "") + "Enter your Full Name to sign in as Guest Student:";
-    var guestName = prompt(msg, defaultName);
-    if (guestName === null) return;
-    
-    guestName = guestName.trim() || defaultName;
-    localStorage.setItem("guest_user_name", guestName);
-    localStorage.setItem("guest_admission_id", defaultId);
-    
-    var guestUser = {
-        uid: "guest_" + defaultId,
-        displayName: guestName,
-        email: guestName.toLowerCase().replace(/\s+/g, '') + "@student.aktu.ac.in",
-        photoURL: "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(guestName),
-        isGuest: true
-    };
-    
-    currentUser = guestUser;
-    
-    var authLockScreen = document.getElementById("authLockScreen");
-    var appLayout = document.getElementById("appLayout");
-    var signInBtn = document.getElementById("googleSignInBtn");
-    var userProfile = document.getElementById("userProfile");
-    var userAvatar = document.getElementById("userAvatar");
-    var userName = document.getElementById("userName");
-    
-    if (authLockScreen) authLockScreen.style.display = "none";
-    if (appLayout) appLayout.style.display = "grid";
-    if (signInBtn) signInBtn.style.display = "none";
-    if (userProfile) userProfile.style.display = "flex";
-    if (userAvatar) userAvatar.src = guestUser.photoURL;
-    if (userName) {
-        userName.innerHTML = guestUser.displayName + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + defaultId + ')</span>';
-    }
-    
-    if (typeof renderAll === "function") renderAll();
 }
 
 function signOutGoogle() {

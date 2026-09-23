@@ -453,7 +453,7 @@ function loadData() {
         }
     }
 
-    if (storedBooks && catalogVer === "6.0_aktu_user_avail") {
+    if (storedBooks && catalogVer === "7.0_original_covers") {
         try {
             books = JSON.parse(storedBooks);
         } catch (e) {
@@ -462,8 +462,16 @@ function loadData() {
     } else {
         // Deep-clone sampleBooks so the original array is never mutated
         books = JSON.parse(JSON.stringify(sampleBooks));
-        localStorage.setItem("lib_catalog_version", "6.0_aktu_user_avail");
+        localStorage.setItem("lib_catalog_version", "7.0_original_covers");
     }
+
+    // Always sync cover photos from sampleBooks to guarantee original high-res covers
+    sampleBooks.forEach(function (sb) {
+        var b = books.find(function (item) { return item.id === sb.id; });
+        if (b && sb.cover) {
+            b.cover = sb.cover;
+        }
+    });
 
     recalculateAvailability();
     saveBooks();
@@ -1185,23 +1193,25 @@ async function sendChatMessage(userText) {
     var prompt = "";
 
     if (currentPortal === "student") {
-        prompt = "You are the ShelfSense AI Assistant for our Engineering College Library helping a STUDENT.\n"
+        prompt = "You are ShelfSense AI, a warm, polite, and intelligent AI Library Assistant conversing naturally like a human-like AI talking to a student.\n"
+            + "IF THE USER SAYS 'hi', 'hello', 'hey', or greets you, respond warmly: 'Hello! How can I help you today with books, AKTU engineering syllabus, or library borrowing?'\n"
             + "Live Engineering Library Catalog Right Now:\n" + inventoryContext + "\n\n"
-            + "Student Query: '" + userText + "'\n\n"
+            + "Student Message: '" + userText + "'\n\n"
             + "STRICT RESPONSE RULES:\n"
-            + "1. FIRST & FOREMOST: Answer the student's exact query directly!\n"
+            + "1. FIRST & FOREMOST: Answer the student's message naturally and directly like a friendly human-like AI assistant!\n"
             + "2. If the user is asking whether a book is available or in stock (e.g. 'Is Cormen available?' or 'Do you have Operating System Concepts?'):\n"
             + "   - Search the Live Library Catalog above for matching titles or authors.\n"
             + "   - IF AVAILABLE (copies > 0): State CLEARLY at the top: 'YES, [Book Title] is AVAILABLE ([N] copies in stock)!'. STRICT RULE: DO NOT GIVE ANY RECOMMENDATIONS OR EXTRA BOOK SUGGESTIONS IF THE ANSWER IS YES! STOP IMMEDIATELY AFTER ANSWERING YES.\n"
             + "   - IF OUT OF STOCK or NOT FOUND: State CLEARLY at the top: 'NO, [Book Title] is currently out of stock / not in library'. Then, and ONLY THEN, list 1-2 related available books from that engineering department at the end.\n"
             + "3. If student asks to ADD or DELETE a book, REJECT politely: '🔒 Only Librarians can add or modify books. Please switch to the Librarian Portal to add new books!'\n"
-            + "4. Use bold formatting and emojis. Keep responses concise, direct, and professional.";
+            + "4. Use bold formatting and emojis. Keep responses concise, direct, warm, and professional.";
     } else {
-        prompt = "You are the ShelfSense AI Assistant & Librarian Agent for our Engineering College Library helping a LIBRARIAN.\n"
+        prompt = "You are ShelfSense AI, an intelligent AI Assistant & Librarian Agent conversing naturally like a human-like AI helping a LIBRARIAN.\n"
+            + "IF THE LIBRARIAN SAYS 'hi', 'hello', 'hey', or greets you, respond warmly: 'Hello! How can I help you today with library management, issuing, or catalog updates?'\n"
             + "Live Engineering Library Catalog Right Now:\n" + inventoryContext + "\n\n"
-            + "Librarian Input: '" + userText + "'\n\n"
+            + "Librarian Message: '" + userText + "'\n\n"
             + "STRICT RESPONSE RULES:\n"
-            + "1. FIRST & FOREMOST: Directly answer the librarian's exact query or request!\n"
+            + "1. FIRST & FOREMOST: Directly answer the librarian's exact query or request naturally!\n"
             + "2. If asking about book availability:\n"
             + "   - IF AVAILABLE (copies > 0): State YES clearly with available copies count. STRICT RULE: DO NOT GIVE ANY RECOMMENDATIONS OR EXTRA BOOK SUGGESTIONS IF THE ANSWER IS YES!\n"
             + "   - IF OUT OF STOCK or NOT FOUND: State NO clearly. Only then offer 1-2 recommended books.\n"
@@ -1209,7 +1219,6 @@ async function sendChatMessage(userText) {
             + "   - Confirm addition in friendly text.\n"
             + "   - At the VERY END of your response, append this JSON tag EXACTLY:\n"
             + "   [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Department Name\", \"copies\": 5}]]\n"
-            + "   Supported engineering departments: Computer Science & Engineering, Information Technology, Artificial Intelligence & Data Science, Electronics & Communication, Electrical & Electronics, Mechanical Engineering, Civil Engineering, Basic Sciences & Humanities, Other.\n"
             + "4. Format with bold text and emojis.";
     }
 
@@ -1271,7 +1280,15 @@ function handleLocalChatbotResponse(userText, loadingId) {
     var loadingBubble = document.getElementById(loadingId);
     if (!loadingBubble) return;
 
-    var lowerText = userText.toLowerCase();
+    var lowerText = userText.toLowerCase().trim();
+
+    // Check greeting
+    var greetingRegex = /^(hi|hello|hey|greetings|good\s*(morning|afternoon|evening)|namaste|hola|hi\s*there|hello\s*there)\b/i;
+    if (greetingRegex.test(lowerText) || lowerText === "hi" || lowerText === "hello" || lowerText === "hey") {
+        loadingBubble.innerHTML = "👋 <strong>Hello! How can I help you today?</strong><br><br>I am your <strong>ShelfSense AI Assistant</strong>. Feel free to ask me about book availability (e.g., <em>'Is Cormen available?'</em>), search AKTU engineering syllabus books, or check department recommendations!";
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return;
+    }
 
     // Check if asking to add a book
     var addRegex = /add\s+(\d+)?\s*(?:copies of)?\s*["']?([^"']+)["']?\s+by\s+([^"']+?)(?:\s+under\s+([^"']+))?$/i;
