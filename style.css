@@ -881,6 +881,32 @@ input:focus, select:focus {
     transform: translateY(-2px);
 }
 
+.guest-gate-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: transparent;
+    color: #475569;
+    border: 2px dashed #cbd5e1;
+    border-radius: 30px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', Arial, sans-serif;
+    margin-top: 12px;
+    transition: all 0.2s ease;
+}
+
+.guest-gate-btn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #94a3b8;
+    transform: translateY(-2px);
+}
+
 /* Pagination Styling */
 .pagination-container {
     display: flex;

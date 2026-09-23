@@ -528,10 +528,33 @@ function setupEventListeners() {
         renderCatalog();
     });
 
+    var adminUniversalSearchInput = document.getElementById("adminUniversalSearchInput");
+    var adminUniversalFilter = document.getElementById("adminUniversalFilter");
     var adminSearchInput = document.getElementById("adminSearchInput");
     var adminCategoryFilter = document.getElementById("adminCategoryFilter");
     var adminIssuedSearchInput = document.getElementById("adminIssuedSearchInput");
     var adminIssuedFilter = document.getElementById("adminIssuedFilter");
+
+    if (adminUniversalSearchInput) {
+        adminUniversalSearchInput.addEventListener("input", function() {
+            var val = adminUniversalSearchInput.value;
+            if (adminSearchInput) adminSearchInput.value = val;
+            if (adminIssuedSearchInput) adminIssuedSearchInput.value = val;
+            adminInventoryCurrentPage = 1;
+            renderAdminInventory();
+            renderIssuedLog();
+        });
+    }
+
+    if (adminUniversalFilter) {
+        adminUniversalFilter.addEventListener("change", function() {
+            var cat = adminUniversalFilter.value;
+            if (adminCategoryFilter) adminCategoryFilter.value = cat;
+            adminInventoryCurrentPage = 1;
+            renderAdminInventory();
+            renderIssuedLog();
+        });
+    }
 
     if (adminSearchInput) {
         adminSearchInput.addEventListener("input", function() {
@@ -559,25 +582,7 @@ function setupEventListeners() {
         scanCoverBtn.addEventListener("click", scanBookCoverFile);
     }
 
-    var googleSignInBtn = document.getElementById("googleSignInBtn");
-    var googleSignOutBtn = document.getElementById("googleSignOutBtn");
-    var gateGoogleSignInBtn = document.getElementById("gateGoogleSignInBtn");
-
-    if (googleSignInBtn) {
-        googleSignInBtn.addEventListener("click", function () {
-            if (typeof signInWithGoogle === "function") signInWithGoogle();
-        });
-    }
-    if (gateGoogleSignInBtn) {
-        gateGoogleSignInBtn.addEventListener("click", function () {
-            if (typeof signInWithGoogle === "function") signInWithGoogle();
-        });
-    }
-    if (googleSignOutBtn) {
-        googleSignOutBtn.addEventListener("click", function () {
-            if (typeof signOutGoogle === "function") signOutGoogle();
-        });
-    }
+    // Note: Inline onclick handlers in index.html (onclick="signInWithGoogle()", etc.) handle clicks directly.
 
     // Firebase auth state listener
     if (typeof auth !== "undefined" && auth) {
@@ -917,7 +922,6 @@ function renderMyBorrowed() {
 
         var bookObj = books.find(function (b) { return b.id === item.bookId; });
         var coverUrl = (bookObj && bookObj.cover) ? bookObj.cover : DEFAULT_COVER;
-        var isReturnPending = item.returnRequested === true;
 
         var card = document.createElement("div");
         card.className = "book-card";
@@ -932,55 +936,36 @@ function renderMyBorrowed() {
             + '</div>'
             + '<div class="book-meta">'
             + '    <span style="font-size: 11px; color: #64748b;">Due: ' + item.dueDate + '</span>'
-            + (isOverdue
-                ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
-                : (isReturnPending
-                    ? '<span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #d97706; font-weight: 600;">⏳ Return Requested</span>'
-                    : '<span class="badge badge-available">On Time</span>'))
+            +      (isOverdue
+                    ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
+                    : '<span class="badge badge-available">On Time</span>')
             + '</div>'
-            + (isReturnPending
-                ? '<button class="action-btn" disabled style="opacity: 0.6; cursor: not-allowed; width: 100%; background: #64748b; color: white;">⏳ Awaiting Librarian Approval</button>'
-                : '<button class="action-btn return-btn" style="width: 100%; background: #3b82f6;" onclick="requestReturnBook(\'' + item.id + '\')">📩 Request Return</button>');
+            + '<div style="margin-top: 10px; font-size: 0.8rem; font-weight: 600; text-align: center; background: rgba(59, 130, 246, 0.08); color: #2563eb; padding: 8px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2);">'
+            + '    🔒 Issued to You (Librarian Returns Only)'
+            + '</div>';
 
         myBorrowedList.appendChild(card);
     }
 }
 
-function requestReturnBook(borrowId) {
+function confirmLibrarianReturn(borrowId) {
     var item = borrowedBooks.find(function (b) { return b.id === borrowId; });
     if (!item) return;
 
-    item.returnRequested = true;
-    item.requestDate = new Date().toLocaleDateString();
+    var confirmed = confirm("Confirm returning '" + item.title + "' issued to " + (item.studentName || 'Student') + " (ID: " + (item.studentId || 'N/A') + ")?");
+    if (!confirmed) return;
 
-    saveBorrowed();
-    renderAll();
-
-    alert("📩 Return request submitted successfully!\nThe Librarian will inspect and approve your return.");
-}
-
-function approveReturn(borrowId) {
-    var index = borrowedBooks.findIndex(function (b) { return b.id === borrowId; });
-    if (index === -1) return;
-
-    var item = borrowedBooks[index];
-    borrowedBooks.splice(index, 1);
+    var index = borrowedBooks.indexOf(item);
+    if (index !== -1) {
+        borrowedBooks.splice(index, 1);
+    }
 
     recalculateAvailability();
     saveBooks();
     saveBorrowed();
     renderAll();
 
-    alert("✅ Return approved for '" + item.title + "' (Borrower: " + item.studentName + ")!\nBook copy is returned to active catalog inventory.");
-}
-
-borrowedBooks.splice(index, 1);
-
-saveBooks();
-saveBorrowed();
-renderAll();
-
-alert("Thank you! Book returned successfully.");
+    alert("✅ Return confirmed! '" + item.title + "' is returned and back in stock.");
 }
 
 function addNewBook() {
@@ -1029,12 +1014,19 @@ function addNewBook() {
 }
 
 function renderAdminInventory() {
+    var adminUniversalSearchInput = document.getElementById("adminUniversalSearchInput");
+    var adminUniversalFilter = document.getElementById("adminUniversalFilter");
     var adminSearchInput = document.getElementById("adminSearchInput");
     var adminCategoryFilter = document.getElementById("adminCategoryFilter");
     var adminInventoryPagination = document.getElementById("adminInventoryPagination");
 
+    var globalQuery = adminUniversalSearchInput ? adminUniversalSearchInput.value.toLowerCase().trim() : "";
     var query = adminSearchInput ? adminSearchInput.value.toLowerCase().trim() : "";
+    if (globalQuery) query = globalQuery;
+
+    var globalCat = adminUniversalFilter ? adminUniversalFilter.value : "All";
     var category = adminCategoryFilter ? adminCategoryFilter.value : "All";
+    if (globalCat !== "All") category = globalCat;
 
     adminInventoryList.innerHTML = "";
 
@@ -1110,29 +1102,32 @@ function deleteBook(bookId) {
 }
 
 function renderIssuedLog() {
+    var adminUniversalSearchInput = document.getElementById("adminUniversalSearchInput");
     var adminIssuedSearchInput = document.getElementById("adminIssuedSearchInput");
     var adminIssuedFilter = document.getElementById("adminIssuedFilter");
 
+    var globalQuery = adminUniversalSearchInput ? adminUniversalSearchInput.value.toLowerCase().trim() : "";
     var query = adminIssuedSearchInput ? adminIssuedSearchInput.value.toLowerCase().trim() : "";
+    if (globalQuery) query = globalQuery;
+
     var filterVal = adminIssuedFilter ? adminIssuedFilter.value : "All";
 
     issuedLogList.innerHTML = "";
 
     var nowTime = Date.now();
 
-    var filtered = borrowedBooks.filter(function(item) {
+    var filtered = borrowedBooks.filter(function (item) {
         var name = (item.studentName || "").toLowerCase();
         var sid = (item.studentId || "").toLowerCase();
         var title = (item.title || "").toLowerCase();
-        var matchesQuery = name.includes(query) || sid.includes(query) || title.includes(query);
+        var author = (item.author || "").toLowerCase();
+        var matchesQuery = name.includes(query) || sid.includes(query) || title.includes(query) || author.includes(query);
 
-        var isPending = item.returnRequested === true;
         var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
 
         var matchesFilter = true;
-        if (filterVal === "Pending") matchesFilter = isPending;
-        else if (filterVal === "Overdue") matchesFilter = isOverdue;
-        else if (filterVal === "Active") matchesFilter = (!isPending && !isOverdue);
+        if (filterVal === "Overdue") matchesFilter = isOverdue;
+        else if (filterVal === "Active") matchesFilter = !isOverdue;
 
         return matchesQuery && matchesFilter;
     });
@@ -1152,26 +1147,17 @@ function renderIssuedLog() {
             fineAmount = diffDays * 20;
         }
 
-        var isPending = item.returnRequested === true;
-
         var div = document.createElement("div");
         div.className = "log-item";
-        if (isPending) {
-            div.style.borderLeft = "4px solid #eab308";
-            div.style.background = "rgba(234, 179, 8, 0.05)";
-        }
 
         div.innerHTML = ''
             + '<div class="log-info">'
             + '    <strong>' + item.title + '</strong>'
-            + '    <span>Borrower: <strong>' + (item.studentName || 'Student') + '</strong> (ID: ' + (item.studentId || 'N/A') + ')</span>'
+            + '    <span>Borrower: <strong style="color: #2563eb;">' + (item.studentName || 'Student') + '</strong> (ID: <strong>' + (item.studentId || 'N/A') + '</strong>)</span>'
             + '    <span>Issued: ' + item.borrowDate + ' | Due: ' + item.dueDate + '</span>'
-            +      (isPending ? '<span style="color: #d97706; font-weight: 700; display: block; margin-top: 4px;">📩 RETURN APPROVAL REQUESTED BY STUDENT</span>' : '')
-            +      (isOverdue ? '<span style="color: #ef4444; font-weight: 600; display: block; margin-top: 4px;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
+            + (isOverdue ? '<span style="color: #ef4444; font-weight: 600; display: block; margin-top: 4px;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
             + '</div>'
-            + (isPending
-                ? '<button class="action-btn" style="background: #10b981; color: white; padding: 8px 16px; font-weight: 700; border-radius: 6px;" onclick="approveReturn(\'' + item.id + '\')">✅ Approve Return</button>'
-                : '<button class="action-btn return-btn" onclick="approveReturn(\'' + item.id + '\')">Mark Returned</button>');
+            + '<button class="action-btn" style="background: #10b981; color: white; padding: 8px 16px; font-weight: 700; border-radius: 6px;" onclick="confirmLibrarianReturn(\'' + item.id + '\')">↩️ Return & Confirm Receipt</button>';
 
         issuedLogList.appendChild(div);
     }
