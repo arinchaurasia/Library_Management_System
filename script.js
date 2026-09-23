@@ -103,6 +103,7 @@ function loadData() {
             }
         });
 
+        // Listen to ALL borrowed records (admin needs all, student filters client-side)
         db.ref("borrowed").on("value", function(snapshot) {
             var data = snapshot.val();
             if (data && Array.isArray(data)) {
@@ -112,6 +113,15 @@ function loadData() {
             }
         });
     }
+}
+
+// Helper: Get only the current user's borrowed books
+function getMyBorrowedBooks() {
+    if (!currentUser) return [];
+    var uid = currentUser.uid;
+    return borrowedBooks.filter(function(item) {
+        return item.uid === uid;
+    });
 }
 
 function saveBooks() {
@@ -277,12 +287,13 @@ function renderStats() {
     var nowTime = Date.now();
 
     if (currentPortal === "student") {
-        var myLoanCount = borrowedBooks.length;
+        var myBooks = getMyBorrowedBooks();
+        var myLoanCount = myBooks.length;
         var totalFine = 0;
         var activeOnTimeCount = 0;
 
-        for (var i = 0; i < borrowedBooks.length; i++) {
-            var item = borrowedBooks[i];
+        for (var i = 0; i < myBooks.length; i++) {
+            var item = myBooks[i];
             if (item.dueTimestamp && nowTime > item.dueTimestamp) {
                 var diffDays = Math.ceil((nowTime - item.dueTimestamp) / (1000 * 60 * 60 * 24));
                 totalFine += diffDays * 20;
@@ -423,6 +434,7 @@ function borrowBook(bookId) {
         author: book.author,
         studentName: studentName.trim(),
         studentId: studentId.trim(),
+        uid: currentUser ? currentUser.uid : "anonymous",
         borrowDate: new Date().toLocaleDateString(),
         dueDate: dueDate.toLocaleDateString(),
         dueTimestamp: dueDate.getTime()
@@ -445,15 +457,18 @@ function borrowBook(bookId) {
 function renderMyBorrowed() {
     myBorrowedList.innerHTML = "";
 
-    if (borrowedBooks.length === 0) {
+    // Only show the current user's borrowed books
+    var myBooks = getMyBorrowedBooks();
+
+    if (myBooks.length === 0) {
         myBorrowedList.innerHTML = '<p class="empty-msg">You have not borrowed any books yet.</p>';
         return;
     }
 
     var nowTime = Date.now();
 
-    for (var i = 0; i < borrowedBooks.length; i++) {
-        var item = borrowedBooks[i];
+    for (var i = 0; i < myBooks.length; i++) {
+        var item = myBooks[i];
         var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
         var fineAmount = 0;
 
@@ -500,6 +515,13 @@ function returnBook(borrowId) {
     if (index === -1) return;
 
     var item = borrowedBooks[index];
+
+    // Ensure students can only return their own books
+    if (currentUser && item.uid && item.uid !== currentUser.uid) {
+        alert("You can only return books you borrowed.");
+        return;
+    }
+
     var book = books.find(function(b) { return b.id === item.bookId; });
 
     if (book) {
