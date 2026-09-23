@@ -38,10 +38,10 @@ var categoryFilter  = document.getElementById("categoryFilter");
 var catalogList     = document.getElementById("catalogList");
 var myBorrowedList  = document.getElementById("myBorrowedList");
 
-// AI View
-var aiTopicInput        = document.getElementById("aiTopicInput");
-var getAiRecommendBtn   = document.getElementById("getAiRecommendBtn");
-var aiRecommendationBox = document.getElementById("aiRecommendationBox");
+// AI Chatbot Sidebar View
+var chatInput   = document.getElementById("chatInput");
+var sendChatBtn = document.getElementById("sendChatBtn");
+var chatHistory = document.getElementById("chatHistory");
 
 // Admin View
 var bookTitle           = document.getElementById("bookTitle");
@@ -108,7 +108,16 @@ function setupEventListeners() {
     categoryFilter.addEventListener("change", renderCatalog);
 
     addBookBtn.addEventListener("click", addNewBook);
-    getAiRecommendBtn.addEventListener("click", getAiRecommendations);
+
+    sendChatBtn.addEventListener("click", function() {
+        sendChatMessage(chatInput.value.trim());
+    });
+
+    chatInput.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+            sendChatMessage(chatInput.value.trim());
+        }
+    });
 }
 
 
@@ -225,18 +234,26 @@ function borrowBook(bookId) {
         return;
     }
 
+    var studentName = prompt("Enter your Name:");
+    if (!studentName || !studentName.trim()) return;
+
+    var studentId = prompt("Enter your Student ID (e.g. ST-101):") || "ST-REG";
+
     book.availableCopies -= 1;
 
     var dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 14); // 14 days loan period
+    dueDate.setDate(dueDate.getDate() + 14); // 14-day loan period
 
     var item = {
         id: "BR-" + Date.now(),
         bookId: book.id,
         title: book.title,
         author: book.author,
+        studentName: studentName.trim(),
+        studentId: studentId.trim(),
         borrowDate: new Date().toLocaleDateString(),
-        dueDate: dueDate.toLocaleDateString()
+        dueDate: dueDate.toLocaleDateString(),
+        dueTimestamp: dueDate.getTime()
     };
 
     borrowedBooks.push(item);
@@ -401,8 +418,11 @@ function renderIssuedLog() {
         return;
     }
 
+    var nowTime = Date.now();
+
     for (var i = 0; i < borrowedBooks.length; i++) {
         var item = borrowedBooks[i];
+        var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
 
         var div = document.createElement("div");
         div.className = "log-item";
@@ -410,7 +430,9 @@ function renderIssuedLog() {
         div.innerHTML = ''
             + '<div class="log-info">'
             + '    <strong>' + item.title + '</strong>'
-            + '    <span>Borrowed: ' + item.borrowDate + ' | Return Due: ' + item.dueDate + '</span>'
+            + '    <span>Borrower: ' + (item.studentName || 'Student') + ' (' + (item.studentId || 'ID: ST-01') + ')</span>'
+            + '    <span>Issued: ' + item.borrowDate + ' | Due: ' + item.dueDate + '</span>'
+            +      (isOverdue ? '<span style="color: #ef4444; font-weight: 600;">⚠️ Overdue (Fine: ₹20/day)</span>' : '')
             + '</div>'
             + '<button class="action-btn return-btn" onclick="returnBook(\'' + item.id + '\')">Mark Returned</button>';
 
@@ -420,28 +442,38 @@ function renderIssuedLog() {
 
 
 // ========================
-//  AI Book Recommender
+//  AI Chatbot & Assistant Logic
 // ========================
 
-async function getAiRecommendations() {
-    var topic = aiTopicInput.value.trim();
+function sendQuickChip(text) {
+    chatInput.value = text;
+    sendChatMessage(text);
+}
 
-    if (!topic) {
-        alert("Please enter a topic or reading interest!");
-        return;
-    }
+async function sendChatMessage(userText) {
+    if (!userText) return;
 
-    getAiRecommendBtn.disabled = true;
-    getAiRecommendBtn.innerText = "Analyzing...";
-    aiRecommendationBox.style.display = "block";
-    aiRecommendationBox.innerHTML = "✨ Gemini AI is finding the best books for you...";
+    // Append User Message Bubble
+    appendBubble(userText, "user-bubble");
+    chatInput.value = "";
 
-    var prompt = "You are a friendly librarian AI. Recommend 3 great books for someone interested in: '" + topic + "'.\n"
-        + "For each book, provide:\n"
-        + "1. Title & Author\n"
-        + "2. 1 sentence overview\n"
-        + "3. Why they should read it.\n"
-        + "Keep the response concise, engaging, and formatted in clean markdown bullet points.";
+    // Append AI Loading Bubble
+    var loadingId = "ai-loading-" + Date.now();
+    appendBubble("Thinking...", "ai-bubble", loadingId);
+
+    // Build Live Inventory Context
+    var inventoryContext = books.map(function(b) {
+        return "- '" + b.title + "' by " + b.author + " [Category: " + b.category + "] -> Available Copies: " + b.availableCopies + "/" + b.totalCopies;
+    }).join("\n");
+
+    var prompt = "You are the AI Assistant for our library. Here is our live library inventory right now:\n"
+        + inventoryContext + "\n\n"
+        + "Student asks: '" + userText + "'\n\n"
+        + "Instructions:\n"
+        + "1. Check if the requested book is in our live inventory above.\n"
+        + "2. Answer clearly YES or NO regarding availability and state how many copies are available.\n"
+        + "3. If a book is unavailable or not in stock, recommend 1-2 available books from the inventory.\n"
+        + "4. Keep the answer concise (2-4 sentences max), polite, and use emojis.";
 
     try {
         var response = await fetch("/api/advice", {
@@ -452,20 +484,36 @@ async function getAiRecommendations() {
 
         var data = await response.json();
 
+        var loadingBubble = document.getElementById(loadingId);
+
         if (response.ok && data.candidates && data.candidates[0]) {
-            var text = data.candidates[0].content.parts[0].text;
-            aiRecommendationBox.innerHTML = formatMarkdown(text);
+            var reply = data.candidates[0].content.parts[0].text;
+            if (loadingBubble) {
+                loadingBubble.innerHTML = formatMarkdown(reply);
+            }
         } else {
-            var err = (data && data.error) ? data.error : "Failed to get AI recommendations.";
-            aiRecommendationBox.innerHTML = '<span style="color: #ef4444;">❌ ' + err + '</span>';
+            if (loadingBubble) {
+                loadingBubble.innerHTML = "❌ AI response failed. Please try again.";
+            }
         }
     } catch (e) {
-        console.error("AI Recommendation error:", e);
-        aiRecommendationBox.innerHTML = '<span style="color: #ef4444;">❌ Could not connect to AI service.</span>';
+        console.error("Chat error:", e);
+        var loadingBubble = document.getElementById(loadingId);
+        if (loadingBubble) {
+            loadingBubble.innerHTML = "❌ Connection error.";
+        }
     }
 
-    getAiRecommendBtn.disabled = false;
-    getAiRecommendBtn.innerText = "✨ Get Recommendations";
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+function appendBubble(text, className, id) {
+    var div = document.createElement("div");
+    div.className = "chat-bubble " + className;
+    if (id) div.id = id;
+    div.innerHTML = text;
+    chatHistory.appendChild(div);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
 function formatMarkdown(text) {
@@ -475,6 +523,7 @@ function formatMarkdown(text) {
     text = text.replace(/\n/g, "<br>");
     return text;
 }
+
 
 
 // Run Application
