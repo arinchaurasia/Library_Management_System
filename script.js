@@ -471,9 +471,68 @@ function generateBookId() {
     return "ENG" + Date.now() + Math.floor(Math.random() * 100);
 }
 
+function applyLoggedInUser(user, admissionId) {
+    if (!user) return;
+    currentUser = user;
+    var uid = user.uid || "local_usr";
+
+    if (!admissionId) {
+        admissionId = localStorage.getItem("user_admission_id_" + uid);
+    }
+
+    if (!admissionId || !admissionId.trim()) {
+        var enteredId = null;
+        while (!enteredId || !enteredId.trim()) {
+            enteredId = prompt("🔒 COMPULSORY REGISTRATION:\n\nWelcome " + (user.displayName || "User") + "!\nPlease enter your Student Admission ID / University Roll Number to continue:");
+            if (enteredId === null) {
+                alert("⚠️ Admission ID / Roll Number is MANDATORY to proceed into the library system.");
+            } else if (!enteredId.trim()) {
+                alert("⚠️ Admission ID cannot be blank. Please enter your valid Admission ID / Roll Number.");
+            }
+        }
+        admissionId = enteredId.trim();
+        localStorage.setItem("user_admission_id_" + uid, admissionId);
+    }
+
+    var authLockScreen = document.getElementById("authLockScreen");
+    var appLayout = document.getElementById("appLayout");
+    var signInBtn = document.getElementById("googleSignInBtn");
+    var userProfile = document.getElementById("userProfile");
+    var userAvatar = document.getElementById("userAvatar");
+    var userName = document.getElementById("userName");
+
+    if (authLockScreen) authLockScreen.style.display = "none";
+    if (appLayout) appLayout.style.display = "grid";
+    if (signInBtn) signInBtn.style.display = "none";
+    if (userProfile) userProfile.style.display = "flex";
+    if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+    if (userName) {
+        userName.innerHTML = (user.displayName || user.email || "Student User") + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + admissionId + ')</span>';
+    }
+
+    renderAll();
+}
+
+function checkAndRestoreUserSession() {
+    var storedUserJson = localStorage.getItem("shelf_current_user");
+    if (storedUserJson) {
+        try {
+            var parsedUser = JSON.parse(storedUserJson);
+            if (parsedUser && parsedUser.uid) {
+                applyLoggedInUser(parsedUser);
+                return true;
+            }
+        } catch (e) {
+            console.error("Error parsing stored session:", e);
+        }
+    }
+    return false;
+}
+
 function init() {
     loadData();
     setupEventListeners();
+    checkAndRestoreUserSession();
     renderAll();
     renderQuickChips();
 }
@@ -705,48 +764,28 @@ function setupEventListeners() {
     // Firebase auth state listener
     if (typeof auth !== "undefined" && auth) {
         auth.onAuthStateChanged(function (user) {
-            var signInBtn = document.getElementById("googleSignInBtn");
-            var userProfile = document.getElementById("userProfile");
-            var userAvatar = document.getElementById("userAvatar");
-            var userName = document.getElementById("userName");
-            var authLockScreen = document.getElementById("authLockScreen");
-            var appLayout = document.getElementById("appLayout");
-
             if (user) {
-                currentUser = user;
-                if (authLockScreen) authLockScreen.style.display = "none";
-                if (appLayout) appLayout.style.display = "grid";
-                if (signInBtn) signInBtn.style.display = "none";
-                if (userProfile) userProfile.style.display = "flex";
-                if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
-
-                // Compulsorily ask Admission ID on Google Sign-In
-                var uid = user.uid;
-                var savedAdmissionId = localStorage.getItem("user_admission_id_" + uid);
-                if (!savedAdmissionId || !savedAdmissionId.trim()) {
-                    var enteredId = null;
-                    while (!enteredId || !enteredId.trim()) {
-                        enteredId = prompt("🔒 COMPULSORY REGISTRATION:\n\nWelcome " + (user.displayName || "User") + "!\nPlease enter your Student Admission ID / University Roll Number to continue:");
-                        if (enteredId === null) {
-                            alert("⚠️ Admission ID / Roll Number is MANDATORY to proceed into the library system.");
-                        } else if (!enteredId.trim()) {
-                            alert("⚠️ Admission ID cannot be blank. Please enter your valid Admission ID / Roll Number.");
-                        }
-                    }
-                    savedAdmissionId = enteredId.trim();
-                    localStorage.setItem("user_admission_id_" + uid, savedAdmissionId);
-                }
-
-                if (userName) {
-                    userName.innerHTML = (user.displayName || user.email || "Student User") + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + savedAdmissionId + ')</span>';
-                }
-                renderAll();
+                localStorage.setItem("shelf_current_user", JSON.stringify({
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL
+                }));
+                applyLoggedInUser(user);
             } else {
-                currentUser = null;
-                if (authLockScreen) authLockScreen.style.display = "flex";
-                if (appLayout) appLayout.style.display = "none";
-                if (signInBtn) signInBtn.style.display = "flex";
-                if (userProfile) userProfile.style.display = "none";
+                var restored = checkAndRestoreUserSession();
+                if (!restored) {
+                    currentUser = null;
+                    var authLockScreen = document.getElementById("authLockScreen");
+                    var appLayout = document.getElementById("appLayout");
+                    var signInBtn = document.getElementById("googleSignInBtn");
+                    var userProfile = document.getElementById("userProfile");
+
+                    if (authLockScreen) authLockScreen.style.display = "flex";
+                    if (appLayout) appLayout.style.display = "none";
+                    if (signInBtn) signInBtn.style.display = "flex";
+                    if (userProfile) userProfile.style.display = "none";
+                }
             }
         });
     }
