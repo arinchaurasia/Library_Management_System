@@ -41,32 +41,37 @@ Return ONLY valid JSON format:
             return res.status(400).json({ error: "No file data provided. Send fileData (base64) and mimeType." });
         }
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+        let lastError = null;
 
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: parts }] })
-        });
+        for (const model of modelsToTry) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
 
-        const data = await response.json();
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: parts }] })
+            });
 
-        if (!response.ok) {
-            const errorMsg = (data.error && data.error.message) ? data.error.message : "Scan failed.";
-            return res.status(response.status).json({ error: errorMsg });
+            const data = await response.json();
+
+            if (response.ok) {
+                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+                    continue;
+                }
+
+                const rawText = data.candidates[0].content.parts[0].text;
+                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                const jsonString = jsonMatch ? jsonMatch[0] : rawText;
+                const bookObj = JSON.parse(jsonString);
+
+                return res.status(200).json({ book: bookObj });
+            }
+
+            lastError = (data.error && data.error.message) ? data.error.message : `Model ${model} failed.`;
         }
 
-        // Guard against empty or blocked Gemini responses
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
-            return res.status(500).json({ error: "Gemini returned an empty or blocked response." });
-        }
-
-        const rawText = data.candidates[0].content.parts[0].text;
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        const jsonString = jsonMatch ? jsonMatch[0] : rawText;
-        const bookObj = JSON.parse(jsonString);
-
-        return res.status(200).json({ book: bookObj });
+        return res.status(500).json({ error: lastError || "Gemini vision scan failed." });
 
     } catch (error) {
         console.error("Scan book error:", error);

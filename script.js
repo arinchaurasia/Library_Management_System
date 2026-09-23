@@ -619,23 +619,30 @@ async function sendChatMessage(userText) {
 
     if (currentPortal === "student") {
         prompt = "You are the ShelfSense AI Assistant for our library helping a STUDENT.\n"
-            + "Live Inventory Right Now:\n" + inventoryContext + "\n\n"
-            + "Student Input: '" + userText + "'\n\n"
-            + "STRICT RULES FOR STUDENT PORTAL:\n"
-            + "1. Students are ONLY allowed to search for books, check availability, or ask for book recommendations.\n"
-            + "2. IF the student asks or commands you to ADD or DELETE a book (e.g. 'Add book XYZ'), REJECT politely and state: '🔒 Only Librarians can add or modify books. Please switch to the Librarian Portal to add new books to the library inventory!'\n"
-            + "3. IF asking about availability, state YES or NO clearly with current available stock count from live inventory.\n"
-            + "4. Keep response friendly, short (2-3 sentences), and use emojis.";
+            + "Live Library Inventory Right Now:\n" + inventoryContext + "\n\n"
+            + "Student Query: '" + userText + "'\n\n"
+            + "STRICT RESPONSE RULES:\n"
+            + "1. FIRST & FOREMOST: Answer the student's exact query directly!\n"
+            + "2. If the user is asking whether a book is available or in stock (e.g. 'Is Atomic Habits available?' or 'Do you have Harry Potter?'):\n"
+            + "   - Search the Live Library Inventory for matching titles or authors.\n"
+            + "   - Answer CLEARLY at the beginning with YES (and state available copy count) or NO (if 0 copies or not found in library).\n"
+            + "3. If student asks to ADD or DELETE a book, REJECT politely: '🔒 Only Librarians can add or modify books. Please switch to the Librarian Portal to add new books!'\n"
+            + "4. RECOMMENDATIONS (AT THE VERY END ONLY): If requested, or if the book is unavailable, or at the very end of your answer, list 1-2 related available books from the inventory.\n"
+            + "5. Use bold formatting and emojis. Keep responses concise and directly helpful.";
     } else {
         prompt = "You are the ShelfSense AI Assistant & Librarian Agent for our library helping a LIBRARIAN.\n"
-            + "Live Inventory Right Now:\n" + inventoryContext + "\n\n"
+            + "Live Library Inventory Right Now:\n" + inventoryContext + "\n\n"
             + "Librarian Input: '" + userText + "'\n\n"
-            + "STRICT RULES FOR LIBRARIAN PORTAL:\n"
-            + "1. IF THE LIBRARIAN WANTS TO ADD A BOOK (e.g., 'Add 5 copies of Clean Code by Robert Martin under Computer Science' or 'Add book XYZ'), extract title, author, category, and copy count. At the END of your friendly response, append this JSON tag EXACTLY:\n"
-            + "[[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Category Name\", \"copies\": 5}]]\n"
-            + "Supported categories: Fiction, Science, History, Computer Science, Self-Help, Other.\n"
-            + "2. IF asking about availability or inventory, answer with YES or NO clearly based on live inventory with available stock count.\n"
-            + "3. Keep response concise, friendly, and use emojis.";
+            + "STRICT RESPONSE RULES:\n"
+            + "1. FIRST & FOREMOST: Directly answer the librarian's exact query or request!\n"
+            + "2. If asking about book availability, search Live Library Inventory and state YES (with available copies count) or NO clearly.\n"
+            + "3. IF THE LIBRARIAN WANTS TO ADD A BOOK (e.g. 'Add 5 copies of Clean Code by Robert Martin under Computer Science'):\n"
+            + "   - Confirm the addition in friendly text.\n"
+            + "   - At the VERY END of your response, append this JSON tag EXACTLY:\n"
+            + "   [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Category Name\", \"copies\": 5}]]\n"
+            + "   Supported categories: Fiction, Science, History, Computer Science, Self-Help, Other.\n"
+            + "4. RECOMMENDATIONS (AT THE VERY END ONLY): If helpful or requested, add 1-2 book recommendations at the very end.\n"
+            + "5. Use bold formatting and emojis.";
     }
 
     try {
@@ -746,17 +753,28 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return;
     }
 
-    // Check availability queries
+    var availables = books.filter(function(b) { return b.availableCopies > 0; });
+    var recSuffix = availables.length > 0
+        ? "<br><br>💡 <strong>Recommended in stock:</strong> " + availables.slice(0, 2).map(function(b){ return "<em>" + b.title + "</em> (" + b.availableCopies + " available)"; }).join(", ")
+        : "";
+
+    // Check availability queries (fuzzy search title or author)
+    var cleanKeyword = lowerText.replace(/is|available|in stock|do you have|book|copies|the|\?/gi, "").trim();
+
     var foundBook = books.find(function(b) {
-        return lowerText.includes(b.title.toLowerCase());
+        var bTitle = b.title.toLowerCase();
+        var bAuthor = b.author.toLowerCase();
+        return lowerText.includes(bTitle) || (cleanKeyword.length > 2 && (bTitle.includes(cleanKeyword) || bAuthor.includes(cleanKeyword)));
     });
 
     if (foundBook) {
         if (foundBook.availableCopies > 0) {
-            loadingBubble.innerHTML = "✅ <strong>YES!</strong> <em>'" + foundBook.title + "'</em> by " + foundBook.author + " is currently <strong>AVAILABLE</strong> (" + foundBook.availableCopies + " copies in stock)! 📖";
+            loadingBubble.innerHTML = "✅ <strong>YES!</strong> <em>'" + foundBook.title + "'</em> by " + foundBook.author + " is currently <strong>AVAILABLE</strong> (" + foundBook.availableCopies + " of " + foundBook.totalCopies + " copies in stock)! 📖" + recSuffix;
         } else {
-            var similar = books.filter(function(b) { return b.category === foundBook.category && b.availableCopies > 0; });
-            var recText = similar.length > 0 ? "<br>💡 Recommended similar books in stock: " + similar.map(function(s){return "<em>" + s.title + "</em>";}).join(", ") : "";
+            var similar = books.filter(function(b) { return b.category === foundBook.category && b.availableCopies > 0 && b.id !== foundBook.id; });
+            var recText = similar.length > 0
+                ? "<br><br>💡 <strong>Recommended similar books in stock:</strong> " + similar.map(function(s){return "<em>" + s.title + "</em>";}).join(", ")
+                : recSuffix;
             loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + foundBook.title + "'</em> is currently out of stock." + recText;
         }
         chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -773,16 +791,20 @@ function handleLocalChatbotResponse(userText, loadingId) {
         if (catBooks.length > 0) {
             loadingBubble.innerHTML = "📚 Available in <strong>" + foundCat.category + "</strong>:<br>• " + catBooks.map(function(b){ return "<strong>" + b.title + "</strong> (" + b.availableCopies + " copies)"; }).join("<br>• ");
         } else {
-            loadingBubble.innerHTML = "Currently no books available under category " + foundCat.category + ".";
+            loadingBubble.innerHTML = "Currently no books available under category " + foundCat.category + "." + recSuffix;
         }
         chatHistory.scrollTop = chatHistory.scrollHeight;
         return;
     }
 
-    // Default recommendation
-    var availables = books.filter(function(b) { return b.availableCopies > 0; });
-    var picks = availables.slice(0, 3).map(function(b) { return "• <strong>" + b.title + "</strong> by " + b.author + " (" + b.availableCopies + " available)"; }).join("<br>");
-    loadingBubble.innerHTML = "🤖 Here are top recommended books available in ShelfSense right now:<br>" + picks;
+    // General query / fallback
+    var isCheckingAvailability = lowerText.includes("available") || lowerText.includes("have") || lowerText.includes("stock") || lowerText.includes("is ");
+    if (isCheckingAvailability && cleanKeyword.length > 0) {
+        loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + cleanKeyword + "'</em> was not found in our library inventory." + recSuffix;
+    } else {
+        var picks = availables.slice(0, 3).map(function(b) { return "• <strong>" + b.title + "</strong> by " + b.author + " (" + b.availableCopies + " available)"; }).join("<br>");
+        loadingBubble.innerHTML = "🤖 Here are top recommended books available in ShelfSense right now:<br>" + picks;
+    }
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 

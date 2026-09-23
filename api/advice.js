@@ -18,24 +18,30 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Prompt is required." });
         }
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+        let lastError = null;
 
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
+        for (const model of modelsToTry) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
 
-        const data = await response.json();
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
 
-        if (!response.ok) {
-            const errorMsg = (data.error && data.error.message) ? data.error.message : "Gemini API request failed.";
-            return res.status(response.status).json({ error: errorMsg });
+            const data = await response.json();
+
+            if (response.ok) {
+                return res.status(200).json(data);
+            }
+
+            lastError = (data.error && data.error.message) ? data.error.message : `Model ${model} failed.`;
         }
 
-        return res.status(200).json(data);
+        return res.status(500).json({ error: lastError || "Gemini API request failed across models." });
 
     } catch (error) {
         console.error("Gemini API error:", error);
