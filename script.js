@@ -563,7 +563,23 @@ function setupEventListeners() {
                 if (signInBtn) signInBtn.style.display = "none";
                 if (userProfile) userProfile.style.display = "flex";
                 if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
-                if (userName) userName.innerText = user.displayName || user.email || "User";
+
+                // Ensure Admission ID is saved for student on first login
+                var uid = user.uid;
+                var savedAdmissionId = localStorage.getItem("user_admission_id_" + uid);
+                if (!savedAdmissionId) {
+                    var enteredId = prompt("🎉 Welcome " + (user.displayName || "Student") + "!\n\nPlease enter your Student Admission ID / Roll Number (saved permanently for book borrowing):");
+                    if (enteredId && enteredId.trim()) {
+                        savedAdmissionId = enteredId.trim();
+                    } else {
+                        savedAdmissionId = "ADM-" + Math.floor(100000 + Math.random() * 900000);
+                    }
+                    localStorage.setItem("user_admission_id_" + uid, savedAdmissionId);
+                }
+
+                if (userName) {
+                    userName.innerHTML = (user.displayName || user.email || "Student User") + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + savedAdmissionId + ')</span>';
+                }
                 renderAll();
             } else {
                 currentUser = null;
@@ -763,6 +779,21 @@ function renderCatalog() {
     }
 }
 
+function getStudentAdmissionId() {
+    var uid = (currentUser && currentUser.uid) ? currentUser.uid : "default_user";
+    var savedId = localStorage.getItem("user_admission_id_" + uid);
+    if (!savedId) {
+        var enteredId = prompt("Welcome! Please enter your Student Admission ID / Roll Number (saved permanently for book borrowing):");
+        if (enteredId && enteredId.trim()) {
+            savedId = enteredId.trim();
+        } else {
+            savedId = "ADM-" + Math.floor(100000 + Math.random() * 900000);
+        }
+        localStorage.setItem("user_admission_id_" + uid, savedId);
+    }
+    return savedId;
+}
+
 function borrowBook(bookId) {
     var book = books.find(function(b) { return b.id === bookId; });
 
@@ -771,14 +802,9 @@ function borrowBook(bookId) {
         return;
     }
 
-    var defaultName = (typeof currentUser !== "undefined" && currentUser && currentUser.displayName) ? currentUser.displayName : "";
-    var studentName = prompt("Enter your Name:", defaultName);
-    if (!studentName || !studentName.trim()) return;
-
-    var studentId = prompt("Enter your Student ID (e.g. ST-101):");
-    if (!studentId || !studentId.trim()) return;
-
-    book.availableCopies -= 1;
+    // Auto-detect student Google name & saved Admission ID without any prompts!
+    var studentName = (currentUser && currentUser.displayName) ? currentUser.displayName : "Student User";
+    var studentId = getStudentAdmissionId();
 
     var dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 14);
@@ -788,21 +814,23 @@ function borrowBook(bookId) {
         bookId: book.id,
         title: book.title,
         author: book.author,
-        studentName: studentName.trim(),
-        studentId: studentId.trim(),
+        studentName: studentName,
+        studentId: studentId,
         uid: currentUser ? currentUser.uid : "anonymous",
         borrowDate: new Date().toLocaleDateString(),
         dueDate: dueDate.toLocaleDateString(),
-        dueTimestamp: dueDate.getTime()
+        dueTimestamp: dueDate.getTime(),
+        returnRequested: false
     };
 
     borrowedBooks.push(item);
 
+    recalculateAvailability();
     saveBooks();
     saveBorrowed();
     renderAll();
 
-    alert("Successfully borrowed '" + book.title + "'! Return due on " + item.dueDate);
+    alert("✅ Successfully borrowed '" + book.title + "'!\n\nBorrower: " + studentName + " (ID: " + studentId + ")\nReturn Due: " + item.dueDate);
 }
 
 function renderMyBorrowed() {
@@ -829,6 +857,7 @@ function renderMyBorrowed() {
 
         var bookObj = books.find(function(b) { return b.id === item.bookId; });
         var coverUrl = (bookObj && bookObj.cover) ? bookObj.cover : DEFAULT_COVER;
+        var isReturnPending = item.returnRequested === true;
 
         var card = document.createElement("div");
         card.className = "book-card";
@@ -845,32 +874,45 @@ function renderMyBorrowed() {
             + '    <span style="font-size: 11px; color: #64748b;">Due: ' + item.dueDate + '</span>'
             +      (isOverdue
                     ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
-                    : '<span class="badge badge-available">On Time</span>')
+                    : (isReturnPending
+                        ? '<span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #d97706; font-weight: 600;">⏳ Return Requested</span>'
+                        : '<span class="badge badge-available">On Time</span>'))
             + '</div>'
-            + '<button class="action-btn return-btn" onclick="returnBook(\'' + item.id + '\')">↩️ Return Book</button>';
+            + (isReturnPending
+                ? '<button class="action-btn" disabled style="opacity: 0.6; cursor: not-allowed; width: 100%; background: #64748b; color: white;">⏳ Awaiting Librarian Approval</button>'
+                : '<button class="action-btn return-btn" style="width: 100%; background: #3b82f6;" onclick="requestReturnBook(\'' + item.id + '\')">📩 Request Return</button>');
 
         myBorrowedList.appendChild(card);
     }
 }
 
-function returnBook(borrowId) {
+function requestReturnBook(borrowId) {
+    var item = borrowedBooks.find(function(b) { return b.id === borrowId; });
+    if (!item) return;
+
+    item.returnRequested = true;
+    item.requestDate = new Date().toLocaleDateString();
+
+    saveBorrowed();
+    renderAll();
+
+    alert("📩 Return request submitted successfully!\nThe Librarian will inspect and approve your return.");
+}
+
+function approveReturn(borrowId) {
     var index = borrowedBooks.findIndex(function(b) { return b.id === borrowId; });
     if (index === -1) return;
 
     var item = borrowedBooks[index];
+    borrowedBooks.splice(index, 1);
 
-    // Students can only return their own books
-    if (currentUser && item.uid && item.uid !== currentUser.uid && currentPortal === "student") {
-        alert("You can only return books you borrowed.");
-        return;
-    }
+    recalculateAvailability();
+    saveBooks();
+    saveBorrowed();
+    renderAll();
 
-    var book = books.find(function(b) { return b.id === item.bookId; });
-
-    if (book) {
-        // Cap availableCopies so it never exceeds totalCopies
-        book.availableCopies = Math.min(book.availableCopies + 1, book.totalCopies);
-    }
+    alert("✅ Return approved for '" + item.title + "' (Borrower: " + item.studentName + ")!\nBook copy is returned to active catalog inventory.");
+}
 
     borrowedBooks.splice(index, 1);
 
@@ -990,17 +1032,26 @@ function renderIssuedLog() {
             fineAmount = diffDays * 20;
         }
 
+        var isPending = item.returnRequested === true;
+
         var div = document.createElement("div");
         div.className = "log-item";
+        if (isPending) {
+            div.style.borderLeft = "4px solid #eab308";
+            div.style.background = "rgba(234, 179, 8, 0.05)";
+        }
 
         div.innerHTML = ''
             + '<div class="log-info">'
             + '    <strong>' + item.title + '</strong>'
-            + '    <span>Borrower: ' + (item.studentName || 'Student') + ' (' + (item.studentId || 'N/A') + ')</span>'
+            + '    <span>Borrower: <strong>' + (item.studentName || 'Student') + '</strong> (ID: ' + (item.studentId || 'N/A') + ')</span>'
             + '    <span>Issued: ' + item.borrowDate + ' | Due: ' + item.dueDate + '</span>'
-            +      (isOverdue ? '<span style="color: #ef4444; font-weight: 600;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
+            +      (isPending ? '<span style="color: #d97706; font-weight: 700; display: block; margin-top: 4px;">📩 RETURN APPROVAL REQUESTED BY STUDENT</span>' : '')
+            +      (isOverdue ? '<span style="color: #ef4444; font-weight: 600; display: block; margin-top: 4px;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
             + '</div>'
-            + '<button class="action-btn return-btn" onclick="returnBook(\'' + item.id + '\')">Mark Returned</button>';
+            + (isPending
+                ? '<button class="action-btn" style="background: #10b981; color: white; padding: 8px 16px; font-weight: 700; border-radius: 6px;" onclick="approveReturn(\'' + item.id + '\')">✅ Approve Return</button>'
+                : '<button class="action-btn return-btn" onclick="approveReturn(\'' + item.id + '\')">Mark Returned</button>');
 
         issuedLogList.appendChild(div);
     }
