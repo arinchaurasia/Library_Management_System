@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Library Management System</title>
+    <meta name="description" content="Simple and modern Library Management System with Student and Librarian portals.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- App Header -->
+        <div class="app-header">
+            <h1>📚 Smart Library System</h1>
+            <p class="subtitle">Manage books, issue & return items, and get AI recommendations</p>
+
+            <!-- Role Portal Selector -->
+            <div class="role-switcher">
+                <button id="studentTabBtn" class="role-btn active">🎓 Student Portal</button>
+                <button id="adminTabBtn" class="role-btn">🔑 Librarian Portal</button>
+            </div>
+        </div>
+
+        <!-- Quick Stats Banner -->
+        <div class="summary-cards">
+            <div class="summary-box">
+                <h3>Total Books</h3>
+                <p id="statTotalBooks">0</p>
+            </div>
+            <div class="summary-box">
+                <h3>Available</h3>
+                <p id="statAvailableBooks">0</p>
+            </div>
+            <div class="summary-box">
+                <h3>Issued Out</h3>
+                <p id="statIssuedBooks">0</p>
+            </div>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!--  STUDENT PORTAL                            -->
+        <!-- ========================================== -->
+        <div id="studentPortal" class="portal-section active">
+
+            <!-- Search & Filter Books -->
+            <div class="card-container">
+                <h2>🔍 Search & Browse Books</h2>
+                <div class="search-bar-group">
+                    <input type="text" id="searchInput" placeholder="Search by title, author, or category...">
+                    <select id="categoryFilter">
+                        <option value="All">All Categories</option>
+                        <option value="Fiction">📖 Fiction</option>
+                        <option value="Science">🔬 Science & Tech</option>
+                        <option value="History">📜 History</option>
+                        <option value="Computer Science">💻 Computer Science</option>
+                        <option value="Self-Help">💡 Self-Help</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- My Borrowed Books Section -->
+            <div class="card-container">
+                <h2>📌 My Borrowed Books</h2>
+                <div id="myBorrowedList" class="book-grid">
+                    <p class="empty-msg">You have not borrowed any books yet.</p>
+                </div>
+            </div>
+
+            <!-- Available Catalog -->
+            <div class="card-container">
+                <h2>📚 Library Catalog</h2>
+                <div id="catalogList" class="book-grid">
+                    <!-- Books dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- AI Book Assistant -->
+            <div class="card-container ai-card">
+                <h2>✨ AI Book Assistant & Recommender</h2>
+                <p class="ai-desc">Ask Gemini AI for book recommendations based on your interest or topic!</p>
+                <div class="ai-input-group">
+                    <input type="text" id="aiTopicInput" placeholder="e.g., Recommended books on Artificial Intelligence for beginners">
+                    <button id="getAiRecommendBtn" class="ai-btn">✨ Get Recommendations</button>
+                </div>
+                <div id="aiRecommendationBox"></div>
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!--  LIBRARIAN / ADMIN PORTAL                 -->
+        <!-- ========================================== -->
+        <div id="adminPortal" class="portal-section">
+
+            <!-- Add New Book Form -->
+            <div class="card-container">
+                <h2>➕ Add New Book to Library</h2>
+                <div class="form-grid">
+                    <input type="text" id="bookTitle" placeholder="Book Title (e.g., Clean Code)">
+                    <input type="text" id="bookAuthor" placeholder="Author (e.g., Robert C. Martin)">
+                    <select id="bookCategory">
+                        <option value="">Select Category</option>
+                        <option value="Fiction">📖 Fiction</option>
+                        <option value="Science">🔬 Science & Tech</option>
+                        <option value="History">📜 History</option>
+                        <option value="Computer Science">💻 Computer Science</option>
+                        <option value="Self-Help">💡 Self-Help</option>
+                    </select>
+                    <input type="text" id="bookIsbn" placeholder="ISBN / ID (e.g., 978-0132350884)">
+                    <input type="number" id="bookCopies" placeholder="Number of Copies (e.g., 5)" min="1" value="1">
+                </div>
+                <button id="addBookBtn" class="primary-btn">Add Book to Library</button>
+            </div>
+
+            <!-- Issued Books Management -->
+            <div class="card-container">
+                <h2>📋 Issued Books Log</h2>
+                <div id="issuedLogList">
+                    <p class="empty-msg">No books currently issued out.</p>
+                </div>
+            </div>
+
+            <!-- All Inventory Management -->
+            <div class="card-container">
+                <h2>⚙️ Library Inventory Management</h2>
+                <div id="adminInventoryList" class="book-grid">
+                    <!-- Inventory inserted dynamically -->
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript File -->
+    <script src="script.js"></script>
+
+</body>
+</html>

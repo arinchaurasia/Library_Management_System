@@ -1,0 +1,371 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+    padding: 30px 15px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+h1 {
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Role Switcher Pills */
+.role-switcher {
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.role-btn {
+    background: transparent;
+    border: none;
+    padding: 10px 22px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.role-btn.active {
+    background: white;
+    color: #1e3c72;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Summary Cards Banner */
+.summary-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.summary-box {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 18px 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.summary-box h3 {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.summary-box p {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e3c72;
+}
+
+/* Card Container */
+.card-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 24px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-container h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+/* Portal Visibility */
+.portal-section {
+    display: none;
+}
+
+.portal-section.active {
+    display: block;
+}
+
+/* Form Controls */
+input, select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Poppins', Arial, sans-serif;
+    outline: none;
+    background: #f8fafc;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #2a5298;
+    background: white;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .summary-cards {
+        flex-direction: column;
+    }
+}
+
+/* Buttons */
+.primary-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', Arial, sans-serif;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.primary-btn:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.action-btn {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', Arial, sans-serif;
+    transition: all 0.2s ease;
+}
+
+.borrow-btn {
+    background: #10b981;
+    color: white;
+}
+
+.borrow-btn:hover {
+    background: #059669;
+}
+
+.return-btn {
+    background: #f59e0b;
+    color: white;
+}
+
+.return-btn:hover {
+    background: #d97706;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+}
+
+/* Search Bar Group */
+.search-bar-group {
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar-group input {
+    flex: 2;
+    margin-bottom: 0;
+}
+
+.search-bar-group select {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Book Grid & Cards */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.book-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.book-info h4 {
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.book-info .author {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.book-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-category {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge-available {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.badge-issued {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Issued Log Row */
+.log-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.log-info strong {
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.log-info span {
+    font-size: 12px;
+    color: #64748b;
+    display: block;
+}
+
+/* AI Card */
+.ai-card {
+    background: linear-gradient(135deg, #ffffff, #f0f4ff);
+    border: 1px solid #dbeafe;
+}
+
+.ai-desc {
+    font-size: 13px;
+    color: #475569;
+    margin-bottom: 12px;
+}
+
+.ai-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.ai-input-group input {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.ai-btn {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', Arial, sans-serif;
+    white-space: nowrap;
+}
+
+.ai-btn:hover {
+    opacity: 0.92;
+}
+
+#aiRecommendationBox {
+    background: white;
+    border: 1px solid #e0e7ff;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #334155;
+    display: none;
+}
+
+.empty-msg {
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px 0;
+}
