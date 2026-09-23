@@ -466,14 +466,15 @@ async function sendChatMessage(userText) {
         return "- '" + b.title + "' by " + b.author + " [Category: " + b.category + "] -> Available Copies: " + b.availableCopies + "/" + b.totalCopies;
     }).join("\n");
 
-    var prompt = "You are the AI Assistant for our library. Here is our live library inventory right now:\n"
-        + inventoryContext + "\n\n"
-        + "Student asks: '" + userText + "'\n\n"
+    var prompt = "You are the AI Assistant & Librarian Agent for our library.\n"
+        + "Live Inventory Right Now:\n" + inventoryContext + "\n\n"
+        + "User Input: '" + userText + "'\n\n"
         + "Instructions:\n"
-        + "1. Check if the requested book is in our live inventory above.\n"
-        + "2. Answer clearly YES or NO regarding availability and state how many copies are available.\n"
-        + "3. If a book is unavailable or not in stock, recommend 1-2 available books from the inventory.\n"
-        + "4. Keep the answer concise (2-4 sentences max), polite, and use emojis.";
+        + "1. IF THE USER WANTS TO ADD A BOOK (e.g., 'Add 5 copies of Clean Code by Robert Martin under Computer Science' or 'Add book XYZ'), extract title, author, category, and copy count. At the END of your friendly response, append this JSON tag EXACTLY:\n"
+        + "[[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Category Name\", \"copies\": 5}]]\n"
+        + "Supported categories: Fiction, Science, History, Computer Science, Self-Help, Other.\n"
+        + "2. IF THE USER IS ASKING ABOUT BOOK AVAILABILITY OR GENERAL QUESTIONS, answer with YES or NO clearly based on live inventory with available stock count.\n"
+        + "3. Keep response concise, friendly, and use emojis.";
 
     try {
         var response = await fetch("/api/advice", {
@@ -487,9 +488,39 @@ async function sendChatMessage(userText) {
         var loadingBubble = document.getElementById(loadingId);
 
         if (response.ok && data.candidates && data.candidates[0]) {
-            var reply = data.candidates[0].content.parts[0].text;
+            var rawReply = data.candidates[0].content.parts[0].text;
+
+            // Check if response contains [[ACTION_ADD: {...}]]
+            var match = rawReply.match(/\[\[ACTION_ADD:\s*(\{.*?\})\]\]/);
+
+            if (match && match[1]) {
+                try {
+                    var bookData = JSON.parse(match[1]);
+                    if (bookData.title && bookData.author) {
+                        var copies = Number(bookData.copies) || 1;
+                        var newBook = {
+                            id: "B" + (books.length + 101),
+                            title: bookData.title,
+                            author: bookData.author,
+                            category: bookData.category || "Other",
+                            totalCopies: copies,
+                            availableCopies: copies
+                        };
+
+                        books.push(newBook);
+                        saveBooks();
+                        renderAll();
+                    }
+                } catch (jsonErr) {
+                    console.error("Error parsing AI book action:", jsonErr);
+                }
+
+                // Strip raw action code from display
+                rawReply = rawReply.replace(/\[\[ACTION_ADD:\s*\{.*?\}\]\]/g, "").trim();
+            }
+
             if (loadingBubble) {
-                loadingBubble.innerHTML = formatMarkdown(reply);
+                loadingBubble.innerHTML = formatMarkdown(rawReply);
             }
         } else {
             if (loadingBubble) {

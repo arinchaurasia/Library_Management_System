@@ -138,26 +138,26 @@
                     <span class="status-dot"></span>
                     <h3>🤖 AI Library Assistant</h3>
                 </div>
-                <span class="chatbot-subtitle">Check availability &amp; get recommendations</span>
+                <span class="chatbot-subtitle">Check availability, recommendations &amp; add books</span>
             </div>
 
             <!-- Quick Question Chips -->
             <div class="quick-chips">
+                <button class="chip-btn" onclick="sendQuickChip('Add 3 copies of Clean Architecture by Robert Martin under Computer Science')">➕ Add book via AI Chat</button>
                 <button class="chip-btn" onclick="sendQuickChip('Is Clean Code available?')">Is Clean Code available?</button>
-                <button class="chip-btn" onclick="sendQuickChip('Which Computer Science books are in stock?')">Computer Science books in stock?</button>
-                <button class="chip-btn" onclick="sendQuickChip('Recommend a good self-help book')">Recommend self-help book</button>
+                <button class="chip-btn" onclick="sendQuickChip('Which Computer Science books are in stock?')">CS books in stock?</button>
             </div>
 
             <!-- Chat Messages Area -->
             <div id="chatHistory" class="chat-history">
                 <div class="chat-bubble ai-bubble">
-                    👋 Hi! I'm your AI Library Assistant. Ask me if a book is available, check stock, or ask for recommendations!
+                    👋 Hi! I'm your AI Library Assistant. Ask me if a book is available, or tell me to add books (e.g., <em>"Add 5 copies of Deep Learning by Ian Goodfellow under Computer Science"</em>)!
                 </div>
             </div>
 
             <!-- Chat Input Group -->
             <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Ask AI e.g. Is Atomic Habits available?">
+                <input type="text" id="chatInput" placeholder="Ask AI or say 'Add 3 copies of Clean Architecture...'">
                 <button id="sendChatBtn" class="send-btn">Send</button>
             </div>
         </div>
