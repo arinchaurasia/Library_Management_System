@@ -590,6 +590,34 @@ function setupEventListeners() {
         scanCoverBtn.addEventListener("click", scanBookCoverFile);
     }
 
+    var bulkCsvInput = document.getElementById("bulkCsvInput");
+    var importCsvBtn = document.getElementById("importCsvBtn");
+    var importPasteBtn = document.getElementById("importPasteBtn");
+
+    if (importCsvBtn && bulkCsvInput) {
+        importCsvBtn.addEventListener("click", function () {
+            if (!bulkCsvInput.files || bulkCsvInput.files.length === 0) {
+                alert("Please select a .CSV or .TXT file to upload!");
+                return;
+            }
+            var file = bulkCsvInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                parseAndImportCsvText(e.target.result);
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    if (importPasteBtn) {
+        importPasteBtn.addEventListener("click", function () {
+            var textarea = document.getElementById("bulkCsvTextarea");
+            if (textarea) {
+                parseAndImportCsvText(textarea.value);
+            }
+        });
+    }
+
     // Note: Inline onclick handlers in index.html (onclick="signInWithGoogle()", etc.) handle clicks directly.
 
     // Firebase auth state listener
@@ -610,16 +638,20 @@ function setupEventListeners() {
                 if (userProfile) userProfile.style.display = "flex";
                 if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
 
-                // Ensure Admission ID is saved for student on first login
+                // Compulsorily ask Admission ID on Google Sign-In
                 var uid = user.uid;
                 var savedAdmissionId = localStorage.getItem("user_admission_id_" + uid);
-                if (!savedAdmissionId) {
-                    var enteredId = prompt("🎉 Welcome " + (user.displayName || "Student") + "!\n\nPlease enter your Student Admission ID / Roll Number (saved permanently for book borrowing):");
-                    if (enteredId && enteredId.trim()) {
-                        savedAdmissionId = enteredId.trim();
-                    } else {
-                        savedAdmissionId = "ADM-" + Math.floor(100000 + Math.random() * 900000);
+                if (!savedAdmissionId || !savedAdmissionId.trim()) {
+                    var enteredId = null;
+                    while (!enteredId || !enteredId.trim()) {
+                        enteredId = prompt("🔒 COMPULSORY REGISTRATION:\n\nWelcome " + (user.displayName || "User") + "!\nPlease enter your Student Admission ID / University Roll Number to continue:");
+                        if (enteredId === null) {
+                            alert("⚠️ Admission ID / Roll Number is MANDATORY to proceed into the library system.");
+                        } else if (!enteredId.trim()) {
+                            alert("⚠️ Admission ID cannot be blank. Please enter your valid Admission ID / Roll Number.");
+                        }
                     }
+                    savedAdmissionId = enteredId.trim();
                     localStorage.setItem("user_admission_id_" + uid, savedAdmissionId);
                 }
 
@@ -871,13 +903,17 @@ function changeCatalogPage(delta) {
 function getStudentAdmissionId() {
     var uid = (currentUser && currentUser.uid) ? currentUser.uid : "default_user";
     var savedId = localStorage.getItem("user_admission_id_" + uid);
-    if (!savedId) {
-        var enteredId = prompt("Welcome! Please enter your Student Admission ID / Roll Number (saved permanently for book borrowing):");
-        if (enteredId && enteredId.trim()) {
-            savedId = enteredId.trim();
-        } else {
-            savedId = "ADM-" + Math.floor(100000 + Math.random() * 900000);
+    if (!savedId || !savedId.trim()) {
+        var enteredId = null;
+        while (!enteredId || !enteredId.trim()) {
+            enteredId = prompt("🔒 COMPULSORY STEP:\n\nPlease enter your Student Admission ID / University Roll Number:");
+            if (enteredId === null) {
+                alert("⚠️ Admission ID / Roll Number is MANDATORY to request or borrow books.");
+            } else if (!enteredId.trim()) {
+                alert("⚠️ Admission ID cannot be blank. Please enter a valid Admission ID.");
+            }
         }
+        savedId = enteredId.trim();
         localStorage.setItem("user_admission_id_" + uid, savedId);
     }
     return savedId;
@@ -1098,10 +1134,86 @@ function addNewBook() {
     bookCopies.value = 1;
     if (bookCover) bookCover.value = "";
 
-    saveBooks();
-    renderAll();
-
     alert("Book '" + title + "' added to library inventory!");
+}
+
+function downloadSampleCsvTemplate() {
+    var csvHeader = "Title,Author,Category,Copies,CoverURL\n";
+    var sampleRows = "Data Structures and Algorithms,Mark Allen Weiss,Computer Science & Engineering,10,https://covers.openlibrary.org/b/isbn/9780132847377-M.jpg\n"
+        + "Higher Engineering Mathematics,B.S. Grewal,Basic Sciences & Humanities,15,https://covers.openlibrary.org/b/isbn/9788174091954-M.jpg\n"
+        + "AKTU 1st Year Engineering Physics,H.K. Malik,AKTU 1st Year,8,https://covers.openlibrary.org/b/isbn/9788189928186-M.jpg\n";
+
+    var blob = new Blob([csvHeader + sampleRows], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "engineering_library_bulk_import_template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function parseAndImportCsvText(rawText) {
+    if (!rawText || !rawText.trim()) {
+        alert("Please select a valid CSV file or paste CSV text!");
+        return;
+    }
+
+    var lines = rawText.split(/\r?\n/);
+    var successCount = 0;
+    var skippedCount = 0;
+
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line) continue;
+
+        // Skip header row if present
+        if (i === 0 && (line.toLowerCase().startsWith("title") || line.toLowerCase().startsWith("author"))) {
+            continue;
+        }
+
+        var cols = line.split(",").map(function (item) {
+            return item.replace(/^["']|["']$/g, "").trim();
+        });
+
+        if (cols.length >= 2) {
+            var title = cols[0];
+            var author = cols[1];
+            var category = cols[2] || "Other";
+            var copies = Number(cols[3]) || 5;
+            var cover = cols[4] || DEFAULT_COVER;
+
+            if (title && author) {
+                var newBook = {
+                    id: generateBookId(),
+                    title: title,
+                    author: author,
+                    category: category,
+                    totalCopies: copies,
+                    availableCopies: copies,
+                    cover: cover
+                };
+                books.push(newBook);
+                successCount++;
+            } else {
+                skippedCount++;
+            }
+        } else {
+            skippedCount++;
+        }
+    }
+
+    if (successCount > 0) {
+        saveBooks();
+        renderAll();
+        var statusEl = document.getElementById("bulkUploadStatus");
+        if (statusEl) {
+            statusEl.innerHTML = '<span style="color: #059669;">✅ Successfully imported ' + successCount + ' books into the engineering library catalog! (' + skippedCount + ' skipped)</span>';
+        }
+        alert("🎉 Bulk Import Complete!\n\nSuccessfully added " + successCount + " new books to the catalog database.");
+    } else {
+        alert("⚠️ No valid books found in CSV data. Ensure columns match: Title, Author, Category, Copies, CoverURL.");
+    }
 }
 
 function renderAdminInventory() {
