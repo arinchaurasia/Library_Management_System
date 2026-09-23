@@ -258,7 +258,71 @@ var sampleBooks = [
   { id: "BSH822", title: "Vector Analysis (Schaum's Outlines)", author: "Murray R. Spiegel", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780071615457-M.jpg" },
   { id: "BSH823", title: "Complex Variables and Applications", author: "James Ward Brown, Ruel V. Churchill", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780073051949-M.jpg" },
   { id: "BSH824", title: "Introduction to Probability Models", author: "Sheldon M. Ross", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 4, cover: "https://covers.openlibrary.org/b/isbn/9780123756862-M.jpg" },
-  { id: "BSH825", title: "Business Communication: Building Critical Skills", author: "Kitty O. Locker", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780073403151-M.jpg" }
+  { id: "BSH825", title: "Business Communication: Building Critical Skills", author: "Kitty O. Locker", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780073403151-M.jpg" },
+
+  // ==========================================
+  // DR. A.P.J. ABDUL KALAM TECHNICAL UNIVERSITY (AKTU) SYLLABUS BOOKS - 60 BOOKS
+  // ==========================================
+  { id: "AKTU001", title: "Engineering Mathematics - I (AKTU BAS-103)", author: "H.K. Dass, Dr. Rama Verma", category: "AKTU Curriculum", totalCopies: 20, availableCopies: 14, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+  { id: "AKTU002", title: "Engineering Mathematics - II (AKTU BAS-203)", author: "H.K. Dass, Rajnish Verma", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 12, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+  { id: "AKTU003", title: "Engineering Physics (AKTU BAS-101)", author: "Hitendra K. Malik, A.K. Singh", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
+  { id: "AKTU004", title: "Engineering Chemistry (AKTU BAS-102)", author: "Dr. Shashi Chawla, Dr. Avinash Agarwal", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&q=80" },
+  { id: "AKTU005", title: "Programming for Problem Solving - C (AKTU KCS-101T)", author: "E. Balagurusamy, Reema Thareja", category: "AKTU Curriculum", totalCopies: 22, availableCopies: 16, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
+  { id: "AKTU006", title: "Basic Electrical Engineering (AKTU KEE-101T)", author: "D.C. Kulshreshtha, V.K. Mehta", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+  { id: "AKTU007", title: "Basic Electronics Engineering (AKTU KEC-101T)", author: "Sanjay Sharma, J.B. Gupta", category: "AKTU Curriculum", totalCopies: 17, availableCopies: 10, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+  { id: "AKTU008", title: "Fundamentals of Mechanical Engineering (AKTU KME-101T)", author: "Pravin Kumar, R.K. Rajput", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+  { id: "AKTU009", title: "Universal Human Values & Ethics (AKTU KNC-301)", author: "R.R. Gaur, R. Sangal, G.P. Bagaria", category: "AKTU Curriculum", totalCopies: 25, availableCopies: 19, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+  { id: "AKTU010", title: "Technical Communication (AKTU KAS-301)", author: "Meenakshi Raman, Sangeeta Sharma", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 9, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+  { id: "AKTU011", title: "Data Structures using C (AKTU KCS-301)", author: "Reema Thareja, Seymour Lipschutz", category: "AKTU Curriculum", totalCopies: 20, availableCopies: 13, cover: "https://covers.openlibrary.org/b/isbn/9780198099307-M.jpg" },
+  { id: "AKTU012", title: "Computer Organization & Architecture (AKTU KCS-302)", author: "M. Morris Mano, Carl Hamacher", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
+  { id: "AKTU013", title: "Discrete Structures & Theory of Logic (AKTU KCS-303)", author: "J.P. Tremblay, R. Manohar", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780074631133-M.jpg" },
+  { id: "AKTU014", title: "Operating Systems (AKTU KCS-401)", author: "Abraham Silberschatz, Peter B. Galvin", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781119800361-M.jpg" },
+  { id: "AKTU015", title: "Theory of Automata & Formal Languages (AKTU KCS-402)", author: "K.L.P. Mishra, N. Chandrasekaran", category: "AKTU Curriculum", totalCopies: 17, availableCopies: 10, cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80" },
+  { id: "AKTU016", title: "Microprocessor & Interfacing (AKTU KCS-403)", author: "Ramesh S. Gaonkar, A.K. Ray", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+  { id: "AKTU017", title: "Database Management System (AKTU KCS-501)", author: "Henry F. Korth, Abraham Silberschatz", category: "AKTU Curriculum", totalCopies: 19, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073523323-M.jpg" },
+  { id: "AKTU018", title: "Web Designing & Technology (AKTU KCS-502)", author: "Uttam K. Roy, Harvey Deitel", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&q=80" },
+  { id: "AKTU019", title: "Design & Analysis of Algorithms (AKTU KCS-503)", author: "Thomas H. Cormen, Ellis Horowitz", category: "AKTU Curriculum", totalCopies: 20, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780262033848-M.jpg" },
+  { id: "AKTU020", title: "Compiler Design (AKTU KCS-601)", author: "Alfred V. Aho, Jeffrey D. Ullman", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780321486813-M.jpg" },
+  { id: "AKTU021", title: "Software Engineering (AKTU KCS-602)", author: "Rajib Mall, Roger S. Pressman", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780078022128-M.jpg" },
+  { id: "AKTU022", title: "Computer Networks (AKTU KCS-603)", author: "Behrouz A. Forouzan, Andrew S. Tanenbaum", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780073376226-M.jpg" },
+  { id: "AKTU023", title: "Artificial Intelligence (AKTU KCS-071)", author: "Stuart Russell, Peter Norvig", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780134610993-M.jpg" },
+  { id: "AKTU024", title: "Cloud Computing (AKTU KCS-073)", author: "Rajiv Chopra, Thomas Erl", category: "AKTU Curriculum", totalCopies: 12, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780133387520-M.jpg" },
+  { id: "AKTU025", title: "Cryptography & Network Security (AKTU KCS-074)", author: "William Stallings, Atul Kahate", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780134444284-M.jpg" },
+  { id: "AKTU026", title: "Machine Learning Techniques (AKTU KCS-078)", author: "Tom M. Mitchell, Aurélien Géron", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781492032649-M.jpg" },
+  { id: "AKTU027", title: "Big Data Analytics (AKTU KCS-081)", author: "V.K. Jain, Nathan Marz", category: "AKTU Curriculum", totalCopies: 11, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781617290343-M.jpg" },
+  { id: "AKTU028", title: "Network Analysis & Synthesis (AKTU KEC-301)", author: "A. Chakrabarti, M.E. Van Valkenburg", category: "AKTU Curriculum", totalCopies: 13, availableCopies: 8, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+  { id: "AKTU029", title: "Digital System Design (AKTU KEC-302)", author: "M. Morris Mano, Charles H. Roth", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
+  { id: "AKTU030", title: "Solid State Devices (AKTU KEC-303)", author: "Ben G. Streetman, Sanjay Banerjee", category: "AKTU Curriculum", totalCopies: 12, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780133356038-M.jpg" },
+  { id: "AKTU031", title: "Analog Circuits (AKTU KEC-401)", author: "Adel S. Sedra, Kenneth C. Smith", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780199333134-M.jpg" },
+  { id: "AKTU032", title: "Signals & Systems (AKTU KEC-402)", author: "Alan V. Oppenheim, Sanjay Sharma", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780138147570-M.jpg" },
+  { id: "AKTU033", title: "Communication Engineering (AKTU KEC-403)", author: "Sanjay Sharma, B.P. Lathi", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780195331455-M.jpg" },
+  { id: "AKTU034", title: "Electromagnetic Field Theory (AKTU KEC-501)", author: "Matthew N.O. Sadiku", category: "AKTU Curriculum", totalCopies: 12, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780199461851-M.jpg" },
+  { id: "AKTU035", title: "Digital Signal Processing (AKTU KEC-502)", author: "S. Salivahanan, John G. Proakis", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780131873742-M.jpg" },
+  { id: "AKTU036", title: "VLSI Design (AKTU KEC-601)", author: "Debaprasad Das, Neil H.E. Weste", category: "AKTU Curriculum", totalCopies: 11, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780321547743-M.jpg" },
+  { id: "AKTU037", title: "Control Systems (AKTU KEE-402 / KEC-602)", author: "I.J. Nagrath, M. Gopal", category: "AKTU Curriculum", totalCopies: 17, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+  { id: "AKTU038", title: "Electrical Machines - I (AKTU KEE-301)", author: "P.S. Bimbhra, J.B. Gupta", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 12, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+  { id: "AKTU039", title: "Electrical Machines - II (AKTU KEE-401)", author: "P.S. Bimbhra, D.P. Kothari", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+  { id: "AKTU040", title: "Power System - I (AKTU KEE-501)", author: "C.L. Wadhwa, V.K. Mehta", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
+  { id: "AKTU041", title: "Power Electronics (AKTU KEE-502)", author: "P.S. Bimbhra, M.H. Rashid", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133125900-M.jpg" },
+  { id: "AKTU042", title: "Thermodynamics (AKTU KME-301)", author: "P.K. Nag, Yunus A. Cengel", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+  { id: "AKTU043", title: "Strength of Materials (AKTU KME-302)", author: "R.K. Rajput, S. Ramamrutham", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+  { id: "AKTU044", title: "Manufacturing Processes (AKTU KME-303)", author: "Serope Kalpakjian, B.S. Raghuwanshi", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+  { id: "AKTU045", title: "Applied Thermodynamics (AKTU KME-401)", author: "R. Yadav, Onkar Singh", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+  { id: "AKTU046", title: "Fluid Mechanics & Machines (AKTU KME-402)", author: "R.K. Bansal, P.N. Modi", category: "AKTU Curriculum", totalCopies: 19, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+  { id: "AKTU047", title: "Theory of Machines (AKTU KME-501)", author: "S.S. Rattan, R.S. Khurmi", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+  { id: "AKTU048", title: "Heat & Mass Transfer (AKTU KME-502)", author: "R.K. Rajput, P.K. Nag", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+  { id: "AKTU049", title: "Design of Machine Elements (AKTU KME-601)", author: "V.B. Bhandari, R.S. Khurmi", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+  { id: "AKTU050", title: "Building Materials & Construction (AKTU KCE-301)", author: "S.K. Duggal, S.C. Rangwala", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+  { id: "AKTU051", title: "Surveying & Geomatics (AKTU KCE-302)", author: "B.C. Punmia, Ashok Kumar Jain", category: "AKTU Curriculum", totalCopies: 18, availableCopies: 11, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+  { id: "AKTU052", title: "Fluid Mechanics Civil (AKTU KCE-303)", author: "R.K. Bansal, Modi & Seth", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+  { id: "AKTU053", title: "Structural Analysis - I (AKTU KCE-401)", author: "S. Ramamrutham, S.S. Bhavikatti", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+  { id: "AKTU054", title: "Design of Concrete Structures (AKTU KCE-502)", author: "N. Krishna Raju, Pillai & Menon", category: "AKTU Curriculum", totalCopies: 14, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+  { id: "AKTU055", title: "Geotechnical Engineering (AKTU KCE-503)", author: "K.R. Arora, B.C. Punmia", category: "AKTU Curriculum", totalCopies: 13, availableCopies: 7, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+  { id: "AKTU056", title: "Environmental Engineering (AKTU KCE-601)", author: "S.K. Garg", category: "AKTU Curriculum", totalCopies: 16, availableCopies: 10, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+  { id: "AKTU057", title: "Design of Steel Structures (AKTU KCE-602)", author: "N. Subramanian, S.K. Duggal", category: "AKTU Curriculum", totalCopies: 12, availableCopies: 7, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+  { id: "AKTU058", title: "Transportation Engineering (AKTU KCE-603)", author: "S.K. Khanna, C.E.G. Justo", category: "AKTU Curriculum", totalCopies: 15, availableCopies: 9, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+  { id: "AKTU059", title: "Constitution of India & Law (AKTU KNC-501)", author: "Madhav Khosla, D.D. Basu", category: "AKTU Curriculum", totalCopies: 20, availableCopies: 14, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+  { id: "AKTU060", title: "Environment & Ecology (AKTU KNC-101)", author: "Dr. A.K. Pahari, Anubha Kaushik", category: "AKTU Curriculum", totalCopies: 22, availableCopies: 16, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" }
 ];
 
 // DOM Elements
@@ -308,12 +372,12 @@ function loadData() {
     var catalogVer = localStorage.getItem("lib_catalog_version");
     var storedBooks = localStorage.getItem("lib_books");
 
-    if (storedBooks && catalogVer === "3.0_engineering") {
+    if (storedBooks && catalogVer === "4.0_aktu_engineering") {
         books = JSON.parse(storedBooks);
     } else {
         // Deep-clone sampleBooks so the original array is never mutated
         books = JSON.parse(JSON.stringify(sampleBooks));
-        localStorage.setItem("lib_catalog_version", "3.0_engineering");
+        localStorage.setItem("lib_catalog_version", "4.0_aktu_engineering");
         saveBooks();
     }
 
