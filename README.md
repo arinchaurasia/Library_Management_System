@@ -65,6 +65,15 @@ Built with no complex frameworks — runs directly in your browser!
    - **Value**: `Your_Gemini_API_Key`
 5. Click **Deploy**!
 
+### Step 3: Authorize Vercel Domain in Firebase Console (Fix `auth/unauthorized-domain`)
+1. Open [Firebase Console](https://console.firebase.google.com/).
+2. Select your project (`library-management-2e40c`).
+3. In the left navigation bar, go to **Build → Authentication**.
+4. Click on the **Settings** tab at the top.
+5. Click **Authorized Domains** on the left sub-menu.
+6. Click **Add Domain** and paste your Vercel URL (e.g. `shelfsensebyarin.vercel.app`).
+7. Click **Add**. Google Sign-In will now work instantly on your Vercel app!
+
 ---
 
 ## 📁 Project Structure
