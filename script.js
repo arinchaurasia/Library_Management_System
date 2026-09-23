@@ -45,14 +45,16 @@ function createBookCoverDataUri(title, author, category) {
     }
     if (line3.length > 18) line3 = line3.substring(0, 15) + "...";
 
+    var gradId = "bgGrad_" + Math.floor(Math.random() * 1000000) + "_" + String(title).replace(/[^a-zA-Z0-9]/g, "").substring(0, 8);
+
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">'
         + '<defs>'
-        + '  <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">'
+        + '  <linearGradient id="' + gradId + '" x1="0%" y1="0%" x2="100%" y2="100%">'
         + '    <stop offset="0%" stop-color="' + gradStart + '" />'
         + '    <stop offset="100%" stop-color="' + gradEnd + '" />'
         + '  </linearGradient>'
         + '</defs>'
-        + '<rect width="300" height="400" rx="12" fill="url(#bgGrad)" />'
+        + '<rect width="300" height="400" rx="12" fill="url(#' + gradId + ')" />'
         + '<rect x="12" y="12" width="276" height="376" rx="8" fill="none" stroke="' + accentColor + '" stroke-width="2" stroke-dasharray="6 4" opacity="0.4" />'
         + '<rect x="0" y="0" width="18" height="400" fill="rgba(0,0,0,0.25)" />'
         + '<text x="150" y="65" font-family="sans-serif" font-size="38" text-anchor="middle" fill="#ffffff">' + icon + '</text>'
@@ -534,7 +536,7 @@ function loadData() {
         }
     }
 
-    if (storedBooks && catalogVer === "7.0_original_covers") {
+    if (storedBooks && catalogVer === "10.0_3d_svg_covers") {
         try {
             books = JSON.parse(storedBooks);
         } catch (e) {
@@ -543,14 +545,13 @@ function loadData() {
     } else {
         // Deep-clone sampleBooks so the original array is never mutated
         books = JSON.parse(JSON.stringify(sampleBooks));
-        localStorage.setItem("lib_catalog_version", "7.0_original_covers");
+        localStorage.setItem("lib_catalog_version", "10.0_3d_svg_covers");
     }
 
-    // Always sync cover photos from sampleBooks to guarantee original high-res covers
-    sampleBooks.forEach(function (sb) {
-        var b = books.find(function (item) { return item.id === sb.id; });
-        if (b && sb.cover) {
-            b.cover = sb.cover;
+    // Ensure EVERY book in catalog displays its custom 3D vector SVG cover Data URI
+    books.forEach(function (b) {
+        if (!b.cover || b.cover.indexOf("http") !== -1 || b.cover === DEFAULT_COVER) {
+            b.cover = createBookCoverDataUri(b.title, b.author, b.category);
         }
     });
 
@@ -1578,21 +1579,27 @@ function handleLocalChatbotResponse(userText, loadingId) {
 
     var lowerText = userText.toLowerCase().trim();
 
-    // Check greeting
-    var greetingRegex = /^(hi|hello|hey|greetings|good\s*(morning|afternoon|evening)|namaste|hola|hi\s*there|hello\s*there)\b/i;
+    // 1. GREETINGS
+    var greetingRegex = /^(hi|hello|hey|greetings|good\s*(morning|afternoon|evening)|namaste|hola|hi\s*there|hello\s*there|sup|yo|who\s*are\s*you)\b/i;
     if (greetingRegex.test(lowerText) || lowerText === "hi" || lowerText === "hello" || lowerText === "hey") {
-        loadingBubble.innerHTML = "👋 <strong>Hello! How can I help you today?</strong><br><br>I am your <strong>ShelfSense AI Assistant</strong>. Feel free to ask me about book availability (e.g., <em>'Is Cormen available?'</em>), search AKTU engineering syllabus books, or check department recommendations!";
+        loadingBubble.innerHTML = "👋 <strong>Hello! How can I help you today?</strong><br><br>"
+            + "I am your <strong>ShelfSense AI Assistant</strong> for the Engineering Library! You can ask me:<br>"
+            + "• 📖 <em>'Is Cormen or Operating Systems available?'</em><br>"
+            + "• 📜 <em>'Show AKTU 1st Year books'</em><br>"
+            + "• 💻 <em>'Which CSE books are in stock?'</em><br>"
+            + "• ➕ <em>'Add 3 copies of Clean Code'</em> (Librarian Portal)";
         chatHistory.scrollTop = chatHistory.scrollHeight;
         return;
     }
 
-    // Check if asking to add a book
+    // 2. LIBRARIAN ADD BOOK COMMAND
     var addRegex = /add\s+(\d+)?\s*(?:copies of)?\s*["']?([^"']+)["']?\s+by\s+([^"']+?)(?:\s+under\s+([^"']+))?$/i;
     var matchAdd = userText.match(addRegex);
 
     if (matchAdd || lowerText.startsWith("add ")) {
         if (currentPortal === "student") {
             loadingBubble.innerHTML = "🔒 <strong>Access Denied</strong>: Only Librarians can add or modify books. Please switch to the 🔑 <strong>Librarian Portal</strong> to add new books!";
+            chatHistory.scrollTop = chatHistory.scrollHeight;
             return;
         }
 
@@ -1622,72 +1629,134 @@ function handleLocalChatbotResponse(userText, loadingId) {
             category: category,
             totalCopies: copies,
             availableCopies: copies,
-            cover: DEFAULT_COVER
+            cover: createBookCoverDataUri(title, author, category)
         };
 
         books.push(newBook);
         saveBooks();
         renderAll();
 
-        loadingBubble.innerHTML = "✅ <strong>Successfully added!</strong> Added " + copies + " copies of <strong>'" + title + "'</strong> by " + author + " under department <em>" + category + "</em> to the engineering library inventory! 📚";
+        loadingBubble.innerHTML = "✅ <strong>Successfully Added!</strong> Added " + copies + " copies of <strong>'" + title + "'</strong> by " + author + " under department <em>" + category + "</em> to the engineering library catalog! 📚";
         chatHistory.scrollTop = chatHistory.scrollHeight;
         return;
     }
 
-    var popList = getPopularAvailableBooks(4);
+    // 3. BORROW / RETURN / FINE GUIDANCE
+    if (lowerText.includes("how to borrow") || lowerText.includes("how to return") || lowerText.includes("fine") || lowerText.includes("due date") || lowerText.includes("rules")) {
+        loadingBubble.innerHTML = "ℹ️ <strong>Engineering Library Rules & Guidance:</strong><br><br>"
+            + "1. 📩 <strong>Requesting a Book:</strong> Click <em>'Request to Borrow'</em> on any catalog book card. Enter your Student Admission ID.<br>"
+            + "2. 🔑 <strong>Librarian Approval:</strong> The Librarian approves the request and issues the physical book to you.<br>"
+            + "3. ⏳ <strong>Loan Duration:</strong> Books are issued for <strong>14 days</strong>.<br>"
+            + "4. ⚠️ <strong>Late Fine:</strong> ₹20 per day after the due date.<br>"
+            + "5. 📥 <strong>Returning a Book:</strong> Hand over the physical book to the Librarian desk. The Librarian will confirm return in their console.";
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return;
+    }
+
+    // 4. AKTU YEAR / SEMESTER QUERY
+    var yearMatch = lowerText.match(/(aktu|1st|2nd|3rd|4th|sem\s*\d+|first|second|third|fourth|year)/i);
+    if (yearMatch) {
+        var targetCat = "";
+        if (lowerText.includes("1st") || lowerText.includes("first") || lowerText.includes("sem 1") || lowerText.includes("sem 2")) targetCat = "AKTU 1st Year";
+        else if (lowerText.includes("2nd") || lowerText.includes("second") || lowerText.includes("sem 3") || lowerText.includes("sem 4")) targetCat = "AKTU 2nd Year";
+        else if (lowerText.includes("3rd") || lowerText.includes("third") || lowerText.includes("sem 5") || lowerText.includes("sem 6")) targetCat = "AKTU 3rd Year";
+        else if (lowerText.includes("4th") || lowerText.includes("fourth") || lowerText.includes("sem 7") || lowerText.includes("sem 8")) targetCat = "AKTU 4th Year";
+
+        var aktuBooks = books.filter(function (b) {
+            if (targetCat) return b.category === targetCat;
+            return b.category.indexOf("AKTU") !== -1;
+        });
+
+        if (aktuBooks.length > 0) {
+            var formatted = aktuBooks.slice(0, 6).map(function (b) {
+                return "• <strong>" + b.title + "</strong> by " + b.author + " — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
+            }).join("<br>");
+
+            loadingBubble.innerHTML = "📜 <strong>" + (targetCat || "AKTU Syllabus") + " Textbooks Available in Library:</strong><br><br>" + formatted;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            return;
+        }
+    }
+
+    // 5. DEPARTMENT / BRANCH QUERY
+    var deptMatch = lowerText.match(/(cse|computer\s*science|information\s*technology|\bit\b|ai|machine\s*learning|data\s*science|ece|electronics|eee|electrical|me\b|mechanical|civil|\bce\b|bsh|physics|chemistry|math)/i);
+    if (deptMatch && !lowerText.includes("cormen") && !lowerText.includes("silberschatz") && !lowerText.includes("is ")) {
+        var deptQuery = deptMatch[0];
+        var matchedDeptBooks = books.filter(function (b) {
+            var cat = b.category.toLowerCase();
+            return cat.includes(deptQuery) || (deptQuery === "cse" && cat.includes("computer")) || (deptQuery === "it" && cat.includes("technology")) || (deptQuery === "ece" && cat.includes("electronics")) || (deptQuery === "me" && cat.includes("mechanical")) || (deptQuery === "ce" && cat.includes("civil"));
+        });
+
+        if (matchedDeptBooks.length > 0) {
+            var formattedDept = matchedDeptBooks.slice(0, 6).map(function (b) {
+                return "• <strong>" + b.title + "</strong> by " + b.author + " — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
+            }).join("<br>");
+
+            loadingBubble.innerHTML = "💻 <strong>Available Books in " + (matchedDeptBooks[0].category) + ":</strong><br><br>" + formattedDept;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            return;
+        }
+    }
+
+    // 6. SPECIFIC BOOK SEARCH
+    var stopWords = ["is", "are", "do", "you", "have", "book", "books", "copies", "copy", "available", "in", "stock", "the", "a", "an", "of", "for", "to", "check", "please", "can", "i", "get", "show", "me", "list", "tell", "about", "?", "!"];
+    var words = lowerText.split(/\s+/).filter(function (w) {
+        var clean = w.replace(/[^a-z0-9]/gi, "");
+        return clean.length >= 3 && stopWords.indexOf(clean) === -1;
+    });
+
+    if (words.length > 0) {
+        var bestBook = null;
+        var highestScore = 0;
+
+        for (var i = 0; i < books.length; i++) {
+            var b = books[i];
+            var bTitle = b.title.toLowerCase();
+            var bAuthor = b.author.toLowerCase();
+            var bCat = b.category.toLowerCase();
+
+            if (bTitle.includes(lowerText) || bAuthor.includes(lowerText)) {
+                bestBook = b;
+                break;
+            }
+
+            var score = 0;
+            for (var w = 0; w < words.length; w++) {
+                if (bTitle.includes(words[w])) score += 3;
+                if (bAuthor.includes(words[w])) score += 2;
+                if (bCat.includes(words[w])) score += 1;
+            }
+
+            if (score > highestScore && score >= 3) {
+                highestScore = score;
+                bestBook = b;
+            }
+        }
+
+        if (bestBook) {
+            if (bestBook.availableCopies > 0) {
+                loadingBubble.innerHTML = "✅ <strong>YES!</strong> <em>'" + bestBook.title + "'</em> by " + bestBook.author + " (" + bestBook.category + ") is currently <strong>AVAILABLE</strong> in our library catalog (🟢 <strong>" + bestBook.availableCopies + "/" + bestBook.totalCopies + " copies in stock</strong>)! 📖";
+            } else {
+                var similar = books.filter(function (s) { return s.category === bestBook.category && s.availableCopies > 0 && s.id !== bestBook.id; });
+                var recText = similar.length > 0
+                    ? "<br><br>💡 <strong>Recommended available books in " + bestBook.category + ":</strong><br>" + similar.slice(0, 3).map(function (s) { return "• <strong>" + s.title + "</strong> (" + s.availableCopies + "/" + s.totalCopies + " available)"; }).join("<br>")
+                    : "";
+                loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + bestBook.title + "'</em> by " + bestBook.author + " is currently out of stock." + recText;
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            return;
+        }
+    }
+
+    // 7. DEFAULT / POPULAR BOOKS FALLBACK
+    var popList = getPopularAvailableBooks(5);
     var popFormatted = popList.map(function (b) {
         return "• <strong>" + b.title + "</strong> by " + b.author + " (<em>" + b.category + "</em>) — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
     }).join("<br>");
 
-    // Check availability queries (fuzzy search title or author)
-    var cleanKeyword = lowerText.replace(/is|available|in stock|do you have|book|copies|the|\?/gi, "").trim();
-
-    var foundBook = books.find(function (b) {
-        var bTitle = b.title.toLowerCase();
-        var bAuthor = b.author.toLowerCase();
-        return lowerText.includes(bTitle) || (cleanKeyword.length > 2 && (bTitle.includes(cleanKeyword) || bAuthor.includes(cleanKeyword)));
-    });
-
-    if (foundBook) {
-        if (foundBook.availableCopies > 0) {
-            // STRICT RULE: DO NOT GIVE ANY RECOMMENDATION IF ANSWER IS YES!
-            loadingBubble.innerHTML = "✅ <strong>YES!</strong> <em>'" + foundBook.title + "'</em> by " + foundBook.author + " (" + foundBook.category + ") is currently <strong>AVAILABLE</strong> (" + foundBook.availableCopies + "/" + foundBook.totalCopies + " copies in stock)! 📖";
-        } else {
-            // Give recommendations ONLY if answer is NO
-            var similar = books.filter(function (b) { return b.category === foundBook.category && b.availableCopies > 0 && b.id !== foundBook.id; });
-            var recText = similar.length > 0
-                ? "<br><br>💡 <strong>Recommended available books in " + foundBook.category + ":</strong><br>" + similar.slice(0, 3).map(function (s) { return "• <strong>" + s.title + "</strong> (" + s.availableCopies + "/" + s.totalCopies + " available)"; }).join("<br>")
-                : "<br><br>🔥 <strong>Popular Books Available Right Now:</strong><br>" + popFormatted;
-            loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + foundBook.title + "'</em> is currently out of stock." + recText;
-        }
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-        return;
-    }
-
-    // Category query
-    var foundCat = books.find(function (b) {
-        return lowerText.includes(b.category.toLowerCase());
-    });
-
-    if (foundCat) {
-        var catBooks = books.filter(function (b) { return b.category.toLowerCase() === foundCat.category.toLowerCase() && b.availableCopies > 0; });
-        if (catBooks.length > 0) {
-            loadingBubble.innerHTML = "📚 Available in <strong>" + foundCat.category + "</strong>:<br>• " + catBooks.slice(0, 5).map(function (b) { return "<strong>" + b.title + "</strong> (" + b.availableCopies + "/" + b.totalCopies + " available)"; }).join("<br>• ");
-        } else {
-            loadingBubble.innerHTML = "Currently no books available under department " + foundCat.category + ".<br><br>🔥 <strong>Popular Books Available Right Now:</strong><br>" + popFormatted;
-        }
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-        return;
-    }
-
-    // General query / fallback
-    var isCheckingAvailability = lowerText.includes("available") || lowerText.includes("have") || lowerText.includes("stock") || lowerText.includes("is ");
-    if (isCheckingAvailability && cleanKeyword.length > 0) {
-        loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + cleanKeyword + "'</em> was not found in our engineering library catalog.<br><br>🔥 <strong>Popular Books Currently Available:</strong><br>" + popFormatted;
-    } else {
-        loadingBubble.innerHTML = "🤖 <strong>Popular Books Currently Available in Library:</strong><br><br>" + popFormatted;
-    }
+    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI Assistant:</strong> I couldn't find an exact match for <em>'" + userText + "'</em>.<br><br>🔥 <strong>Popular Engineering Books Currently Available in Library:</strong><br><br>" + popFormatted;
     chatHistory.scrollTop = chatHistory.scrollHeight;
+}
 }
 
 function appendBubble(text, className, id) {
