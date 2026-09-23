@@ -36,7 +36,7 @@
                 <div class="header-top-bar">
                     <div class="header-branding">
                         <h1>📚 ShelfSense</h1>
-                        <p class="subtitle">AI-Powered Smart Library Management System</p>
+                        <p class="subtitle">AI-Powered Engineering College Library Management System</p>
                     </div>
                     <div id="googleAuthContainer" class="google-auth-container">
                         <button id="googleSignInBtn" class="google-btn">
@@ -64,16 +64,19 @@
             <!-- Student Portal -->
             <div id="studentPortal" class="portal-section active">
                 <div class="card-container">
-                    <h2>🔍 Search & Browse Books</h2>
+                    <h2>🔍 Search & Browse Engineering Catalog</h2>
                     <div class="search-bar-group">
-                        <input type="text" id="searchInput" placeholder="Search by title, author, or category...">
+                        <input type="text" id="searchInput" placeholder="Search by title, author, or engineering department...">
                         <select id="categoryFilter">
-                            <option value="All">All Categories</option>
-                            <option value="Fiction">📖 Fiction</option>
-                            <option value="Science">🔬 Science & Tech</option>
-                            <option value="History">📜 History</option>
-                            <option value="Computer Science">💻 Computer Science</option>
-                            <option value="Self-Help">💡 Self-Help</option>
+                            <option value="All">All Departments / Branches</option>
+                            <option value="Computer Science & Engineering">💻 Computer Science & Engineering (CSE)</option>
+                            <option value="Information Technology">🌐 Information Technology (IT)</option>
+                            <option value="Artificial Intelligence & Data Science">🤖 AI & Data Science (AI & DS)</option>
+                            <option value="Electronics & Communication">📡 Electronics & Communication (ECE)</option>
+                            <option value="Electrical & Electronics">⚡ Electrical & Electronics (EEE)</option>
+                            <option value="Mechanical Engineering">⚙️ Mechanical Engineering (ME)</option>
+                            <option value="Civil Engineering">🏗️ Civil Engineering (CE)</option>
+                            <option value="Basic Sciences & Humanities">📐 Basic Sciences & Humanities (BSH)</option>
                         </select>
                     </div>
                 </div>
@@ -86,7 +89,7 @@
                 </div>
 
                 <div class="card-container">
-                    <h2>📚 Library Catalog</h2>
+                    <h2>📚 Engineering Library Catalog</h2>
                     <div id="catalogList" class="book-grid"></div>
                 </div>
             </div>
@@ -94,17 +97,20 @@
             <!-- Librarian Portal -->
             <div id="adminPortal" class="portal-section">
                 <div class="card-container">
-                    <h2>➕ Add New Book to Library</h2>
+                    <h2>➕ Add New Book to Engineering Catalog</h2>
                     <div class="form-grid">
-                        <input type="text" id="bookTitle" placeholder="Book Title (e.g., Clean Code)">
-                        <input type="text" id="bookAuthor" placeholder="Author (e.g., Robert C. Martin)">
+                        <input type="text" id="bookTitle" placeholder="Book Title (e.g., Introduction to Algorithms)">
+                        <input type="text" id="bookAuthor" placeholder="Author (e.g., Thomas H. Cormen)">
                         <select id="bookCategory">
-                            <option value="">Select Category</option>
-                            <option value="Fiction">📖 Fiction</option>
-                            <option value="Science">🔬 Science & Tech</option>
-                            <option value="History">📜 History</option>
-                            <option value="Computer Science">💻 Computer Science</option>
-                            <option value="Self-Help">💡 Self-Help</option>
+                            <option value="">Select Department / Branch</option>
+                            <option value="Computer Science & Engineering">💻 Computer Science & Engineering (CSE)</option>
+                            <option value="Information Technology">🌐 Information Technology (IT)</option>
+                            <option value="Artificial Intelligence & Data Science">🤖 AI & Data Science (AI & DS)</option>
+                            <option value="Electronics & Communication">📡 Electronics & Communication (ECE)</option>
+                            <option value="Electrical & Electronics">⚡ Electrical & Electronics (EEE)</option>
+                            <option value="Mechanical Engineering">⚙️ Mechanical Engineering (ME)</option>
+                            <option value="Civil Engineering">🏗️ Civil Engineering (CE)</option>
+                            <option value="Basic Sciences & Humanities">📐 Basic Sciences & Humanities (BSH)</option>
                             <option value="Other">📁 Other</option>
                         </select>
                         <input type="text" id="bookIsbn" placeholder="ISBN / ID (e.g., 978-0132350884)">
