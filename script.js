@@ -6,14 +6,17 @@
     - AI Book Recommender via Gemini API
 */
 
-// Initial Sample Books Catalog
+// Default Book Cover Fallback
+var DEFAULT_COVER = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80";
+
+// Initial Sample Books Catalog with Covers
 var sampleBooks = [
-    { id: "B101", title: "Clean Code", author: "Robert C. Martin", category: "Computer Science", totalCopies: 5, availableCopies: 3 },
-    { id: "B102", title: "The Pragmatic Programmer", author: "Andrew Hunt", category: "Computer Science", totalCopies: 4, availableCopies: 2 },
-    { id: "B103", title: "Atomic Habits", author: "James Clear", category: "Self-Help", totalCopies: 6, availableCopies: 4 },
-    { id: "B104", title: "A Brief History of Time", author: "Stephen Hawking", category: "Science", totalCopies: 3, availableCopies: 1 },
-    { id: "B105", title: "Sapiens: A Brief History", author: "Yuval Noah Harari", category: "History", totalCopies: 5, availableCopies: 5 },
-    { id: "B106", title: "To Kill a Mockingbird", author: "Harper Lee", category: "Fiction", totalCopies: 4, availableCopies: 4 }
+    { id: "B101", title: "Clean Code", author: "Robert C. Martin", category: "Computer Science", totalCopies: 5, availableCopies: 3, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
+    { id: "B102", title: "The Pragmatic Programmer", author: "Andrew Hunt", category: "Computer Science", totalCopies: 4, availableCopies: 2, cover: "https://covers.openlibrary.org/b/isbn/9780201616224-M.jpg" },
+    { id: "B103", title: "Atomic Habits", author: "James Clear", category: "Self-Help", totalCopies: 6, availableCopies: 4, cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80" },
+    { id: "B104", title: "A Brief History of Time", author: "Stephen Hawking", category: "Science", totalCopies: 3, availableCopies: 1, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
+    { id: "B105", title: "Sapiens: A Brief History", author: "Yuval Noah Harari", category: "History", totalCopies: 5, availableCopies: 5, cover: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=400&q=80" },
+    { id: "B106", title: "To Kill a Mockingbird", author: "Harper Lee", category: "Fiction", totalCopies: 4, availableCopies: 4, cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80" }
 ];
 
 
@@ -49,6 +52,7 @@ var bookAuthor          = document.getElementById("bookAuthor");
 var bookCategory        = document.getElementById("bookCategory");
 var bookIsbn            = document.getElementById("bookIsbn");
 var bookCopies          = document.getElementById("bookCopies");
+var bookCover           = document.getElementById("bookCover");
 var addBookBtn          = document.getElementById("addBookBtn");
 var issuedLogList       = document.getElementById("issuedLogList");
 var adminInventoryList  = document.getElementById("adminInventoryList");
@@ -87,14 +91,41 @@ function loadData() {
     if (storedBorrowed) {
         borrowedBooks = JSON.parse(storedBorrowed);
     }
+
+    // Attach Firebase Listeners for Real-time Multi-Device Sync
+    if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
+        db.ref("books").on("value", function(snapshot) {
+            var data = snapshot.val();
+            if (data && Array.isArray(data)) {
+                books = data;
+                localStorage.setItem("lib_books", JSON.stringify(books));
+                renderAll();
+            }
+        });
+
+        db.ref("borrowed").on("value", function(snapshot) {
+            var data = snapshot.val();
+            if (data && Array.isArray(data)) {
+                borrowedBooks = data;
+                localStorage.setItem("lib_borrowed", JSON.stringify(borrowedBooks));
+                renderAll();
+            }
+        });
+    }
 }
 
 function saveBooks() {
     localStorage.setItem("lib_books", JSON.stringify(books));
+    if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
+        db.ref("books").set(books);
+    }
 }
 
 function saveBorrowed() {
     localStorage.setItem("lib_borrowed", JSON.stringify(borrowedBooks));
+    if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
+        db.ref("borrowed").set(borrowedBooks);
+    }
 }
 
 
@@ -285,8 +316,12 @@ function renderCatalog() {
 
         var safeTitle = book.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         var safeAuthor = book.author.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        var coverUrl = book.cover || DEFAULT_COVER;
 
         card.innerHTML = ''
+            + '<div class="book-cover-wrap">'
+            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + safeTitle + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
+            + '</div>'
             + '<div class="book-info">'
             + '    <h4>' + book.title + '</h4>'
             + '    <div class="author">by ' + book.author + '</div>'
@@ -378,10 +413,16 @@ function renderMyBorrowed() {
             fineAmount = diffDays * 20;
         }
 
+        var bookObj = books.find(function(b) { return b.id === item.bookId; });
+        var coverUrl = (bookObj && bookObj.cover) ? bookObj.cover : DEFAULT_COVER;
+
         var card = document.createElement("div");
         card.className = "book-card";
 
         card.innerHTML = ''
+            + '<div class="book-cover-wrap">'
+            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + item.title + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
+            + '</div>'
             + '<div class="book-info">'
             + '    <h4>' + item.title + '</h4>'
             + '    <div class="author">by ' + item.author + '</div>'
@@ -436,6 +477,7 @@ function addNewBook() {
     var category = bookCategory.value;
     var isbn     = bookIsbn.value.trim() || ("B" + (books.length + 101));
     var copies   = Number(bookCopies.value);
+    var cover    = (bookCover && bookCover.value.trim()) ? bookCover.value.trim() : DEFAULT_COVER;
 
     if (!title || !author || !category || copies <= 0) {
         alert("Please fill in all book details with valid values.");
@@ -448,7 +490,8 @@ function addNewBook() {
         author: author,
         category: category,
         totalCopies: copies,
-        availableCopies: copies
+        availableCopies: copies,
+        cover: cover
     };
 
     books.push(newBook);
@@ -459,6 +502,7 @@ function addNewBook() {
     bookCategory.value = "";
     bookIsbn.value = "";
     bookCopies.value = 1;
+    if (bookCover) bookCover.value = "";
 
     saveBooks();
     renderAll();
@@ -481,11 +525,15 @@ function renderAdminInventory() {
 
     for (var i = 0; i < books.length; i++) {
         var book = books[i];
+        var coverUrl = book.cover || DEFAULT_COVER;
 
         var card = document.createElement("div");
         card.className = "book-card";
 
         card.innerHTML = ''
+            + '<div class="book-cover-wrap">'
+            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + book.title + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
+            + '</div>'
             + '<div class="book-info">'
             + '    <h4>' + book.title + '</h4>'
             + '    <div class="author">Author: ' + book.author + ' | ID: ' + book.id + '</div>'
@@ -954,6 +1002,7 @@ async function scanBookCoverFile() {
     reader.onload = async function(e) {
         var base64Data = e.target.result.split(',')[1];
         var mimeType = file.type || "image/png";
+        var coverDataUrl = e.target.result;
 
         try {
             var response = await fetch("/api/scan-book", {
@@ -965,8 +1014,9 @@ async function scanBookCoverFile() {
             if (response.ok) {
                 var resData = await response.json();
                 if (resData.book) {
+                    resData.book.cover = coverDataUrl;
                     fillBookForm(resData.book);
-                    scanStatus.innerHTML = "<span style='color: #059669;'>✅ Gemini Vision scanned details successfully! Form auto-filled below.</span>";
+                    scanStatus.innerHTML = "<span style='color: #059669;'>✅ Gemini Vision scanned details successfully! Form auto-filled with cover image.</span>";
                     return;
                 }
             }
@@ -983,10 +1033,11 @@ async function scanBookCoverFile() {
             author: "Steve Schoger & Adam Wathan",
             category: "Computer Science",
             isbn: "978-109" + Math.floor(1000 + Math.random() * 9000),
-            copies: 3
+            copies: 3,
+            cover: coverDataUrl
         });
 
-        scanStatus.innerHTML = "<span style='color: #059669;'>📷 AI Scanned Document: Auto-filled <strong>'" + sampleTitle + "'</strong> into form!</span>";
+        scanStatus.innerHTML = "<span style='color: #059669;'>📷 AI Scanned Document: Auto-filled <strong>'" + sampleTitle + "'</strong> into form with cover image!</span>";
     };
 
     reader.readAsDataURL(file);
@@ -998,6 +1049,7 @@ function fillBookForm(data) {
     if (data.category && bookCategory) bookCategory.value = data.category;
     if (data.isbn && bookIsbn) bookIsbn.value = data.isbn;
     if (data.copies && bookCopies) bookCopies.value = data.copies;
+    if (data.cover && bookCover) bookCover.value = data.cover;
 }
 
 

@@ -16,29 +16,53 @@ Built with no complex frameworks — runs directly in your browser!
 
 ### 🔑 2. Librarian / Admin Portal
 - **Library Inventory Dashboard**: Real-time stats showing Total Books, Available Copies, and Issued Books out.
-- **💬 Add Books via AI Chatbot**: Librarians can add books directly by talking to the AI in natural language (e.g. *"Add 5 copies of Deep Learning by Ian Goodfellow under Computer Science"*).
-- **📸 Multimodal AI Vision Cover Scanner**: Upload a photo of a book cover or purchase receipt (PNG, JPG, PDF) and Gemini 1.5 Flash Vision auto-detects title, author, category, ISBN, and copy counts!
-- **Manual Book Entry Form**: Form to add titles, authors, categories, ISBNs, and copy counts manually.
+- **🖼️ Book Cover Photo Rendering**: Displays book cover photos on every book card across all catalog and inventory views.
+- **💬 Add Books via AI Chatbot**: Librarians can add books directly by talking to the AI in natural language.
+- **📸 Multimodal AI Vision Cover Scanner**: Upload a photo of a book cover or purchase receipt (PNG, JPG, PDF) to auto-fill book details & cover preview!
+- **Manual Book Entry Form**: Form to add titles, authors, categories, ISBNs, copy counts, and custom cover image URLs.
 - **Issued Books Log**: Track all issued books, borrower names, student IDs, and mark items as returned.
 
 ---
 
-## ✨ All Gemini AI Features Integrated
+## ✨ All Gemini AI & Firebase Features
 
 1. **🤖 Conversational AI Book Assistant**: Ask stock availability (*"Is Clean Code available?"*), category queries, or get personalized recommendations.
 2. **➕ AI Natural Language Book Creation**: Librarians can command the assistant to add books to inventory with automatic parsing.
 3. **✨ AI Book Summaries & Key Takeaways**: Click **"✨ AI Summary"** on any catalog card to view a modal with overview, top 3 key takeaways, reading duration, and recommended audience.
 4. **🧠 Interactive AI Book Trivia Quizzes**: Click **"🧠 AI Quiz"** to generate interactive 2-question trivia quizzes for any book with real-time answer checking & explanations.
 5. **📸 Multimodal AI Vision Scanner**: Automatically OCR and parse book covers and receipts into full library records (`api/scan-book.js`).
-6. **⚡ Offline & Local Fallback Engine**: Zero connection errors — functions seamlessly on Vercel with real Gemini API keys or locally via intelligent mock fallback handlers.
+6. **🔥 Realtime Firebase Integration**: Real-time cloud synchronization for inventory and borrowed logs across multiple devices with fallback to `localStorage`.
 
 ---
 
-## 🚀 How to Run
+## 📌 Next Steps Guide
 
-1. Clone or download this project folder.
-2. Open `index.html` directly in your web browser or open with Live Server in VS Code.
-3. Switch between **Student Portal** and **Librarian Portal** using the toggle pill at the top!
+### Step 1: Connect Firebase Realtime Database (Optional for Cloud Sync)
+1. Open [Firebase Console](https://console.firebase.google.com/).
+2. Click **Create Project** and enter project name `ShelfSense`.
+3. Go to **Build → Realtime Database → Create Database** (Choose test mode: `{ ".read": true, ".write": true }`).
+4. Go to **Project Settings (⚙️) → Web App (</>) → Register App**.
+5. Copy your credentials into `firebase-config.js` in your project folder:
+   ```javascript
+   var firebaseConfig = {
+       apiKey: "YOUR_FIREBASE_API_KEY",
+       authDomain: "your-app.firebaseapp.com",
+       databaseURL: "https://your-app-default-rtdb.firebaseio.com",
+       projectId: "your-app-id",
+       storageBucket: "your-app.appspot.com",
+       messagingSenderId: "1234567890",
+       appId: "1:1234567890:web:abcdef"
+   };
+   ```
+
+### Step 2: Deploy to Vercel (For AI API Endpoints)
+1. Push your repository to GitHub: `git push origin main`.
+2. Go to [Vercel](https://vercel.com/) and click **Add New → Project**.
+3. Import `arinchaurasia/Library_Management_System`.
+4. Add Environment Variable:
+   - **Key**: `GEMINI_API_KEY`
+   - **Value**: `Your_Gemini_API_Key`
+5. Click **Deploy**!
 
 ---
 
@@ -50,8 +74,9 @@ Library Management System/
 │   ├── advice.js       → Vercel Serverless Function for Gemini AI Text & Assistant
 │   └── scan-book.js    → Vercel Serverless Function for Gemini 1.5 Flash Vision Scanning
 ├── index.html          → Main UI structure (Student & Admin Portals + AI Modal)
-├── style.css           → Modern gradient & glassmorphic styling + Modal styles
+├── style.css           → Modern gradient & glassmorphic styling + Book Covers & Modal
 ├── script.js           → Core app logic, catalog management, quiz & AI integration
+├── firebase-config.js  → Firebase Realtime Database setup & credentials
 └── README.md           → Project documentation
 ```
 
@@ -62,19 +87,11 @@ Library Management System/
 | Technology | Purpose |
 | :--- | :--- |
 | **HTML5** | Semantic structure & portal tabs |
-| **CSS3** | Modern gradients, glassmorphism, responsive grid, modal popups |
+| **CSS3** | Modern gradients, glassmorphism, responsive grid, book covers |
 | **JavaScript (ES6)** | DOM manipulation, state management, search/filter |
-| **localStorage** | Instant persistence for books & loan records |
-| **Gemini AI API** | Intelligent recommendations, summaries, quizzes, and multimodal vision scanning |
-
----
-
-## 🔒 Vercel Deployment
-
-To deploy on **Vercel** with secure AI key management:
-1. Import this repository into Vercel.
-2. Add `GEMINI_API_KEY` under **Project Settings → Environment Variables**.
-3. Click **Deploy**.
+| **Firebase Realtime DB** | Cloud database synchronization across devices |
+| **localStorage** | Instant local offline persistence |
+| **Gemini AI API** | Intelligent recommendations, summaries, quizzes, and vision scanning |
 
 ---
 

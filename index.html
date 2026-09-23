@@ -95,6 +95,7 @@
                         </select>
                         <input type="text" id="bookIsbn" placeholder="ISBN / ID (e.g., 978-0132350884)">
                         <input type="number" id="bookCopies" placeholder="Number of Copies (e.g., 5)" min="1" value="1">
+                        <input type="text" id="bookCover" placeholder="Cover Image URL (Optional)">
                     </div>
                     <button id="addBookBtn" class="primary-btn">Add Book to Library</button>
                 </div>
@@ -173,7 +174,10 @@
         </div>
     </div>
 
-    <!-- JavaScript File -->
+    <!-- Firebase Realtime Database SDK & Config -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 
 </body>
