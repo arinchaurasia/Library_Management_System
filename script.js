@@ -1,4 +1,4 @@
-function createBookCoverDataUri(title, author, category) {
+﻿function createBookCoverDataUri(title, author, category) {
     title = title || "Engineering Textbook";
     author = author || "Engineering Faculty";
     category = category || "General Engineering";
@@ -465,90 +465,77 @@ var currentPortal = "student";
 var catalogCurrentPage = 1;
 var adminInventoryCurrentPage = 1;
 var ITEMS_PER_PAGE = 12;
+var _sessionRestored = false; // Flag to prevent auth listener overriding restored session
 
 // Generate a unique book ID using timestamp to avoid duplicates
 function generateBookId() {
     return "ENG" + Date.now() + Math.floor(Math.random() * 100);
 }
 
-async function applyLoggedInUser(user, admissionId) {
+function applyLoggedInUser(user, admissionId) {
     if (!user) return;
     currentUser = user;
-    var uid = user.uid || ("usr_" + Date.now());
-
-    // Fetch existing admission ID from Firebase Realtime Database if available
-    if (!admissionId && typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
-        try {
-            var snapshot = await db.ref("users/" + uid).once("value");
-            var dbUser = snapshot.val();
-            if (dbUser && dbUser.admissionId) {
-                admissionId = dbUser.admissionId;
-            }
-        } catch (dbErr) {
-            console.warn("Could not fetch user from Firebase DB:", dbErr.message);
+    var uid = user.uid || ('usr_' + Date.now());
+    var localId = admissionId || localStorage.getItem('user_admission_id_' + uid);
+    if (localId && localId.trim()) {
+        _sessionRestored = true;
+        _showAppUI(user, localId);
+        renderAll();
+        if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
+            db.ref('users/' + uid).once('value').then(function(snap) {
+                var dbU = snap.val();
+                if (dbU && dbU.admissionId) localStorage.setItem('user_admission_id_' + uid, dbU.admissionId);
+                db.ref('users/' + uid).update({ lastLogin: new Date().toISOString() }).catch(function(){});
+            }).catch(function(e){ console.warn('Firebase bg sync:', e.message); });
         }
+        return;
     }
+    _applyLoggedInUserAsync(user, uid);
+}
 
-    if (!admissionId) {
-        admissionId = localStorage.getItem("user_admission_id_" + uid);
+async function _applyLoggedInUserAsync(user, uid) {
+    var admissionId = null;
+    if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
+        try {
+            var snapshot = await db.ref('users/' + uid).once('value');
+            var dbUser = snapshot.val();
+            if (dbUser && dbUser.admissionId) admissionId = dbUser.admissionId;
+        } catch (dbErr) { console.warn('DB fetch error:', dbErr.message); }
     }
-
+    if (!admissionId) admissionId = localStorage.getItem('user_admission_id_' + uid);
     if (!admissionId || !admissionId.trim()) {
         var enteredId = null;
         while (!enteredId || !enteredId.trim()) {
-            enteredId = prompt("🔒 COMPULSORY REGISTRATION:\n\nWelcome " + (user.displayName || "User") + "!\nPlease enter your Student Admission ID / University Roll Number to continue:");
-            if (enteredId === null) {
-                alert("⚠️ Admission ID / Roll Number is MANDATORY to proceed into the library system.");
-            } else if (!enteredId.trim()) {
-                alert("⚠️ Admission ID cannot be blank. Please enter your valid Admission ID / Roll Number.");
-            }
+            enteredId = prompt('COMPULSORY: Welcome ' + (user.displayName || 'User') + '! Please enter your Student Admission ID / University Roll Number to continue:');
+            if (enteredId === null) alert('Admission ID is MANDATORY to access the library system.');
+            else if (!enteredId.trim()) alert('Admission ID cannot be blank.');
         }
         admissionId = enteredId.trim();
     }
-
-    // Save to LocalStorage
-    localStorage.setItem("user_admission_id_" + uid, admissionId);
-    localStorage.setItem("shelf_current_user", JSON.stringify({
-        uid: uid,
-        displayName: user.displayName || user.email || "Student User",
-        email: user.email || "",
-        photoURL: user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-    }));
-
-    // SAVE USER PROFILE & ADMISSION ID TO FIREBASE REALTIME DATABASE (users/{uid})
-    if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
-        try {
-            var userData = {
-                uid: uid,
-                displayName: user.displayName || user.email || "Student User",
-                email: user.email || "",
-                photoURL: user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg",
-                admissionId: admissionId,
-                lastLogin: new Date().toISOString()
-            };
-            db.ref("users/" + uid).set(userData);
-        } catch (saveErr) {
-            console.error("Error saving user to Firebase DB:", saveErr);
-        }
+    localStorage.setItem('user_admission_id_' + uid, admissionId);
+    localStorage.setItem('shelf_current_user', JSON.stringify({ uid: uid, displayName: user.displayName || user.email || 'Student User', email: user.email || '', photoURL: user.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg' }));
+    if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
+        try { db.ref('users/' + uid).set({ uid: uid, displayName: user.displayName || user.email || 'Student User', email: user.email || '', photoURL: user.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg', admissionId: admissionId, lastLogin: new Date().toISOString() }); }
+        catch (e) { console.error('Firebase save error:', e); }
     }
-
-    var authLockScreen = document.getElementById("authLockScreen");
-    var appLayout = document.getElementById("appLayout");
-    var signInBtn = document.getElementById("googleSignInBtn");
-    var userProfile = document.getElementById("userProfile");
-    var userAvatar = document.getElementById("userAvatar");
-    var userName = document.getElementById("userName");
-
-    if (authLockScreen) authLockScreen.style.display = "none";
-    if (appLayout) appLayout.style.display = "grid";
-    if (signInBtn) signInBtn.style.display = "none";
-    if (userProfile) userProfile.style.display = "flex";
-    if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
-    if (userName) {
-        userName.innerHTML = (user.displayName || user.email || "Student User") + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + admissionId + ')</span>';
-    }
-
+    _sessionRestored = true;
+    _showAppUI(user, admissionId);
     renderAll();
+}
+
+function _showAppUI(user, admissionId) {
+    var authLockScreen = document.getElementById('authLockScreen');
+    var appLayout = document.getElementById('appLayout');
+    var signInBtn = document.getElementById('googleSignInBtn');
+    var userProfile = document.getElementById('userProfile');
+    var userAvatar = document.getElementById('userAvatar');
+    var userName = document.getElementById('userName');
+    if (authLockScreen) authLockScreen.style.display = 'none';
+    if (appLayout) appLayout.style.display = 'grid';
+    if (signInBtn) signInBtn.style.display = 'none';
+    if (userProfile) userProfile.style.display = 'flex';
+    if (userAvatar) userAvatar.src = user.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg';
+    if (userName) { userName.innerHTML = (user.displayName || user.email || 'Student User') + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + admissionId + ')</span>'; }
 }
 
 var handleUserAuthSuccess = applyLoggedInUser;
@@ -559,6 +546,7 @@ function checkAndRestoreUserSession() {
         try {
             var parsedUser = JSON.parse(storedUserJson);
             if (parsedUser && parsedUser.uid) {
+                _sessionRestored = true;
                 applyLoggedInUser(parsedUser);
                 return true;
             }
@@ -572,8 +560,16 @@ function checkAndRestoreUserSession() {
 function init() {
     loadData();
     setupEventListeners();
-    checkAndRestoreUserSession();
-    renderAll();
+    // Try restoring session from localStorage immediately
+    // The auth state listener will handle fresh Firebase logins
+    var restored = checkAndRestoreUserSession();
+    if (!restored) {
+        // No session found — show the lock screen
+        var authLockScreen = document.getElementById("authLockScreen");
+        var appLayout = document.getElementById("appLayout");
+        if (authLockScreen) authLockScreen.style.display = "flex";
+        if (appLayout) appLayout.style.display = "none";
+    }
     renderQuickChips();
 }
 
@@ -635,7 +631,7 @@ function loadData() {
         }
     }
 
-    if (storedBooks && catalogVer === "10.0_3d_svg_covers") {
+    if (storedBooks && catalogVer === "11.0_real_covers") {
         try {
             books = JSON.parse(storedBooks);
         } catch (e) {
@@ -644,12 +640,13 @@ function loadData() {
     } else {
         // Deep-clone sampleBooks so the original array is never mutated
         books = JSON.parse(JSON.stringify(sampleBooks));
-        localStorage.setItem("lib_catalog_version", "10.0_3d_svg_covers");
+        localStorage.setItem("lib_catalog_version", "11.0_real_covers");
     }
 
-    // Ensure EVERY book in catalog displays its custom 3D vector SVG cover Data URI
+    // Only set SVG cover fallback for books that have NO cover URL at all
+    // DO NOT overwrite valid HTTP/HTTPS cover URLs — these are real book cover images!
     books.forEach(function (b) {
-        if (!b.cover || b.cover.indexOf("http") !== -1 || b.cover === DEFAULT_COVER) {
+        if (!b.cover || b.cover.trim() === "") {
             b.cover = createBookCoverDataUri(b.title, b.author, b.category);
         }
     });
@@ -805,16 +802,25 @@ function setupEventListeners() {
     if (typeof auth !== "undefined" && auth) {
         auth.onAuthStateChanged(function (user) {
             if (user) {
+                // Genuine Firebase sign-in
                 localStorage.setItem("shelf_current_user", JSON.stringify({
                     uid: user.uid,
                     displayName: user.displayName,
                     email: user.email,
                     photoURL: user.photoURL
                 }));
+                _sessionRestored = true;
                 applyLoggedInUser(user);
             } else {
+                // Firebase reports no user — but DO NOT wipe session if we already restored from localStorage
+                if (_sessionRestored) {
+                    // Session already active via localStorage, keep the user logged in
+                    return;
+                }
+                // Try restoring from localStorage first
                 var restored = checkAndRestoreUserSession();
                 if (!restored) {
+                    // Truly no session — show lock screen
                     currentUser = null;
                     var authLockScreen = document.getElementById("authLockScreen");
                     var appLayout = document.getElementById("appLayout");
@@ -1303,7 +1309,10 @@ function addNewBook() {
     bookCopies.value = 1;
     if (bookCover) bookCover.value = "";
 
-    alert("Book '" + title + "' added to library inventory!");
+    saveBooks();
+    renderAll();
+
+    alert("✅ Book '" + title + "' has been added to the library inventory!");
 }
 
 function downloadSampleCsvTemplate() {
@@ -1899,9 +1908,8 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return "• <strong>" + b.title + "</strong> by " + b.author + " (<em>" + b.category + "</em>) — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
     }).join("<br>");
 
-    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI Assistant:</strong> I couldn't find an exact match for <em>'" + userText + "'</em>.<br><br>🔥 <strong>Popular Engineering Books Currently Available in Library:</strong><br><br>" + popFormatted;
+    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI Assistant:</strong> I couldn't find an exact match for <em>'" + userText + "'</em>.<br><br>💡 <em>Tip: Set a Gemini API Key (🔑 API Key button) for smarter AI responses!</em><br><br>🔥 <strong>Popular Engineering Books Currently Available in Library:</strong><br><br>" + popFormatted;
     chatHistory.scrollTop = chatHistory.scrollHeight;
-}
 }
 
 function appendBubble(text, className, id) {

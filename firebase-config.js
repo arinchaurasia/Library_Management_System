@@ -122,6 +122,11 @@ function signOutGoogle() {
     localStorage.removeItem("shelf_current_user");
     currentUser = null;
 
+    // Reset session flag so lock screen will show correctly
+    if (typeof _sessionRestored !== "undefined") {
+        _sessionRestored = false;
+    }
+
     var authLockScreen = document.getElementById("authLockScreen");
     var appLayout = document.getElementById("appLayout");
     var signInBtn = document.getElementById("googleSignInBtn");
