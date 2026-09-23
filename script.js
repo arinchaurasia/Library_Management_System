@@ -142,21 +142,29 @@ function switchPortal(portal) {
         studentPortal.classList.remove("active");
         if (chatbotSubtitle) chatbotSubtitle.innerText = "Check availability, recommendations & add books";
     }
+    renderStats();
     renderQuickChips();
 }
 
 function renderQuickChips() {
     if (!quickChipsContainer) return;
+
     if (currentPortal === "student") {
+        var availableBooksList = books.filter(function(b) { return b.availableCopies > 0; });
+
+        var sampleBook1 = (availableBooksList[0] || books[0] || { title: "Clean Code", category: "Computer Science" });
+        var sampleBook2 = (availableBooksList[1] || books[1] || { title: "Atomic Habits", category: "Self-Help" });
+        var sampleCat = sampleBook1.category || "Computer Science";
+
         quickChipsContainer.innerHTML = ''
-            + '<button class="chip-btn" onclick="sendQuickChip(\'Is Clean Code available?\')">Is Clean Code available?</button>'
-            + '<button class="chip-btn" onclick="sendQuickChip(\'Which Computer Science books are in stock?\')">CS books in stock?</button>'
-            + '<button class="chip-btn" onclick="sendQuickChip(\'Recommend a good self-help book\')">Recommend self-help book</button>';
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Is ' + sampleBook1.title + ' available?\')">Is ' + sampleBook1.title + ' available?</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Which ' + sampleCat + ' books are in stock?\')">' + sampleCat + ' books in stock?</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Recommend books similar to ' + sampleBook2.title + '\')">Recommend books similar to ' + sampleBook2.title + '</button>';
     } else {
         quickChipsContainer.innerHTML = ''
             + '<button class="chip-btn" onclick="sendQuickChip(\'Add 3 copies of Clean Architecture by Robert Martin under Computer Science\')">➕ Add book via AI Chat</button>'
-            + '<button class="chip-btn" onclick="sendQuickChip(\'Is Clean Code available?\')">Is Clean Code available?</button>'
-            + '<button class="chip-btn" onclick="sendQuickChip(\'Which Computer Science books are in stock?\')">CS books in stock?</button>';
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Which books are currently out of stock?\')">Out of stock books?</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'List all issued books and due dates\')">List issued books log</button>';
     }
 }
 
@@ -179,20 +187,67 @@ function renderAll() {
 // ========================
 
 function renderStats() {
-    var totalCount = 0;
-    var availableCount = 0;
+    var summaryContainer = document.getElementById("summaryCardsContainer");
+    if (!summaryContainer) return;
 
-    for (var i = 0; i < books.length; i++) {
-        totalCount += books[i].totalCopies;
-        availableCount += books[i].availableCopies;
+    var nowTime = Date.now();
+
+    if (currentPortal === "student") {
+        var myLoanCount = borrowedBooks.length;
+        var totalFine = 0;
+        var activeOnTimeCount = 0;
+
+        for (var i = 0; i < borrowedBooks.length; i++) {
+            var item = borrowedBooks[i];
+            if (item.dueTimestamp && nowTime > item.dueTimestamp) {
+                var diffDays = Math.ceil((nowTime - item.dueTimestamp) / (1000 * 60 * 60 * 24));
+                totalFine += diffDays * 20;
+            } else {
+                activeOnTimeCount++;
+            }
+        }
+
+        summaryContainer.innerHTML = ''
+            + '<div class="summary-box">'
+            + '    <h3>📌 My Borrowed Books</h3>'
+            + '    <p>' + myLoanCount + '</p>'
+            + '</div>'
+            + '<div class="summary-box">'
+            + '    <h3>⏳ Active Loans</h3>'
+            + '    <p>' + activeOnTimeCount + '</p>'
+            + '</div>'
+            + '<div class="summary-box">'
+            + '    <h3>⚠️ Current Late Fine</h3>'
+            + '    <p style="color: ' + (totalFine > 0 ? '#ef4444' : '#10b981') + ';">₹' + totalFine + '</p>'
+            + '</div>';
+
+    } else {
+        var totalCount = 0;
+        var availableCount = 0;
+
+        for (var j = 0; j < books.length; j++) {
+            totalCount += books[j].totalCopies;
+            availableCount += books[j].availableCopies;
+        }
+
+        var issuedCount = totalCount - availableCount;
+
+        summaryContainer.innerHTML = ''
+            + '<div class="summary-box">'
+            + '    <h3>Total Books</h3>'
+            + '    <p>' + totalCount + '</p>'
+            + '</div>'
+            + '<div class="summary-box">'
+            + '    <h3>Available</h3>'
+            + '    <p>' + availableCount + '</p>'
+            + '</div>'
+            + '<div class="summary-box">'
+            + '    <h3>Issued Out</h3>'
+            + '    <p>' + issuedCount + '</p>'
+            + '</div>';
     }
-
-    var issuedCount = totalCount - availableCount;
-
-    statTotalBooks.innerText = totalCount;
-    statAvailableBooks.innerText = availableCount;
-    statIssuedBooks.innerText = issuedCount;
 }
+
 
 
 // ========================
@@ -299,8 +354,17 @@ function renderMyBorrowed() {
         return;
     }
 
+    var nowTime = Date.now();
+
     for (var i = 0; i < borrowedBooks.length; i++) {
         var item = borrowedBooks[i];
+        var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
+        var fineAmount = 0;
+
+        if (isOverdue) {
+            var diffDays = Math.ceil((nowTime - item.dueTimestamp) / (1000 * 60 * 60 * 24));
+            fineAmount = diffDays * 20;
+        }
 
         var card = document.createElement("div");
         card.className = "book-card";
@@ -312,12 +376,16 @@ function renderMyBorrowed() {
             + '</div>'
             + '<div class="book-meta">'
             + '    <span style="font-size: 11px; color: #64748b;">Due: ' + item.dueDate + '</span>'
+            +      (isOverdue
+                    ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
+                    : '<span class="badge badge-available">On Time</span>')
             + '</div>'
             + '<button class="action-btn return-btn" onclick="returnBook(\'' + item.id + '\')">↩️ Return Book</button>';
 
         myBorrowedList.appendChild(card);
     }
 }
+
 
 
 // ========================
