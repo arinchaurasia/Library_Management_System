@@ -1,8 +1,4 @@
-/*
-    ==========================================
-    🔥 ShelfSense Firebase Realtime DB & Google Auth Config
-    ==========================================
-*/
+/* ShelfSense Firebase Realtime DB & Google Auth Config */
 
 var firebaseConfig = {
     apiKey: "AIzaSyDE9BVf22P0ksqtyVutIrtAbLoAA4GwXpA",
@@ -30,12 +26,9 @@ try {
             googleProvider = new firebase.auth.GoogleAuthProvider();
         }
         isFirebaseActive = true;
-        console.log("🔥 Firebase Realtime DB & Google Auth connected successfully!");
-    } else {
-        console.log("ℹ️ Running in browser localStorage mode.");
     }
 } catch (err) {
-    console.warn("Firebase initialization note:", err.message);
+    console.warn("Firebase init error:", err.message);
 }
 
 function signInWithGoogle() {
@@ -43,17 +36,12 @@ function signInWithGoogle() {
         alert("Firebase Auth is not ready.");
         return;
     }
-    auth.signInWithPopup(googleProvider).then(function(result) {
-        console.log("Signed in as:", result.user.displayName);
-    }).catch(function(error) {
-        console.error("Google Sign-In Error:", error);
+    auth.signInWithPopup(googleProvider).catch(function(error) {
         alert("Google Sign-In Error: " + error.message);
     });
 }
 
 function signOutGoogle() {
     if (!auth) return;
-    auth.signOut().then(function() {
-        console.log("Signed out successfully.");
-    });
+    auth.signOut();
 }

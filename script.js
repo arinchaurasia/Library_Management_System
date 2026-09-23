@@ -1,15 +1,7 @@
-/*
-    Smart Library Management System
-    - Student & Librarian Dual Portals
-    - Pre-seeded Sample Books + localStorage Persistence
-    - Book Issue / Return Tracking
-    - AI Book Recommender via Gemini API
-*/
+/* ShelfSense: AI-Powered Smart Library Management System */
 
-// Default Book Cover Fallback
 var DEFAULT_COVER = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80";
 
-// Initial Sample Books Catalog with Covers
 var sampleBooks = [
     { id: "B101", title: "Clean Code", author: "Robert C. Martin", category: "Computer Science", totalCopies: 5, availableCopies: 3, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
     { id: "B102", title: "The Pragmatic Programmer", author: "Andrew Hunt", category: "Computer Science", totalCopies: 4, availableCopies: 2, cover: "https://covers.openlibrary.org/b/isbn/9780201616224-M.jpg" },
@@ -19,34 +11,21 @@ var sampleBooks = [
     { id: "B106", title: "To Kill a Mockingbird", author: "Harper Lee", category: "Fiction", totalCopies: 4, availableCopies: 4, cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80" }
 ];
 
-
-// ========================
-//  DOM Elements
-// ========================
-
-// Portal Switchers
+// DOM Elements
 var studentTabBtn = document.getElementById("studentTabBtn");
 var adminTabBtn   = document.getElementById("adminTabBtn");
 var studentPortal = document.getElementById("studentPortal");
 var adminPortal   = document.getElementById("adminPortal");
 
-// Stats
-var statTotalBooks     = document.getElementById("statTotalBooks");
-var statAvailableBooks = document.getElementById("statAvailableBooks");
-var statIssuedBooks    = document.getElementById("statIssuedBooks");
-
-// Student View
 var searchInput     = document.getElementById("searchInput");
 var categoryFilter  = document.getElementById("categoryFilter");
 var catalogList     = document.getElementById("catalogList");
 var myBorrowedList  = document.getElementById("myBorrowedList");
 
-// AI Chatbot Sidebar View
 var chatInput   = document.getElementById("chatInput");
 var sendChatBtn = document.getElementById("sendChatBtn");
 var chatHistory = document.getElementById("chatHistory");
 
-// Admin View
 var bookTitle           = document.getElementById("bookTitle");
 var bookAuthor          = document.getElementById("bookAuthor");
 var bookCategory        = document.getElementById("bookCategory");
@@ -56,20 +35,17 @@ var bookCover           = document.getElementById("bookCover");
 var addBookBtn          = document.getElementById("addBookBtn");
 var issuedLogList       = document.getElementById("issuedLogList");
 var adminInventoryList  = document.getElementById("adminInventoryList");
+var quickChipsContainer = document.getElementById("quickChipsContainer");
+var chatbotSubtitle     = document.getElementById("chatbotSubtitle");
 
-
-// State & Storage
 var books = [];
 var borrowedBooks = [];
 var currentPortal = "student";
 
-var quickChipsContainer = document.getElementById("quickChipsContainer");
-var chatbotSubtitle     = document.getElementById("chatbotSubtitle");
-
-
-// ========================
-//  Initialization
-// ========================
+// Generate a unique book ID using timestamp to avoid duplicates
+function generateBookId() {
+    return "B" + Date.now() + Math.floor(Math.random() * 100);
+}
 
 function init() {
     loadData();
@@ -83,7 +59,8 @@ function loadData() {
     if (storedBooks) {
         books = JSON.parse(storedBooks);
     } else {
-        books = sampleBooks;
+        // Deep-clone sampleBooks so the original array is never mutated
+        books = JSON.parse(JSON.stringify(sampleBooks));
         saveBooks();
     }
 
@@ -92,7 +69,7 @@ function loadData() {
         borrowedBooks = JSON.parse(storedBorrowed);
     }
 
-    // Attach Firebase Listeners for Real-time Multi-Device Sync
+    // Firebase realtime sync listeners
     if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
         db.ref("books").on("value", function(snapshot) {
             var data = snapshot.val();
@@ -103,7 +80,6 @@ function loadData() {
             }
         });
 
-        // Listen to ALL borrowed records (admin needs all, student filters client-side)
         db.ref("borrowed").on("value", function(snapshot) {
             var data = snapshot.val();
             if (data && Array.isArray(data)) {
@@ -115,7 +91,7 @@ function loadData() {
     }
 }
 
-// Helper: Get only the current user's borrowed books
+// Returns only the current signed-in user's borrowed books
 function getMyBorrowedBooks() {
     if (!currentUser) return [];
     var uid = currentUser.uid;
@@ -137,11 +113,6 @@ function saveBorrowed() {
         db.ref("borrowed").set(borrowedBooks);
     }
 }
-
-
-// ========================
-//  Event Listeners
-// ========================
 
 function setupEventListeners() {
     studentTabBtn.addEventListener("click", function() { switchPortal("student"); });
@@ -177,9 +148,10 @@ function setupEventListeners() {
         });
     }
 
+    // Firebase auth state listener
     if (typeof auth !== "undefined" && auth) {
         auth.onAuthStateChanged(function(user) {
-            var googleSignInBtn = document.getElementById("googleSignInBtn");
+            var signInBtn = document.getElementById("googleSignInBtn");
             var userProfile = document.getElementById("userProfile");
             var userAvatar = document.getElementById("userAvatar");
             var userName = document.getElementById("userName");
@@ -190,7 +162,7 @@ function setupEventListeners() {
                 currentUser = user;
                 if (authLockScreen) authLockScreen.style.display = "none";
                 if (appLayout) appLayout.style.display = "grid";
-                if (googleSignInBtn) googleSignInBtn.style.display = "none";
+                if (signInBtn) signInBtn.style.display = "none";
                 if (userProfile) userProfile.style.display = "flex";
                 if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
                 if (userName) userName.innerText = user.displayName || user.email || "User";
@@ -199,7 +171,7 @@ function setupEventListeners() {
                 currentUser = null;
                 if (authLockScreen) authLockScreen.style.display = "flex";
                 if (appLayout) appLayout.style.display = "none";
-                if (googleSignInBtn) googleSignInBtn.style.display = "flex";
+                if (signInBtn) signInBtn.style.display = "flex";
                 if (userProfile) userProfile.style.display = "none";
             }
         });
@@ -215,11 +187,6 @@ function setupEventListeners() {
         }
     });
 }
-
-
-// ========================
-//  Portal Switcher
-// ========================
 
 function switchPortal(portal) {
     currentPortal = portal;
@@ -245,7 +212,6 @@ function renderQuickChips() {
 
     if (currentPortal === "student") {
         var availableBooksList = books.filter(function(b) { return b.availableCopies > 0; });
-
         var sampleBook1 = (availableBooksList[0] || books[0] || { title: "Clean Code", category: "Computer Science" });
         var sampleBook2 = (availableBooksList[1] || books[1] || { title: "Atomic Habits", category: "Self-Help" });
         var sampleCat = sampleBook1.category || "Computer Science";
@@ -262,11 +228,6 @@ function renderQuickChips() {
     }
 }
 
-
-// ========================
-//  Render Master Function
-// ========================
-
 function renderAll() {
     renderStats();
     renderCatalog();
@@ -274,11 +235,6 @@ function renderAll() {
     renderAdminInventory();
     renderIssuedLog();
 }
-
-
-// ========================
-//  Render Stats
-// ========================
 
 function renderStats() {
     var summaryContainer = document.getElementById("summaryCardsContainer");
@@ -343,12 +299,6 @@ function renderStats() {
     }
 }
 
-
-
-// ========================
-//  Student: Catalog Render
-// ========================
-
 function renderCatalog() {
     var query = searchInput.value.toLowerCase().trim();
     var category = categoryFilter.value;
@@ -403,11 +353,6 @@ function renderCatalog() {
     }
 }
 
-
-// ========================
-//  Student: Borrow Book
-// ========================
-
 function borrowBook(bookId) {
     var book = books.find(function(b) { return b.id === bookId; });
 
@@ -420,12 +365,13 @@ function borrowBook(bookId) {
     var studentName = prompt("Enter your Name:", defaultName);
     if (!studentName || !studentName.trim()) return;
 
-    var studentId = prompt("Enter your Student ID (e.g. ST-101):") || "ST-REG";
+    var studentId = prompt("Enter your Student ID (e.g. ST-101):");
+    if (!studentId || !studentId.trim()) return;
 
     book.availableCopies -= 1;
 
     var dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 14); // 14-day loan period
+    dueDate.setDate(dueDate.getDate() + 14);
 
     var item = {
         id: "BR-" + Date.now(),
@@ -449,15 +395,9 @@ function borrowBook(bookId) {
     alert("Successfully borrowed '" + book.title + "'! Return due on " + item.dueDate);
 }
 
-
-// ========================
-//  Student: My Borrowed Books
-// ========================
-
 function renderMyBorrowed() {
     myBorrowedList.innerHTML = "";
 
-    // Only show the current user's borrowed books
     var myBooks = getMyBorrowedBooks();
 
     if (myBooks.length === 0) {
@@ -503,21 +443,14 @@ function renderMyBorrowed() {
     }
 }
 
-
-
-// ========================
-//  Return Book
-// ========================
-
 function returnBook(borrowId) {
     var index = borrowedBooks.findIndex(function(b) { return b.id === borrowId; });
-
     if (index === -1) return;
 
     var item = borrowedBooks[index];
 
-    // Ensure students can only return their own books
-    if (currentUser && item.uid && item.uid !== currentUser.uid) {
+    // Students can only return their own books
+    if (currentUser && item.uid && item.uid !== currentUser.uid && currentPortal === "student") {
         alert("You can only return books you borrowed.");
         return;
     }
@@ -525,7 +458,8 @@ function returnBook(borrowId) {
     var book = books.find(function(b) { return b.id === item.bookId; });
 
     if (book) {
-        book.availableCopies += 1;
+        // Cap availableCopies so it never exceeds totalCopies
+        book.availableCopies = Math.min(book.availableCopies + 1, book.totalCopies);
     }
 
     borrowedBooks.splice(index, 1);
@@ -537,21 +471,23 @@ function returnBook(borrowId) {
     alert("Thank you! Book returned successfully.");
 }
 
-
-// ========================
-//  Admin: Add New Book
-// ========================
-
 function addNewBook() {
     var title    = bookTitle.value.trim();
     var author   = bookAuthor.value.trim();
     var category = bookCategory.value;
-    var isbn     = bookIsbn.value.trim() || ("B" + (books.length + 101));
+    var isbn     = bookIsbn.value.trim() || generateBookId();
     var copies   = Number(bookCopies.value);
     var cover    = (bookCover && bookCover.value.trim()) ? bookCover.value.trim() : DEFAULT_COVER;
 
     if (!title || !author || !category || copies <= 0) {
         alert("Please fill in all book details with valid values.");
+        return;
+    }
+
+    // Prevent duplicate ISBN/ID
+    var existingBook = books.find(function(b) { return b.id === isbn; });
+    if (existingBook) {
+        alert("A book with ID '" + isbn + "' already exists. Please use a different ISBN/ID.");
         return;
     }
 
@@ -567,7 +503,6 @@ function addNewBook() {
 
     books.push(newBook);
 
-    // Reset Form
     bookTitle.value = "";
     bookAuthor.value = "";
     bookCategory.value = "";
@@ -580,11 +515,6 @@ function addNewBook() {
 
     alert("Book '" + title + "' added to library inventory!");
 }
-
-
-// ========================
-//  Admin: Inventory & Logs
-// ========================
 
 function renderAdminInventory() {
     adminInventoryList.innerHTML = "";
@@ -643,6 +573,12 @@ function renderIssuedLog() {
     for (var i = 0; i < borrowedBooks.length; i++) {
         var item = borrowedBooks[i];
         var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
+        var fineAmount = 0;
+
+        if (isOverdue) {
+            var diffDays = Math.ceil((nowTime - item.dueTimestamp) / (1000 * 60 * 60 * 24));
+            fineAmount = diffDays * 20;
+        }
 
         var div = document.createElement("div");
         div.className = "log-item";
@@ -650,9 +586,9 @@ function renderIssuedLog() {
         div.innerHTML = ''
             + '<div class="log-info">'
             + '    <strong>' + item.title + '</strong>'
-            + '    <span>Borrower: ' + (item.studentName || 'Student') + ' (' + (item.studentId || 'ID: ST-01') + ')</span>'
+            + '    <span>Borrower: ' + (item.studentName || 'Student') + ' (' + (item.studentId || 'N/A') + ')</span>'
             + '    <span>Issued: ' + item.borrowDate + ' | Due: ' + item.dueDate + '</span>'
-            +      (isOverdue ? '<span style="color: #ef4444; font-weight: 600;">⚠️ Overdue (Fine: ₹20/day)</span>' : '')
+            +      (isOverdue ? '<span style="color: #ef4444; font-weight: 600;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
             + '</div>'
             + '<button class="action-btn return-btn" onclick="returnBook(\'' + item.id + '\')">Mark Returned</button>';
 
@@ -660,11 +596,7 @@ function renderIssuedLog() {
     }
 }
 
-
-// ========================
-//  AI Chatbot & Assistant Logic
-// ========================
-
+// AI Chatbot
 function sendQuickChip(text) {
     chatInput.value = text;
     sendChatMessage(text);
@@ -673,15 +605,12 @@ function sendQuickChip(text) {
 async function sendChatMessage(userText) {
     if (!userText) return;
 
-    // Append User Message Bubble
     appendBubble(userText, "user-bubble");
     chatInput.value = "";
 
-    // Append AI Loading Bubble
     var loadingId = "ai-loading-" + Date.now();
     appendBubble("Thinking...", "ai-bubble", loadingId);
 
-    // Build Live Inventory Context
     var inventoryContext = books.map(function(b) {
         return "- '" + b.title + "' by " + b.author + " [Category: " + b.category + "] -> Available Copies: " + b.availableCopies + "/" + b.totalCopies;
     }).join("\n");
@@ -718,9 +647,10 @@ async function sendChatMessage(userText) {
 
         if (response.ok) {
             var data = await response.json();
-            if (data.candidates && data.candidates[0]) {
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
                 var rawReply = data.candidates[0].content.parts[0].text;
 
+                // Parse ACTION_ADD tag for auto book addition in librarian portal
                 var match = rawReply.match(/\[\[ACTION_ADD:\s*(\{.*?\})\]\]/);
                 if (match && match[1]) {
                     try {
@@ -728,7 +658,7 @@ async function sendChatMessage(userText) {
                         if (bookData.title && bookData.author) {
                             var copies = Number(bookData.copies) || 1;
                             var newBook = {
-                                id: "B" + (books.length + 101),
+                                id: generateBookId(),
                                 title: bookData.title,
                                 author: bookData.author,
                                 category: bookData.category || "Other",
@@ -755,10 +685,10 @@ async function sendChatMessage(userText) {
             }
         }
     } catch (e) {
-        console.log("Local environment detected (/api/advice serverless route unavailable locally), using smart local AI parser fallback...", e);
+        console.log("API unavailable, using local fallback.", e.message);
     }
 
-    // Smart Local Fallback Parser for Local Testing / Offline Mode
+    // Local fallback for offline/local dev
     handleLocalChatbotResponse(userText, loadingId);
 }
 
@@ -768,7 +698,7 @@ function handleLocalChatbotResponse(userText, loadingId) {
 
     var lowerText = userText.toLowerCase();
 
-    // 1. Check if asking to add a book
+    // Check if asking to add a book
     var addRegex = /add\s+(\d+)?\s*(?:copies of)?\s*["']?([^"']+)["']?\s+by\s+([^"']+?)(?:\s+under\s+([^"']+))?$/i;
     var matchAdd = userText.match(addRegex);
 
@@ -798,7 +728,7 @@ function handleLocalChatbotResponse(userText, loadingId) {
         }
 
         var newBook = {
-            id: "B" + (books.length + 101),
+            id: generateBookId(),
             title: title,
             author: author,
             category: category,
@@ -816,7 +746,7 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return;
     }
 
-    // 2. Check availability queries
+    // Check availability queries
     var foundBook = books.find(function(b) {
         return lowerText.includes(b.title.toLowerCase());
     });
@@ -833,7 +763,7 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return;
     }
 
-    // 3. Category or General Query
+    // Category query
     var foundCat = books.find(function(b) {
         return lowerText.includes(b.category.toLowerCase());
     });
@@ -849,7 +779,7 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return;
     }
 
-    // 4. Default Recommendation Response
+    // Default recommendation
     var availables = books.filter(function(b) { return b.availableCopies > 0; });
     var picks = availables.slice(0, 3).map(function(b) { return "• <strong>" + b.title + "</strong> by " + b.author + " (" + b.availableCopies + " available)"; }).join("<br>");
     loadingBubble.innerHTML = "🤖 Here are top recommended books available in ShelfSense right now:<br>" + picks;
@@ -873,11 +803,7 @@ function formatMarkdown(text) {
     return text;
 }
 
-
-// ==========================================
-//  AI MODAL & SUMMARY & QUIZ FEATURES
-// ==========================================
-
+// AI Modal
 var aiModal    = document.getElementById("aiModal");
 var modalTitle = document.getElementById("modalTitle");
 var modalBody  = document.getElementById("modalBody");
@@ -892,19 +818,13 @@ function closeAiModal() {
     if (aiModal) aiModal.classList.remove("active");
 }
 
-// Close modal when clicking on backdrop
 if (aiModal) {
     aiModal.addEventListener("click", function(e) {
-        if (e.target === aiModal) {
-            closeAiModal();
-        }
+        if (e.target === aiModal) closeAiModal();
     });
 }
 
-
-// ------------------------------------------
-//  AI Feature 1: Book Key Summary & Takeaways
-// ------------------------------------------
+// AI Book Summary
 async function getAiSummary(title, author) {
     openAiModal("✨ AI Book Insights: " + title, "<p class='empty-msg'>⏳ Asking Gemini AI to analyze & summarize <strong>" + title + "</strong>...</p>");
 
@@ -923,17 +843,17 @@ async function getAiSummary(title, author) {
 
         if (response.ok) {
             var data = await response.json();
-            if (data.candidates && data.candidates[0]) {
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
                 var reply = data.candidates[0].content.parts[0].text;
                 openAiModal("✨ AI Book Summary: " + title, formatMarkdown(reply));
                 return;
             }
         }
     } catch (e) {
-        console.log("Using local AI summary generator fallback for " + title);
+        console.log("Using local AI summary fallback for " + title);
     }
 
-    // Local Rich Summary Fallback
+    // Local fallback summary
     var localSummary = "<h3 style='margin-bottom: 8px; color: #1e3c72;'>📖 Overview</h3>"
         + "<p><strong>'" + title + "'</strong> by <em>" + author + "</em> is a masterclass in its domain, providing essential principles, step-by-step strategies, and practical frameworks for readers seeking growth.</p>"
         + "<br><h3 style='margin-bottom: 8px; color: #1e3c72;'>💡 Top 3 Key Takeaways</h3>"
@@ -949,10 +869,7 @@ async function getAiSummary(title, author) {
     openAiModal("✨ AI Book Summary: " + title, localSummary);
 }
 
-
-// ------------------------------------------
-//  AI Feature 2: Interactive Book Trivia Quiz
-// ------------------------------------------
+// AI Trivia Quiz
 async function getAiQuiz(title, author) {
     openAiModal("🧠 AI Book Trivia Quiz: " + title, "<p class='empty-msg'>⏳ Generating trivia quiz for <strong>" + title + "</strong> using Gemini AI...</p>");
 
@@ -973,7 +890,7 @@ async function getAiQuiz(title, author) {
 
         if (response.ok) {
             var data = await response.json();
-            if (data.candidates && data.candidates[0]) {
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
                 var rawText = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
                 var quizItems = JSON.parse(rawText);
                 renderQuizModal(title, quizItems);
@@ -981,10 +898,10 @@ async function getAiQuiz(title, author) {
             }
         }
     } catch (e) {
-        console.log("Using local AI quiz generator fallback for " + title);
+        console.log("Using local AI quiz fallback for " + title);
     }
 
-    // Local Quiz Fallback
+    // Local fallback quiz
     var localQuiz = [
         {
             question: "What is the primary theme explored in '" + title + "'?",
@@ -1056,10 +973,7 @@ function checkQuizAnswer(btn, isCorrect, explanation) {
     }
 }
 
-
-// ------------------------------------------
-//  AI Feature 3: Multimodal Vision Book Scanner
-// ------------------------------------------
+// Multimodal Vision Book Scanner
 async function scanBookCoverFile() {
     var fileInput = document.getElementById("scanFileInput");
     var scanStatus = document.getElementById("scanStatus");
@@ -1079,10 +993,11 @@ async function scanBookCoverFile() {
         var coverDataUrl = e.target.result;
 
         try {
+            // Send as fileData to match API endpoint expected field name
             var response = await fetch("/api/scan-book", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ base64Data: base64Data, mimeType: mimeType })
+                body: JSON.stringify({ fileData: base64Data, mimeType: mimeType })
             });
 
             if (response.ok) {
@@ -1095,19 +1010,19 @@ async function scanBookCoverFile() {
                 }
             }
         } catch (err) {
-            console.log("Local serverless route /api/scan-book unavailable. Using smart local vision mock parser.");
+            console.log("API scan-book unavailable, using local fallback.");
         }
 
-        // Local Smart Fallback Vision Auto-Fill
+        // Local fallback: extract title from filename
         var rawName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-        var sampleTitle = rawName.length > 3 ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Refactoring UI";
+        var sampleTitle = rawName.length > 3 ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Scanned Book";
 
         fillBookForm({
             title: sampleTitle,
-            author: "Steve Schoger & Adam Wathan",
-            category: "Computer Science",
-            isbn: "978-109" + Math.floor(1000 + Math.random() * 9000),
-            copies: 3,
+            author: "Unknown Author",
+            category: "Other",
+            isbn: generateBookId(),
+            copies: 1,
             cover: coverDataUrl
         });
 
@@ -1126,6 +1041,4 @@ function fillBookForm(data) {
     if (data.cover && bookCover) bookCover.value = data.cover;
 }
 
-
-// Run Application
 init();

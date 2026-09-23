@@ -17,7 +17,7 @@ body {
     margin: 0 auto;
 }
 
-/* App Layout Grid */
+/* App Layout */
 .app-layout {
     max-width: 1180px;
     margin: 0 auto;
@@ -132,7 +132,7 @@ h1 {
     margin-bottom: 0;
 }
 
-/* Role Switcher Pills */
+/* Role Switcher */
 .role-switcher {
     display: inline-flex;
     background: rgba(255, 255, 255, 0.2);
@@ -160,7 +160,7 @@ h1 {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Summary Cards Banner */
+/* Summary Cards */
 .summary-cards {
     display: flex;
     gap: 15px;
@@ -305,7 +305,7 @@ input:focus, select:focus {
     background: #dc2626;
 }
 
-/* Search Bar Group */
+/* Search Bar */
 .search-bar-group {
     display: flex;
     gap: 10px;
@@ -406,7 +406,7 @@ input:focus, select:focus {
     color: #b91c1c;
 }
 
-/* Issued Log Row */
+/* Issued Log */
 .log-item {
     display: flex;
     justify-content: space-between;
@@ -429,7 +429,7 @@ input:focus, select:focus {
     display: block;
 }
 
-/* AI Card */
+/* AI Recommendation Card */
 .ai-card {
     background: linear-gradient(135deg, #ffffff, #f0f4ff);
     border: 1px solid #dbeafe;
@@ -487,10 +487,7 @@ input:focus, select:focus {
     padding: 20px 0;
 }
 
-/* ========================================== */
-/*  AI CHATBOT SIDEBAR                        */
-/* ========================================== */
-
+/* AI Chatbot Sidebar */
 .ai-chatbot-sidebar {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 14px;
@@ -632,10 +629,7 @@ input:focus, select:focus {
     }
 }
 
-/* ========================================== */
-/*  AI MODAL & QUIZ STYLES                    */
-/* ========================================== */
-
+/* Modal & Quiz Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -798,10 +792,7 @@ input:focus, select:focus {
     margin-top: 8px;
 }
 
-/* ========================================== */
-/*  FULL-SCREEN AUTH LOCK GATE                */
-/* ========================================== */
-
+/* Fullscreen Auth Lock Screen */
 .auth-lock-screen {
     position: fixed;
     top: 0;

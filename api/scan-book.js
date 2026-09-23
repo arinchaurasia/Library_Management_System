@@ -1,3 +1,5 @@
+/* Vercel Serverless: Gemini 1.5 Flash Vision - Book Cover Scanner */
+
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
@@ -36,10 +38,10 @@ Return ONLY valid JSON format:
                 }
             });
         } else {
-            return res.status(400).json({ error: "No file provided." });
+            return res.status(400).json({ error: "No file data provided. Send fileData (base64) and mimeType." });
         }
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
 
         const response = await fetch(url, {
             method: "POST",
@@ -52,6 +54,11 @@ Return ONLY valid JSON format:
         if (!response.ok) {
             const errorMsg = (data.error && data.error.message) ? data.error.message : "Scan failed.";
             return res.status(response.status).json({ error: errorMsg });
+        }
+
+        // Guard against empty or blocked Gemini responses
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+            return res.status(500).json({ error: "Gemini returned an empty or blocked response." });
         }
 
         const rawText = data.candidates[0].content.parts[0].text;
