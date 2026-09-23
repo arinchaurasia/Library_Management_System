@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Library Management System</title>
-    <meta name="description" content="Simple and modern Library Management System with Student and Librarian portals.">
+    <title>ShelfSense: AI-Powered Smart Library Management System</title>
+    <meta name="description" content="ShelfSense - Smart Library Management System with Student & Librarian Portals and Gemini AI Assistant.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -18,8 +18,8 @@
 
             <!-- App Header -->
             <div class="app-header">
-                <h1>📚 Smart Library System</h1>
-                <p class="subtitle">Manage books, check live availability, and chat with AI Assistant</p>
+                <h1>📚 ShelfSense</h1>
+                <p class="subtitle">AI-Powered Smart Library Management System</p>
 
                 <!-- Role Portal Selector -->
                 <div class="role-switcher">
@@ -136,28 +136,26 @@
             <div class="chatbot-header">
                 <div class="chatbot-title">
                     <span class="status-dot"></span>
-                    <h3>🤖 AI Library Assistant</h3>
+                    <h3>🤖 ShelfSense AI Assistant</h3>
                 </div>
-                <span class="chatbot-subtitle">Check availability, recommendations &amp; add books</span>
+                <span id="chatbotSubtitle" class="chatbot-subtitle">Check availability &amp; get recommendations</span>
             </div>
 
             <!-- Quick Question Chips -->
-            <div class="quick-chips">
-                <button class="chip-btn" onclick="sendQuickChip('Add 3 copies of Clean Architecture by Robert Martin under Computer Science')">➕ Add book via AI Chat</button>
-                <button class="chip-btn" onclick="sendQuickChip('Is Clean Code available?')">Is Clean Code available?</button>
-                <button class="chip-btn" onclick="sendQuickChip('Which Computer Science books are in stock?')">CS books in stock?</button>
+            <div id="quickChipsContainer" class="quick-chips">
+                <!-- Chips inserted dynamically based on active portal -->
             </div>
 
             <!-- Chat Messages Area -->
             <div id="chatHistory" class="chat-history">
                 <div class="chat-bubble ai-bubble">
-                    👋 Hi! I'm your AI Library Assistant. Ask me if a book is available, or tell me to add books (e.g., <em>"Add 5 copies of Deep Learning by Ian Goodfellow under Computer Science"</em>)!
+                    👋 Hi! I'm your ShelfSense AI Assistant. Ask me if a book is available, check stock, or ask for recommendations!
                 </div>
             </div>
 
             <!-- Chat Input Group -->
             <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Ask AI or say 'Add 3 copies of Clean Architecture...'">
+                <input type="text" id="chatInput" placeholder="Ask AI e.g. Is Atomic Habits available?">
                 <button id="sendChatBtn" class="send-btn">Send</button>
             </div>
         </div>

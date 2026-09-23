@@ -1,8 +1,8 @@
-# 📚 Smart Library Management System
+# 📚 ShelfSense: AI-Powered Smart Library Management System
 
-A clean, modern, and simple Library Management System built with plain HTML, CSS, and JavaScript. Features **Student Portal**, **Librarian / Admin Portal**, and **Gemini AI Book Recommendations**.
+**ShelfSense** is an AI-powered, modern, and simple Library Management System built with plain HTML, CSS, and JavaScript. Features **Student Portal**, **Librarian / Admin Portal**, and a **Right-Side Gemini AI Assistant Widget**.
 
-Built with no frameworks or complex setup — runs directly in your browser!
+Built with no complex frameworks — runs directly in your browser!
 
 ---
 
@@ -10,15 +10,15 @@ Built with no frameworks or complex setup — runs directly in your browser!
 
 ### 🎓 1. Student Portal
 - **Browse & Search Catalog**: Search by book title, author, or filter by categories (*Fiction, Computer Science, Science, History, Self-Help*).
-- **Borrow Books**: Click "Borrow Book" to issue books instantly (sets a 14-day return due date).
-- **My Borrowed Books**: View your active loans and return books with a single click.
-- **✨ AI Book Recommender**: Ask Gemini AI for personalized book suggestions based on any topic or interest!
+- **Borrow Books with Name & ID**: Issue books instantly with Student Name & ID tracking and automated 14-day due date calculation.
+- **My Borrowed Books & Overdue Tracker**: View active loans, overdue fine alerts (`₹20/day`), and return books with a single click.
+- **🤖 ShelfSense AI Chatbot**: Ask the AI chatbot if any book is available, check stock count, or ask for recommendations! *(Student portal restricts book creation actions for security)*.
 
 ### 🔑 2. Librarian / Admin Portal
-- **Library Inventory Dashboard**: Real-time stats showing Total Books, Available Copies, and Issued Books.
-- **Add New Books**: Easily add new titles, authors, categories, ISBNs, and copy counts.
-- **Issued Books Log**: Track all currently issued out books and mark items as returned.
-- **Inventory Control**: Delete or manage existing library books.
+- **Library Inventory Dashboard**: Real-time stats showing Total Books, Available Copies, and Issued Books out.
+- **💬 Add Books via AI Chatbot**: Librarians can add books directly by talking to the AI in natural language (e.g. *"Add 5 copies of Deep Learning by Ian Goodfellow under Computer Science"*).
+- **Manual Book Entry Form**: Form to add titles, authors, categories, ISBNs, and copy counts manually.
+- **Issued Books Log**: Track all issued books, borrower names, student IDs, and mark items as returned.
 
 ---
 

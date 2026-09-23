@@ -54,12 +54,13 @@ var issuedLogList       = document.getElementById("issuedLogList");
 var adminInventoryList  = document.getElementById("adminInventoryList");
 
 
-// ========================
-//  State & Storage
-// ========================
-
+// State & Storage
 var books = [];
 var borrowedBooks = [];
+var currentPortal = "student";
+
+var quickChipsContainer = document.getElementById("quickChipsContainer");
+var chatbotSubtitle     = document.getElementById("chatbotSubtitle");
 
 
 // ========================
@@ -70,6 +71,7 @@ function init() {
     loadData();
     setupEventListeners();
     renderAll();
+    renderQuickChips();
 }
 
 function loadData() {
@@ -126,16 +128,35 @@ function setupEventListeners() {
 // ========================
 
 function switchPortal(portal) {
+    currentPortal = portal;
     if (portal === "student") {
         studentTabBtn.classList.add("active");
         adminTabBtn.classList.remove("active");
         studentPortal.classList.add("active");
         adminPortal.classList.remove("active");
+        if (chatbotSubtitle) chatbotSubtitle.innerText = "Check availability & get recommendations";
     } else {
         adminTabBtn.classList.add("active");
         studentTabBtn.classList.remove("active");
         adminPortal.classList.add("active");
         studentPortal.classList.remove("active");
+        if (chatbotSubtitle) chatbotSubtitle.innerText = "Check availability, recommendations & add books";
+    }
+    renderQuickChips();
+}
+
+function renderQuickChips() {
+    if (!quickChipsContainer) return;
+    if (currentPortal === "student") {
+        quickChipsContainer.innerHTML = ''
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Is Clean Code available?\')">Is Clean Code available?</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Which Computer Science books are in stock?\')">CS books in stock?</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Recommend a good self-help book\')">Recommend self-help book</button>';
+    } else {
+        quickChipsContainer.innerHTML = ''
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Add 3 copies of Clean Architecture by Robert Martin under Computer Science\')">➕ Add book via AI Chat</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Is Clean Code available?\')">Is Clean Code available?</button>'
+            + '<button class="chip-btn" onclick="sendQuickChip(\'Which Computer Science books are in stock?\')">CS books in stock?</button>';
     }
 }
 
@@ -466,15 +487,28 @@ async function sendChatMessage(userText) {
         return "- '" + b.title + "' by " + b.author + " [Category: " + b.category + "] -> Available Copies: " + b.availableCopies + "/" + b.totalCopies;
     }).join("\n");
 
-    var prompt = "You are the AI Assistant & Librarian Agent for our library.\n"
-        + "Live Inventory Right Now:\n" + inventoryContext + "\n\n"
-        + "User Input: '" + userText + "'\n\n"
-        + "Instructions:\n"
-        + "1. IF THE USER WANTS TO ADD A BOOK (e.g., 'Add 5 copies of Clean Code by Robert Martin under Computer Science' or 'Add book XYZ'), extract title, author, category, and copy count. At the END of your friendly response, append this JSON tag EXACTLY:\n"
-        + "[[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Category Name\", \"copies\": 5}]]\n"
-        + "Supported categories: Fiction, Science, History, Computer Science, Self-Help, Other.\n"
-        + "2. IF THE USER IS ASKING ABOUT BOOK AVAILABILITY OR GENERAL QUESTIONS, answer with YES or NO clearly based on live inventory with available stock count.\n"
-        + "3. Keep response concise, friendly, and use emojis.";
+    var prompt = "";
+
+    if (currentPortal === "student") {
+        prompt = "You are the ShelfSense AI Assistant for our library helping a STUDENT.\n"
+            + "Live Inventory Right Now:\n" + inventoryContext + "\n\n"
+            + "Student Input: '" + userText + "'\n\n"
+            + "STRICT RULES FOR STUDENT PORTAL:\n"
+            + "1. Students are ONLY allowed to search for books, check availability, or ask for book recommendations.\n"
+            + "2. IF the student asks or commands you to ADD or DELETE a book (e.g. 'Add book XYZ'), REJECT politely and state: '🔒 Only Librarians can add or modify books. Please switch to the Librarian Portal to add new books to the library inventory!'\n"
+            + "3. IF asking about availability, state YES or NO clearly with current available stock count from live inventory.\n"
+            + "4. Keep response friendly, short (2-3 sentences), and use emojis.";
+    } else {
+        prompt = "You are the ShelfSense AI Assistant & Librarian Agent for our library helping a LIBRARIAN.\n"
+            + "Live Inventory Right Now:\n" + inventoryContext + "\n\n"
+            + "Librarian Input: '" + userText + "'\n\n"
+            + "STRICT RULES FOR LIBRARIAN PORTAL:\n"
+            + "1. IF THE LIBRARIAN WANTS TO ADD A BOOK (e.g., 'Add 5 copies of Clean Code by Robert Martin under Computer Science' or 'Add book XYZ'), extract title, author, category, and copy count. At the END of your friendly response, append this JSON tag EXACTLY:\n"
+            + "[[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Category Name\", \"copies\": 5}]]\n"
+            + "Supported categories: Fiction, Science, History, Computer Science, Self-Help, Other.\n"
+            + "2. IF asking about availability or inventory, answer with YES or NO clearly based on live inventory with available stock count.\n"
+            + "3. Keep response concise, friendly, and use emojis.";
+    }
 
     try {
         var response = await fetch("/api/advice", {
