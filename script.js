@@ -808,6 +808,24 @@ function renderCatalog() {
         var safeAuthor = book.author.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         var coverUrl = book.cover || DEFAULT_COVER;
 
+        var myUid = currentUser ? currentUser.uid : "anonymous";
+        var existingBorrow = borrowedBooks.find(function (item) {
+            return item.bookId === book.id && item.uid === myUid && item.status !== "Returned";
+        });
+
+        var actionBtnHtml = "";
+        if (existingBorrow) {
+            if (existingBorrow.status === "Pending Approval") {
+                actionBtnHtml = '<button class="action-btn" disabled style="background: #f59e0b; color: white; width: 100%; opacity: 0.9; cursor: default;">⏳ Request Pending</button>';
+            } else {
+                actionBtnHtml = '<button class="action-btn" disabled style="background: #64748b; color: white; width: 100%; opacity: 0.8; cursor: default;">🔒 Issued to You</button>';
+            }
+        } else if (isAvailable) {
+            actionBtnHtml = '<button class="action-btn borrow-btn" style="width: 100%;" onclick="borrowBook(\'' + book.id + '\')">📩 Request to Borrow</button>';
+        } else {
+            actionBtnHtml = '<button class="action-btn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%;">Out of Stock</button>';
+        }
+
         card.innerHTML = ''
             + '<div class="book-cover-wrap">'
             + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + safeTitle + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
@@ -822,9 +840,7 @@ function renderCatalog() {
             + (isAvailable ? book.availableCopies + '/' + book.totalCopies + ' Available' : 'Out of Stock')
             + '    </span>'
             + '</div>'
-            + (isAvailable
-                ? '<button class="action-btn borrow-btn" style="width: 100%;" onclick="borrowBook(\'' + book.id + '\')">📖 Borrow Book</button>'
-                : '<button class="action-btn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%;">Unavailable</button>')
+            + actionBtnHtml
             + '<div class="card-action-row">'
             + '    <button class="action-btn summary-btn" onclick="getAiSummary(\'' + safeTitle + '\', \'' + safeAuthor + '\')">✨ AI Summary</button>'
             + '    <button class="action-btn quiz-btn" onclick="getAiQuiz(\'' + safeTitle + '\', \'' + safeAuthor + '\')">🧠 AI Quiz</button>'
@@ -875,12 +891,21 @@ function borrowBook(bookId) {
         return;
     }
 
-    // Auto-detect student Google name & saved Admission ID without any prompts!
     var studentName = (currentUser && currentUser.displayName) ? currentUser.displayName : "Student User";
     var studentId = getStudentAdmissionId();
 
-    var dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 14);
+    var existing = borrowedBooks.find(function(item) {
+        return item.bookId === bookId && (item.uid === (currentUser ? currentUser.uid : "anonymous") || item.studentId === studentId) && item.status !== "Returned";
+    });
+
+    if (existing) {
+        if (existing.status === "Pending Approval") {
+            alert("📩 You have already submitted a borrow request for '" + book.title + "'. It is currently pending approval by the Librarian.");
+        } else {
+            alert("🔒 You have already borrowed '" + book.title + "'.");
+        }
+        return;
+    }
 
     var item = {
         id: "BR-" + Date.now(),
@@ -890,20 +915,19 @@ function borrowBook(bookId) {
         studentName: studentName,
         studentId: studentId,
         uid: currentUser ? currentUser.uid : "anonymous",
-        borrowDate: new Date().toLocaleDateString(),
-        dueDate: dueDate.toLocaleDateString(),
-        dueTimestamp: dueDate.getTime(),
-        returnRequested: false
+        requestDate: new Date().toLocaleDateString(),
+        borrowDate: null,
+        dueDate: null,
+        dueTimestamp: null,
+        status: "Pending Approval"
     };
 
     borrowedBooks.push(item);
 
-    recalculateAvailability();
-    saveBooks();
     saveBorrowed();
     renderAll();
 
-    alert("✅ Successfully borrowed '" + book.title + "'!\n\nBorrower: " + studentName + " (ID: " + studentId + ")\nReturn Due: " + item.dueDate);
+    alert("📩 Borrow Request Sent!\n\nYour request for '" + book.title + "' has been submitted to the Librarian for approval.");
 }
 
 function renderMyBorrowed() {
@@ -912,7 +936,7 @@ function renderMyBorrowed() {
     var myBooks = getMyBorrowedBooks();
 
     if (myBooks.length === 0) {
-        myBorrowedList.innerHTML = '<p class="empty-msg">You have not borrowed any books yet.</p>';
+        myBorrowedList.innerHTML = '<p class="empty-msg">You have no active borrow requests or issued books.</p>';
         return;
     }
 
@@ -920,7 +944,8 @@ function renderMyBorrowed() {
 
     for (var i = 0; i < myBooks.length; i++) {
         var item = myBooks[i];
-        var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
+        var isPending = item.status === "Pending Approval";
+        var isOverdue = !isPending && item.dueTimestamp && nowTime > item.dueTimestamp;
         var fineAmount = 0;
 
         if (isOverdue) {
@@ -930,6 +955,23 @@ function renderMyBorrowed() {
 
         var bookObj = books.find(function (b) { return b.id === item.bookId; });
         var coverUrl = (bookObj && bookObj.cover) ? bookObj.cover : DEFAULT_COVER;
+
+        var statusBadge = '';
+        var statusNote = '';
+
+        if (isPending) {
+            statusBadge = '<span class="badge" style="background: #f59e0b; color: white;">⏳ Pending Approval</span>';
+            statusNote = '<div style="margin-top: 10px; font-size: 0.8rem; font-weight: 600; text-align: center; background: rgba(245, 158, 11, 0.1); color: #d97706; padding: 8px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);">'
+                + '    ⏳ Requested on ' + (item.requestDate || 'Recently') + ' — Awaiting Librarian Approval'
+                + '</div>';
+        } else {
+            statusBadge = isOverdue
+                ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
+                : '<span class="badge badge-available">🟢 Issued to You</span>';
+            statusNote = '<div style="margin-top: 10px; font-size: 0.8rem; font-weight: 600; text-align: center; background: rgba(59, 130, 246, 0.08); color: #2563eb; padding: 8px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2);">'
+                + '    🔒 Issued to You (Due: ' + (item.dueDate || 'N/A') + ')'
+                + '</div>';
+        }
 
         var card = document.createElement("div");
         card.className = "book-card";
@@ -943,17 +985,58 @@ function renderMyBorrowed() {
             + '    <div class="author">by ' + item.author + '</div>'
             + '</div>'
             + '<div class="book-meta">'
-            + '    <span style="font-size: 11px; color: #64748b;">Due: ' + item.dueDate + '</span>'
-            +      (isOverdue
-                    ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
-                    : '<span class="badge badge-available">On Time</span>')
+            + '    <span style="font-size: 11px; color: #64748b;">' + (isPending ? 'Req: ' + item.requestDate : 'Due: ' + item.dueDate) + '</span>'
+            +      statusBadge
             + '</div>'
-            + '<div style="margin-top: 10px; font-size: 0.8rem; font-weight: 600; text-align: center; background: rgba(59, 130, 246, 0.08); color: #2563eb; padding: 8px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2);">'
-            + '    🔒 Issued to You (Librarian Returns Only)'
-            + '</div>';
+            + statusNote;
 
         myBorrowedList.appendChild(card);
     }
+}
+
+function approveBorrowRequest(borrowId) {
+    var item = borrowedBooks.find(function (b) { return b.id === borrowId; });
+    if (!item) return;
+
+    var book = books.find(function (b) { return b.id === item.bookId; });
+    if (!book || book.availableCopies <= 0) {
+        alert("Cannot approve issue: Book is currently out of stock!");
+        return;
+    }
+
+    var dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 14);
+
+    item.status = "Approved";
+    item.borrowDate = new Date().toLocaleDateString();
+    item.dueDate = dueDate.toLocaleDateString();
+    item.dueTimestamp = dueDate.getTime();
+
+    recalculateAvailability();
+    saveBooks();
+    saveBorrowed();
+    renderAll();
+
+    alert("✅ Borrow Request Approved!\n\n'" + item.title + "' is now granted & issued to " + (item.studentName || 'Student') + " (ID: " + (item.studentId || 'N/A') + ").");
+}
+
+function rejectBorrowRequest(borrowId) {
+    var item = borrowedBooks.find(function (b) { return b.id === borrowId; });
+    if (!item) return;
+
+    if (!confirm("Reject borrow request for '" + item.title + "' by " + (item.studentName || 'Student') + "?")) return;
+
+    var index = borrowedBooks.indexOf(item);
+    if (index !== -1) {
+        borrowedBooks.splice(index, 1);
+    }
+
+    recalculateAvailability();
+    saveBooks();
+    saveBorrowed();
+    renderAll();
+
+    alert("❌ Borrow request rejected.");
 }
 
 function confirmLibrarianReturn(borrowId) {
@@ -1131,23 +1214,26 @@ function renderIssuedLog() {
         var author = (item.author || "").toLowerCase();
         var matchesQuery = name.includes(query) || sid.includes(query) || title.includes(query) || author.includes(query);
 
-        var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
+        var isPending = item.status === "Pending Approval";
+        var isOverdue = !isPending && item.dueTimestamp && nowTime > item.dueTimestamp;
 
         var matchesFilter = true;
-        if (filterVal === "Overdue") matchesFilter = isOverdue;
-        else if (filterVal === "Active") matchesFilter = !isOverdue;
+        if (filterVal === "Pending") matchesFilter = isPending;
+        else if (filterVal === "Overdue") matchesFilter = isOverdue;
+        else if (filterVal === "Active") matchesFilter = !isPending && !isOverdue;
 
         return matchesQuery && matchesFilter;
     });
 
     if (filtered.length === 0) {
-        issuedLogList.innerHTML = '<p class="empty-msg">No matching issued records found.</p>';
+        issuedLogList.innerHTML = '<p class="empty-msg">No matching borrow requests or issued records found.</p>';
         return;
     }
 
     for (var i = 0; i < filtered.length; i++) {
         var item = filtered[i];
-        var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
+        var isPending = item.status === "Pending Approval";
+        var isOverdue = !isPending && item.dueTimestamp && nowTime > item.dueTimestamp;
         var fineAmount = 0;
 
         if (isOverdue) {
@@ -1158,14 +1244,27 @@ function renderIssuedLog() {
         var div = document.createElement("div");
         div.className = "log-item";
 
-        div.innerHTML = ''
-            + '<div class="log-info">'
-            + '    <strong>' + item.title + '</strong>'
-            + '    <span>Borrower: <strong style="color: #2563eb;">' + (item.studentName || 'Student') + '</strong> (ID: <strong>' + (item.studentId || 'N/A') + '</strong>)</span>'
-            + '    <span>Issued: ' + item.borrowDate + ' | Due: ' + item.dueDate + '</span>'
-            + (isOverdue ? '<span style="color: #ef4444; font-weight: 600; display: block; margin-top: 4px;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
-            + '</div>'
-            + '<button class="action-btn" style="background: #10b981; color: white; padding: 8px 16px; font-weight: 700; border-radius: 6px;" onclick="confirmLibrarianReturn(\'' + item.id + '\')">↩️ Return & Confirm Receipt</button>';
+        if (isPending) {
+            div.innerHTML = ''
+                + '<div class="log-info">'
+                + '    <strong>' + item.title + '</strong>'
+                + '    <span>Requested by Student: <strong style="color: #d97706;">' + (item.studentName || 'Student') + '</strong> (ID: <strong>' + (item.studentId || 'N/A') + '</strong>)</span>'
+                + '    <span>Requested Date: ' + (item.requestDate || 'Recently') + ' | Status: <strong style="color: #f59e0b;">⏳ Pending Approval</strong></span>'
+                + '</div>'
+                + '<div style="display: flex; gap: 8px; flex-wrap: wrap;">'
+                + '    <button class="action-btn" style="background: #10b981; color: white; padding: 8px 14px; font-weight: 700; border-radius: 6px;" onclick="approveBorrowRequest(\'' + item.id + '\')">✅ Approve Issue</button>'
+                + '    <button class="action-btn delete-btn" style="padding: 8px 14px; font-weight: 700; border-radius: 6px;" onclick="rejectBorrowRequest(\'' + item.id + '\')">❌ Reject</button>'
+                + '</div>';
+        } else {
+            div.innerHTML = ''
+                + '<div class="log-info">'
+                + '    <strong>' + item.title + '</strong>'
+                + '    <span>Borrower: <strong style="color: #2563eb;">' + (item.studentName || 'Student') + '</strong> (ID: <strong>' + (item.studentId || 'N/A') + '</strong>)</span>'
+                + '    <span>Issued: ' + item.borrowDate + ' | Due: ' + item.dueDate + '</span>'
+                + (isOverdue ? '<span style="color: #ef4444; font-weight: 600; display: block; margin-top: 4px;">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>' : '')
+                + '</div>'
+                + '<button class="action-btn" style="background: #2563eb; color: white; padding: 8px 16px; font-weight: 700; border-radius: 6px;" onclick="confirmLibrarianReturn(\'' + item.id + '\')">📥 Confirm Return</button>';
+        }
 
         issuedLogList.appendChild(div);
     }
@@ -1186,41 +1285,33 @@ async function sendChatMessage(userText) {
     var loadingId = "ai-loading-" + Date.now();
     appendBubble("Thinking...", "ai-bubble", loadingId);
 
-    var inventoryContext = books.map(function (b) {
-        return "- '" + b.title + "' by " + b.author + " [Category: " + b.category + "] -> Available Copies: " + b.availableCopies + "/" + b.totalCopies;
-    }).join("\n");
+    // Build complete JSON database of all engineering books in library
+    var catalogJson = JSON.stringify(books.map(function (b) {
+        return {
+            id: b.id,
+            title: b.title,
+            author: b.author,
+            category: b.category,
+            availableCopies: b.availableCopies,
+            totalCopies: b.totalCopies
+        };
+    }), null, 2);
 
-    var prompt = "";
-
-    if (currentPortal === "student") {
-        prompt = "You are ShelfSense AI, a warm, polite, and intelligent AI Library Assistant conversing naturally like a human-like AI talking to a student.\n"
-            + "IF THE USER SAYS 'hi', 'hello', 'hey', or greets you, respond warmly: 'Hello! How can I help you today with books, AKTU engineering syllabus, or library borrowing?'\n"
-            + "Live Engineering Library Catalog Right Now:\n" + inventoryContext + "\n\n"
-            + "Student Message: '" + userText + "'\n\n"
-            + "STRICT RESPONSE RULES:\n"
-            + "1. FIRST & FOREMOST: Answer the student's message naturally and directly like a friendly human-like AI assistant!\n"
-            + "2. If the user is asking whether a book is available or in stock (e.g. 'Is Cormen available?' or 'Do you have Operating System Concepts?'):\n"
-            + "   - Search the Live Library Catalog above for matching titles or authors.\n"
-            + "   - IF AVAILABLE (copies > 0): State CLEARLY at the top: 'YES, [Book Title] is AVAILABLE ([N] copies in stock)!'. STRICT RULE: DO NOT GIVE ANY RECOMMENDATIONS OR EXTRA BOOK SUGGESTIONS IF THE ANSWER IS YES! STOP IMMEDIATELY AFTER ANSWERING YES.\n"
-            + "   - IF OUT OF STOCK or NOT FOUND: State CLEARLY at the top: 'NO, [Book Title] is currently out of stock / not in library'. Then, and ONLY THEN, list 1-2 related available books from that engineering department at the end.\n"
-            + "3. If student asks to ADD or DELETE a book, REJECT politely: '🔒 Only Librarians can add or modify books. Please switch to the Librarian Portal to add new books!'\n"
-            + "4. Use bold formatting and emojis. Keep responses concise, direct, warm, and professional.";
-    } else {
-        prompt = "You are ShelfSense AI, an intelligent AI Assistant & Librarian Agent conversing naturally like a human-like AI helping a LIBRARIAN.\n"
-            + "IF THE LIBRARIAN SAYS 'hi', 'hello', 'hey', or greets you, respond warmly: 'Hello! How can I help you today with library management, issuing, or catalog updates?'\n"
-            + "Live Engineering Library Catalog Right Now:\n" + inventoryContext + "\n\n"
-            + "Librarian Message: '" + userText + "'\n\n"
-            + "STRICT RESPONSE RULES:\n"
-            + "1. FIRST & FOREMOST: Directly answer the librarian's exact query or request naturally!\n"
-            + "2. If asking about book availability:\n"
-            + "   - IF AVAILABLE (copies > 0): State YES clearly with available copies count. STRICT RULE: DO NOT GIVE ANY RECOMMENDATIONS OR EXTRA BOOK SUGGESTIONS IF THE ANSWER IS YES!\n"
-            + "   - IF OUT OF STOCK or NOT FOUND: State NO clearly. Only then offer 1-2 recommended books.\n"
-            + "3. IF THE LIBRARIAN WANTS TO ADD A BOOK (e.g. 'Add 5 copies of Thermodynamics by PK Nag under Mechanical Engineering'):\n"
-            + "   - Confirm addition in friendly text.\n"
-            + "   - At the VERY END of your response, append this JSON tag EXACTLY:\n"
-            + "   [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Department Name\", \"copies\": 5}]]\n"
-            + "4. Format with bold text and emojis.";
-    }
+    var prompt = "You are ShelfSense AI, an intelligent, human-like AI Assistant for our Engineering Library.\n"
+        + "Here is the COMPLETE LIVE ENGINEERING LIBRARY CATALOG DATABASE (JSON Format):\n"
+        + catalogJson + "\n\n"
+        + "User Portal: " + currentPortal.toUpperCase() + "\n"
+        + "User Input: '" + userText + "'\n\n"
+        + "STRICT INSTRUCTIONS:\n"
+        + "1. Answer the user's message intelligently and dynamically using the JSON catalog data above. DO NOT give generic or auto-generated canned text every time!\n"
+        + "2. If the user greets you ('hi', 'hello', 'hey', 'good morning', etc.), greet them warmly and naturally as a helpful AI assistant.\n"
+        + "3. If the user asks whether a book, subject, or author is available or in stock:\n"
+        + "   - Search the JSON catalog database above for matching titles, authors, or subjects.\n"
+        + "   - IF AVAILABLE (availableCopies > 0): State CLEARLY at the top: 'YES, [Book Title] by [Author] ([Category]) is AVAILABLE with [N] copies in stock!'. STRICT RULE: DO NOT GIVE ANY RECOMMENDATIONS IF THE ANSWER IS YES! STOP IMMEDIATELY AFTER ANSWERING YES.\n"
+        + "   - IF OUT OF STOCK or NOT FOUND: State CLEARLY at the top: 'NO, [Book Title] is currently out of stock / not in library'. Then, and ONLY THEN, list 1-2 related available books from that engineering department from the JSON.\n"
+        + "4. IF THE LIBRARIAN WANTS TO ADD A BOOK (e.g. 'Add 5 copies of Machine Learning under AI & DS'):\n"
+        + "   Confirm addition in friendly text, and append at the VERY END: [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Department Name\", \"copies\": 5}]]\n"
+        + "5. Use bold text, clean markdown, and friendly emojis.";
 
     try {
         var response = await fetch("/api/advice", {
