@@ -471,10 +471,23 @@ function generateBookId() {
     return "ENG" + Date.now() + Math.floor(Math.random() * 100);
 }
 
-function applyLoggedInUser(user, admissionId) {
+async function applyLoggedInUser(user, admissionId) {
     if (!user) return;
     currentUser = user;
-    var uid = user.uid || "local_usr";
+    var uid = user.uid || ("usr_" + Date.now());
+
+    // Fetch existing admission ID from Firebase Realtime Database if available
+    if (!admissionId && typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
+        try {
+            var snapshot = await db.ref("users/" + uid).once("value");
+            var dbUser = snapshot.val();
+            if (dbUser && dbUser.admissionId) {
+                admissionId = dbUser.admissionId;
+            }
+        } catch (dbErr) {
+            console.warn("Could not fetch user from Firebase DB:", dbErr.message);
+        }
+    }
 
     if (!admissionId) {
         admissionId = localStorage.getItem("user_admission_id_" + uid);
@@ -491,7 +504,32 @@ function applyLoggedInUser(user, admissionId) {
             }
         }
         admissionId = enteredId.trim();
-        localStorage.setItem("user_admission_id_" + uid, admissionId);
+    }
+
+    // Save to LocalStorage
+    localStorage.setItem("user_admission_id_" + uid, admissionId);
+    localStorage.setItem("shelf_current_user", JSON.stringify({
+        uid: uid,
+        displayName: user.displayName || user.email || "Student User",
+        email: user.email || "",
+        photoURL: user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    }));
+
+    // SAVE USER PROFILE & ADMISSION ID TO FIREBASE REALTIME DATABASE (users/{uid})
+    if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
+        try {
+            var userData = {
+                uid: uid,
+                displayName: user.displayName || user.email || "Student User",
+                email: user.email || "",
+                photoURL: user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg",
+                admissionId: admissionId,
+                lastLogin: new Date().toISOString()
+            };
+            db.ref("users/" + uid).set(userData);
+        } catch (saveErr) {
+            console.error("Error saving user to Firebase DB:", saveErr);
+        }
     }
 
     var authLockScreen = document.getElementById("authLockScreen");

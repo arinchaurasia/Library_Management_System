@@ -37,20 +37,21 @@ function signInWithGoogle() {
     if (isSigningIn) return;
 
     if (!auth || !googleProvider) {
-        signInAsGuestOrStudent();
+        alert("⚠️ Firebase Auth SDK is loading or not initialized. Please check your internet connection.");
         return;
     }
 
     isSigningIn = true;
+    
+    // Always prompt user to select their Google account
+    googleProvider.setCustomParameters({
+        prompt: 'select_account'
+    });
+
     auth.signInWithPopup(googleProvider).then(function (result) {
         isSigningIn = false;
         if (result && result.user) {
-            localStorage.setItem("shelf_current_user", JSON.stringify({
-                uid: result.user.uid,
-                displayName: result.user.displayName,
-                email: result.user.email,
-                photoURL: result.user.photoURL
-            }));
+            console.log("Google Sign-In successful:", result.user.displayName);
         }
     }).catch(function (error) {
         isSigningIn = false;
@@ -60,37 +61,14 @@ function signInWithGoogle() {
             return;
         }
 
-        alert("⚠️ Google Sign-In Note: " + (error.message || "OAuth domain restricted") + "\n\nSwitching to Instant Student / Faculty Sign-In mode...");
-        signInAsGuestOrStudent();
+        if (error.code === 'auth/popup-blocked') {
+            alert("⚠️ Popup was blocked. Redirecting to Google Sign-In page...");
+            auth.signInWithRedirect(googleProvider);
+            return;
+        }
+
+        alert("Google Sign-In Error (" + error.code + "): " + error.message);
     });
-}
-
-function signInAsGuestOrStudent() {
-    var name = prompt("🎓 STUDENT / FACULTY SIGN-IN:\n\nPlease enter your Full Name:");
-    if (!name || !name.trim()) return;
-    name = name.trim();
-
-    var admissionId = null;
-    while (!admissionId || !admissionId.trim()) {
-        admissionId = prompt("🔒 COMPULSORY REGISTRATION:\n\nPlease enter your Student Admission ID / University Roll Number (e.g., ADM-2024-001):");
-        if (admissionId === null) return;
-        if (!admissionId.trim()) alert("⚠️ Admission ID / Roll Number is compulsory.");
-    }
-    admissionId = admissionId.trim();
-
-    var localUser = {
-        uid: "usr_" + Date.now(),
-        displayName: name,
-        email: name.toLowerCase().replace(/\s+/g, ".") + "@student.aktu.ac.in",
-        photoURL: "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-    };
-
-    localStorage.setItem("shelf_current_user", JSON.stringify(localUser));
-    localStorage.setItem("user_admission_id_" + localUser.uid, admissionId);
-
-    if (typeof applyLoggedInUser === "function") {
-        applyLoggedInUser(localUser, admissionId);
-    }
 }
 
 function signOutGoogle() {
