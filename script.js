@@ -1,4 +1,4 @@
-﻿function createBookCoverDataUri(title, author, category) {
+function createBookCoverDataUri(title, author, category) {
     title = title || "Engineering Textbook";
     author = author || "Engineering Faculty";
     category = category || "General Engineering";
@@ -75,8 +75,34 @@
 
 function handleCoverError(imgEl, title, author, category) {
     if (!imgEl) return;
-    imgEl.onerror = null;
-    imgEl.src = createBookCoverDataUri(title, author, category);
+    imgEl.onerror = null; // Prevent infinite loops
+
+    // Try Google Books API as secondary source
+    var googleBooksUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+        encodeURIComponent(title + " " + (author || "")) +
+        "&fields=items(volumeInfo/imageLinks)&maxResults=1";
+
+    fetch(googleBooksUrl)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var cover = data &&
+                data.items && data.items[0] &&
+                data.items[0].volumeInfo &&
+                data.items[0].volumeInfo.imageLinks &&
+                (data.items[0].volumeInfo.imageLinks.thumbnail ||
+                 data.items[0].volumeInfo.imageLinks.smallThumbnail);
+
+            if (cover) {
+                // Upgrade to higher-resolution Google Books image
+                cover = cover.replace("http://", "https://").replace("&zoom=1", "&zoom=3");
+                imgEl.src = cover;
+            } else {
+                imgEl.src = createBookCoverDataUri(title, author, category);
+            }
+        })
+        .catch(function() {
+            imgEl.src = createBookCoverDataUri(title, author, category);
+        });
 }
 
 function escapeJsAttr(str) {
@@ -538,6 +564,7 @@ function _showAppUI(user, admissionId) {
     if (userName) { userName.innerHTML = (user.displayName || user.email || 'Student User') + ' <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.85;">(ID: ' + admissionId + ')</span>'; }
 }
 
+// handleUserAuthSuccess is kept for backward compat with firebase-config.js
 var handleUserAuthSuccess = applyLoggedInUser;
 
 function checkAndRestoreUserSession() {
@@ -560,11 +587,22 @@ function checkAndRestoreUserSession() {
 function init() {
     loadData();
     setupEventListeners();
-    // Try restoring session from localStorage immediately
-    // The auth state listener will handle fresh Firebase logins
+
+    // 1. Handle pending auth user queued by firebase-config.js before script.js loaded
+    //    (happens when popup completes before DOMContentLoaded)
+    if (window._pendingAuthUser) {
+        var pendingUser = window._pendingAuthUser;
+        window._pendingAuthUser = null;
+        _sessionRestored = true;
+        applyLoggedInUser(pendingUser);
+        renderQuickChips();
+        return;
+    }
+
+    // 2. Try restoring from localStorage (page refresh with existing session)
     var restored = checkAndRestoreUserSession();
     if (!restored) {
-        // No session found — show the lock screen
+        // 3. No session found — show the lock screen, wait for Google sign-in
         var authLockScreen = document.getElementById("authLockScreen");
         var appLayout = document.getElementById("appLayout");
         if (authLockScreen) authLockScreen.style.display = "flex";
@@ -798,11 +836,15 @@ function setupEventListeners() {
 
     // Note: Inline onclick handlers in index.html (onclick="signInWithGoogle()", etc.) handle clicks directly.
 
-    // Firebase auth state listener
+    // Firebase auth state listener — handles fresh Google sign-ins
     if (typeof auth !== "undefined" && auth) {
         auth.onAuthStateChanged(function (user) {
             if (user) {
-                // Genuine Firebase sign-in
+                // Firebase confirmed a signed-in user
+                if (_sessionRestored && currentUser && currentUser.uid === user.uid) {
+                    // Already handled this user — skip duplicate call
+                    return;
+                }
                 localStorage.setItem("shelf_current_user", JSON.stringify({
                     uid: user.uid,
                     displayName: user.displayName,
@@ -812,26 +854,21 @@ function setupEventListeners() {
                 _sessionRestored = true;
                 applyLoggedInUser(user);
             } else {
-                // Firebase reports no user — but DO NOT wipe session if we already restored from localStorage
+                // Firebase reports no user
                 if (_sessionRestored) {
-                    // Session already active via localStorage, keep the user logged in
+                    // Session already active via localStorage — keep the user logged in
                     return;
                 }
-                // Try restoring from localStorage first
-                var restored = checkAndRestoreUserSession();
-                if (!restored) {
-                    // Truly no session — show lock screen
-                    currentUser = null;
-                    var authLockScreen = document.getElementById("authLockScreen");
-                    var appLayout = document.getElementById("appLayout");
-                    var signInBtn = document.getElementById("googleSignInBtn");
-                    var userProfile = document.getElementById("userProfile");
-
-                    if (authLockScreen) authLockScreen.style.display = "flex";
-                    if (appLayout) appLayout.style.display = "none";
-                    if (signInBtn) signInBtn.style.display = "flex";
-                    if (userProfile) userProfile.style.display = "none";
-                }
+                // No localStorage session either — show lock screen
+                currentUser = null;
+                var authLockScreen = document.getElementById("authLockScreen");
+                var appLayout = document.getElementById("appLayout");
+                var signInBtn = document.getElementById("googleSignInBtn");
+                var userProfile = document.getElementById("userProfile");
+                if (authLockScreen) authLockScreen.style.display = "flex";
+                if (appLayout) appLayout.style.display = "none";
+                if (signInBtn) signInBtn.style.display = "flex";
+                if (userProfile) userProfile.style.display = "none";
             }
         });
     }
@@ -1572,16 +1609,40 @@ function sendQuickChip(text) {
 
 function promptGeminiApiKey() {
     var currentKey = localStorage.getItem("gemini_api_key") || "";
-    var newKey = prompt("🔑 GEMINI API KEY SETUP:\n\nEnter your Gemini API key for direct Google Generative AI integration (or leave blank for serverless mode):", currentKey);
-    if (newKey !== null) {
-        if (newKey.trim()) {
-            localStorage.setItem("gemini_api_key", newKey.trim());
-            alert("✅ Gemini API Key saved! Every query will now be evaluated directly by Gemini AI with your live library inventory dataset.");
-        } else {
-            localStorage.removeItem("gemini_api_key");
-            alert("ℹ️ Gemini API Key cleared. System will use serverless endpoint or decision engine.");
-        }
+    // Show inline key entry in the chatbot
+    var keyCardId = "gemini-key-card-" + Date.now();
+    var html = "<div id='" + keyCardId + "' style='background: linear-gradient(135deg, #1e3c72, #2563eb); color: white; padding: 14px; border-radius: 12px; font-size: 12px;'>" +
+        "<div style='font-weight: 700; font-size: 13px; margin-bottom: 8px;'>🔑 Connect Gemini AI</div>" +
+        "<p style='margin-bottom: 10px; color: rgba(255,255,255,0.85);'>Enter your Gemini API key to get real-time AI answers powered by Google:</p>" +
+        "<input id='geminiKeyInput_" + keyCardId + "' type='password' placeholder='AIzaSy...' value='" + currentKey + "' style='width: 100%; padding: 8px 10px; border-radius: 8px; border: none; margin-bottom: 8px; font-size: 12px; font-family: monospace; color: #1e293b;'>" +
+        "<div style='display:flex; gap: 6px;'>" +
+        "<button onclick=\"_saveGeminiKey('" + keyCardId + "')\" style='flex:1; background: #10b981; color: white; border: none; border-radius: 6px; padding: 8px; font-weight: 700; cursor: pointer; font-size: 11px;'>✅ Save & Activate</button>" +
+        "<button onclick=\"_clearGeminiKey('" + keyCardId + "')\" style='background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 6px; padding: 8px; font-weight: 600; cursor: pointer; font-size: 11px;'>🗑️ Clear</button>" +
+        "</div>" +
+        "<p style='margin-top: 8px; font-size: 10px; color: rgba(255,255,255,0.6);'>Get a free key at: <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color: #93c5fd;'>aistudio.google.com</a></p>" +
+        "</div>";
+    appendBubble(html, "ai-bubble");
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+function _saveGeminiKey(cardId) {
+    var input = document.getElementById("geminiKeyInput_" + cardId);
+    if (!input) return;
+    var key = input.value.trim();
+    if (key) {
+        localStorage.setItem("gemini_api_key", key);
+        var card = document.getElementById(cardId);
+        if (card) card.innerHTML = "<strong style='color: #10b981;'>✅ Gemini API Key saved!</strong><br><span style='font-size: 11px; color: #94a3b8;'>All your queries will now be answered by Gemini AI with live library data.</span>";
+        setTimeout(function() { sendChatMessage("Hello! What can you help me with?"); }, 500);
+    } else {
+        alert("Please enter a valid Gemini API key.");
     }
+}
+
+function _clearGeminiKey(cardId) {
+    localStorage.removeItem("gemini_api_key");
+    var card = document.getElementById(cardId);
+    if (card) card.innerHTML = "<span style='color: #94a3b8; font-size: 11px;'>🗑️ Gemini API Key cleared. Using local mode.</span>";
 }
 
 async function callGeminiDirectly(promptText, apiKey) {
@@ -1610,72 +1671,69 @@ async function callGeminiDirectly(promptText, apiKey) {
 }
 
 async function sendChatMessage(userText) {
-    if (!userText) return;
+    if (!userText || !userText.trim()) return;
+    userText = userText.trim();
 
     appendBubble(userText, "user-bubble");
     chatInput.value = "";
 
     var loadingId = "ai-loading-" + Date.now();
-    appendBubble("Thinking...", "ai-bubble", loadingId);
+    appendBubble("<span style='opacity:0.6;'>🤖 Thinking...</span>", "ai-bubble", loadingId);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    // Build complete JSON database of all engineering books in library
-    var catalogJson = JSON.stringify(books.map(function (b) {
-        return {
-            id: b.id,
-            title: b.title,
-            author: b.author,
-            category: b.category,
-            availableCopies: b.availableCopies,
-            totalCopies: b.totalCopies
-        };
-    }), null, 2);
+    // Build a concise summary of library inventory for Gemini
+    var totalBooks = books.length;
+    var availableBooks = books.filter(function(b){ return b.availableCopies > 0; }).length;
+    var issuedBooks = borrowedBooks.length;
+    var catalogSummary = JSON.stringify(books.map(function (b) {
+        return { id: b.id, title: b.title, author: b.author, category: b.category, available: b.availableCopies, total: b.totalCopies };
+    }));
 
-    var prompt = "You are ShelfSense AI, an intelligent, human-like AI Assistant and Decision Engine for our Engineering College Library.\n\n"
-        + "=== COMPLETE LIVE LIBRARY INVENTORY DATABASE (JSON) ===\n"
-        + catalogJson + "\n\n"
-        + "=== USER CONTEXT ===\n"
-        + "Active Portal: " + currentPortal.toUpperCase() + "\n"
-        + "Signed In User: " + (currentUser ? (currentUser.displayName || currentUser.email) : "Student User") + "\n"
-        + "User Query: '" + userText + "'\n\n"
-        + "=== DECISION INSTRUCTIONS FOR GEMINI AI ===\n"
-        + "1. Answer the user's message DIRECTLY, INTELLIGENTLY, AND ACCURATELY based on the LIVE LIBRARY INVENTORY JSON provided above.\n"
-        + "2. If user greets you ('hi', 'hello', 'hey', 'good morning', etc.), respond warmly as a helpful AI assistant.\n"
-        + "3. BOOK AVAILABILITY DECISION:\n"
-        + "   - Search the JSON database for matching title, author, or subject.\n"
-        + "   - IF AVAILABLE (availableCopies > 0): State clearly: '✅ **YES!** [Book Title] by [Author] ([Category]) is AVAILABLE with [N]/[Total] copies in stock!'. DO NOT list any extra recommendations if answer is YES!\n"
-        + "   - IF OUT OF STOCK or NOT IN LIBRARY: State clearly: '❌ **NO**, [Book Title] is out of stock / not available', then recommend 1-2 available books in that department from the JSON.\n"
-        + "4. LIBRARIAN ADD BOOK DECISION:\n"
-        + "   - If Librarian requests to add a book (e.g., 'Add 5 copies of Machine Learning under AI & DS'):\n"
-        + "   - Confirm addition in friendly text, and append at the VERY END: [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Department Name\", \"copies\": 5}]]\n"
-        + "5. SYLLABUS & RECOMMENDATION DECISIONS:\n"
-        + "   - If student asks for AKTU semester/year books or department books (CSE, IT, ECE, ME, CE), list 4-6 matching books from the JSON database above with exact copy availability.\n"
-        + "6. Format your answer with clean Markdown, bold text, bullet points, and friendly emojis. Send your exact decision and response to the user.";
+    var userName = currentUser ? (currentUser.displayName || currentUser.email || "Student") : "Student";
+    var admissionId = currentUser ? (localStorage.getItem("user_admission_id_" + (currentUser.uid || "")) || "N/A") : "N/A";
+
+    var prompt = "You are ShelfSense AI — the smart, friendly, conversational library assistant for an Engineering College. You speak naturally like a human librarian, not like a robot. Use emojis, short sentences, and be warm and helpful.\n\n"
+        + "=== LIVE LIBRARY INVENTORY (" + totalBooks + " books, " + availableBooks + " types available, " + issuedBooks + " currently issued) ===\n"
+        + catalogSummary + "\n\n"
+        + "=== CURRENT USER ===\n"
+        + "Name: " + userName + " | Admission ID: " + admissionId + " | Portal: " + currentPortal.toUpperCase() + "\n\n"
+        + "=== USER'S MESSAGE ===\n"
+        + userText + "\n\n"
+        + "=== YOUR INSTRUCTIONS ===\n"
+        + "1. GREETINGS: If user says hi/hello/hey, greet them warmly by name and ask how you can help.\n"
+        + "2. BOOK SEARCH: Search inventory JSON for the book. If found & available, say \"\u2705 YES! [Title] is available — [N] of [Total] copies in stock!\". If not found or out of stock, say \"\u274c Sorry, [Title] isn't available right now\" and suggest 1-2 similar available books.\n"
+        + "3. CATEGORY/DEPT QUERIES: If user asks about CSE/IT/ECE/ME/CE/AI books, list top 5 available books from that category with copy counts.\n"
+        + "4. AKTU QUERIES: List matching books for the semester/year with availability.\n"
+        + "5. LIBRARY RULES: Loan period = 14 days. Fine = Rs.20/day overdue. Request via 'Request to Borrow' button.\n"
+        + "6. LIBRARIAN COMMANDS: If portal=LIBRARIAN and user says 'add X copies of [Book] by [Author] under [Category]', confirm and append: [[ACTION_ADD: {\"title\":\"Book\",\"author\":\"Author\",\"category\":\"Category\",\"copies\":X}]]\n"
+        + "7. GENERAL QUERIES: Answer any general question about the library, studying, engineering topics, book recommendations. Be helpful!\n"
+        + "8. Format with markdown: **bold**, bullet points, emojis. Keep responses concise and conversational (max 150 words unless listing books).";
 
     var rawReply = null;
 
-    // 1. Try Vercel Serverless Endpoint (/api/advice)
-    try {
-        var response = await fetch("/api/advice", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: prompt })
-        });
-
-        if (response.ok) {
-            var data = await response.json();
-            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-                rawReply = data.candidates[0].content.parts[0].text;
-            }
-        }
-    } catch (e) {
-        console.log("Serverless API unavailable, checking client key...", e.message);
+    // 1. Try Direct Client-Side Gemini API if key exists (primary method)
+    var userApiKey = localStorage.getItem("gemini_api_key");
+    if (userApiKey && userApiKey.trim()) {
+        rawReply = await callGeminiDirectly(prompt, userApiKey.trim());
     }
 
-    // 2. If Serverless Endpoint failed/unavailable, try Direct Client-Side Gemini API if key exists
+    // 2. Try Vercel Serverless Endpoint (/api/advice) as fallback
     if (!rawReply) {
-        var userApiKey = localStorage.getItem("gemini_api_key");
-        if (userApiKey && userApiKey.trim()) {
-            rawReply = await callGeminiDirectly(prompt, userApiKey.trim());
+        try {
+            var response = await fetch("/api/advice", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: prompt }),
+                signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined
+            });
+            if (response.ok) {
+                var data = await response.json();
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                    rawReply = data.candidates[0].content.parts[0].text;
+                }
+            }
+        } catch (e) {
+            console.log("Serverless API unavailable:", e.message);
         }
     }
 
@@ -1908,7 +1966,11 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return "• <strong>" + b.title + "</strong> by " + b.author + " (<em>" + b.category + "</em>) — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
     }).join("<br>");
 
-    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI Assistant:</strong> I couldn't find an exact match for <em>'" + userText + "'</em>.<br><br>💡 <em>Tip: Set a Gemini API Key (🔑 API Key button) for smarter AI responses!</em><br><br>🔥 <strong>Popular Engineering Books Currently Available in Library:</strong><br><br>" + popFormatted;
+    var hasKey = !!localStorage.getItem("gemini_api_key");
+    var keySetupHtml = hasKey ? "" :
+        "<br><br><button onclick=\"promptGeminiApiKey()\" style=\"background: linear-gradient(135deg,#2563eb,#4f46e5); color:white; border:none; border-radius:8px; padding:8px 14px; font-size:11px; font-weight:700; cursor:pointer; width:100%;\">🔑 Connect Gemini AI for smarter answers</button>";
+
+    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI:</strong> I couldn't find an exact match for <em>'" + userText + "'</em>. Try rephrasing or ask me something else!" + keySetupHtml + "<br><br>🔥 <strong>Popular Books Available Now:</strong><br><br>" + popFormatted;
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
