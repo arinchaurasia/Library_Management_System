@@ -1482,6 +1482,45 @@ function sendQuickChip(text) {
     sendChatMessage(text);
 }
 
+function promptGeminiApiKey() {
+    var currentKey = localStorage.getItem("gemini_api_key") || "";
+    var newKey = prompt("🔑 GEMINI API KEY SETUP:\n\nEnter your Gemini API key for direct Google Generative AI integration (or leave blank for serverless mode):", currentKey);
+    if (newKey !== null) {
+        if (newKey.trim()) {
+            localStorage.setItem("gemini_api_key", newKey.trim());
+            alert("✅ Gemini API Key saved! Every query will now be evaluated directly by Gemini AI with your live library inventory dataset.");
+        } else {
+            localStorage.removeItem("gemini_api_key");
+            alert("ℹ️ Gemini API Key cleared. System will use serverless endpoint or decision engine.");
+        }
+    }
+}
+
+async function callGeminiDirectly(promptText, apiKey) {
+    var models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+    for (var i = 0; i < models.length; i++) {
+        var url = "https://generativelanguage.googleapis.com/v1beta/models/" + models[i] + ":generateContent?key=" + apiKey;
+        try {
+            var response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: promptText }] }]
+                })
+            });
+            if (response.ok) {
+                var data = await response.json();
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                    return data.candidates[0].content.parts[0].text;
+                }
+            }
+        } catch (err) {
+            console.log("Direct Gemini model " + models[i] + " failed:", err);
+        }
+    }
+    return null;
+}
+
 async function sendChatMessage(userText) {
     if (!userText) return;
 
@@ -1503,22 +1542,30 @@ async function sendChatMessage(userText) {
         };
     }), null, 2);
 
-    var prompt = "You are ShelfSense AI, an intelligent, human-like AI Assistant for our Engineering Library.\n"
-        + "Here is the COMPLETE LIVE ENGINEERING LIBRARY CATALOG DATABASE (JSON Format):\n"
+    var prompt = "You are ShelfSense AI, an intelligent, human-like AI Assistant and Decision Engine for our Engineering College Library.\n\n"
+        + "=== COMPLETE LIVE LIBRARY INVENTORY DATABASE (JSON) ===\n"
         + catalogJson + "\n\n"
-        + "User Portal: " + currentPortal.toUpperCase() + "\n"
-        + "User Input: '" + userText + "'\n\n"
-        + "STRICT INSTRUCTIONS:\n"
-        + "1. Answer the user's message intelligently and dynamically using the JSON catalog data above. DO NOT give generic or auto-generated canned text every time!\n"
-        + "2. If the user greets you ('hi', 'hello', 'hey', 'good morning', etc.), greet them warmly and naturally as a helpful AI assistant.\n"
-        + "3. If the user asks whether a book, subject, or author is available or in stock:\n"
-        + "   - Search the JSON catalog database above for matching titles, authors, or subjects.\n"
-        + "   - IF AVAILABLE (availableCopies > 0): State CLEARLY at the top: 'YES, [Book Title] by [Author] ([Category]) is AVAILABLE with [N] copies in stock!'. STRICT RULE: DO NOT GIVE ANY RECOMMENDATIONS IF THE ANSWER IS YES! STOP IMMEDIATELY AFTER ANSWERING YES.\n"
-        + "   - IF OUT OF STOCK or NOT FOUND: State CLEARLY at the top: 'NO, [Book Title] is currently out of stock / not in library'. Then, and ONLY THEN, list 1-2 related available books from that engineering department from the JSON.\n"
-        + "4. IF THE LIBRARIAN WANTS TO ADD A BOOK (e.g. 'Add 5 copies of Machine Learning under AI & DS'):\n"
-        + "   Confirm addition in friendly text, and append at the VERY END: [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Department Name\", \"copies\": 5}]]\n"
-        + "5. Use bold text, clean markdown, and friendly emojis.";
+        + "=== USER CONTEXT ===\n"
+        + "Active Portal: " + currentPortal.toUpperCase() + "\n"
+        + "Signed In User: " + (currentUser ? (currentUser.displayName || currentUser.email) : "Student User") + "\n"
+        + "User Query: '" + userText + "'\n\n"
+        + "=== DECISION INSTRUCTIONS FOR GEMINI AI ===\n"
+        + "1. Answer the user's message DIRECTLY, INTELLIGENTLY, AND ACCURATELY based on the LIVE LIBRARY INVENTORY JSON provided above.\n"
+        + "2. If user greets you ('hi', 'hello', 'hey', 'good morning', etc.), respond warmly as a helpful AI assistant.\n"
+        + "3. BOOK AVAILABILITY DECISION:\n"
+        + "   - Search the JSON database for matching title, author, or subject.\n"
+        + "   - IF AVAILABLE (availableCopies > 0): State clearly: '✅ **YES!** [Book Title] by [Author] ([Category]) is AVAILABLE with [N]/[Total] copies in stock!'. DO NOT list any extra recommendations if answer is YES!\n"
+        + "   - IF OUT OF STOCK or NOT IN LIBRARY: State clearly: '❌ **NO**, [Book Title] is out of stock / not available', then recommend 1-2 available books in that department from the JSON.\n"
+        + "4. LIBRARIAN ADD BOOK DECISION:\n"
+        + "   - If Librarian requests to add a book (e.g., 'Add 5 copies of Machine Learning under AI & DS'):\n"
+        + "   - Confirm addition in friendly text, and append at the VERY END: [[ACTION_ADD: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"category\": \"Department Name\", \"copies\": 5}]]\n"
+        + "5. SYLLABUS & RECOMMENDATION DECISIONS:\n"
+        + "   - If student asks for AKTU semester/year books or department books (CSE, IT, ECE, ME, CE), list 4-6 matching books from the JSON database above with exact copy availability.\n"
+        + "6. Format your answer with clean Markdown, bold text, bullet points, and friendly emojis. Send your exact decision and response to the user.";
 
+    var rawReply = null;
+
+    // 1. Try Vercel Serverless Endpoint (/api/advice)
     try {
         var response = await fetch("/api/advice", {
             method: "POST",
@@ -1529,47 +1576,66 @@ async function sendChatMessage(userText) {
         if (response.ok) {
             var data = await response.json();
             if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-                var rawReply = data.candidates[0].content.parts[0].text;
-
-                // Parse ACTION_ADD tag for auto book addition in librarian portal
-                var match = rawReply.match(/\[\[ACTION_ADD:\s*(\{.*?\})\]\]/);
-                if (match && match[1]) {
-                    try {
-                        var bookData = JSON.parse(match[1]);
-                        if (bookData.title && bookData.author) {
-                            var copies = Number(bookData.copies) || 1;
-                            var newBook = {
-                                id: generateBookId(),
-                                title: bookData.title,
-                                author: bookData.author,
-                                category: bookData.category || "Other",
-                                totalCopies: copies,
-                                availableCopies: copies,
-                                cover: DEFAULT_COVER
-                            };
-                            books.push(newBook);
-                            saveBooks();
-                            renderAll();
-                        }
-                    } catch (jsonErr) {
-                        console.error("Error parsing AI book action:", jsonErr);
-                    }
-                    rawReply = rawReply.replace(/\[\[ACTION_ADD:\s*\{.*?\}\]\]/g, "").trim();
-                }
-
-                var loadingBubble = document.getElementById(loadingId);
-                if (loadingBubble) {
-                    loadingBubble.innerHTML = formatMarkdown(rawReply);
-                }
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-                return;
+                rawReply = data.candidates[0].content.parts[0].text;
             }
         }
     } catch (e) {
-        console.log("API unavailable, using local fallback.", e.message);
+        console.log("Serverless API unavailable, checking client key...", e.message);
     }
 
-    // Local fallback for offline/local dev
+    // 2. If Serverless Endpoint failed/unavailable, try Direct Client-Side Gemini API if key exists
+    if (!rawReply) {
+        var userApiKey = localStorage.getItem("gemini_api_key");
+        if (userApiKey && userApiKey.trim()) {
+            rawReply = await callGeminiDirectly(prompt, userApiKey.trim());
+        }
+    }
+
+    // 3. Process Gemini AI's reply & decisions
+    if (rawReply) {
+        var actionExecuted = false;
+
+        // Parse ACTION_ADD tag for auto book addition decided by Gemini AI
+        var match = rawReply.match(/\[\[ACTION_ADD:\s*(\{.*?\})\]\]/);
+        if (match && match[1]) {
+            try {
+                var bookData = JSON.parse(match[1]);
+                if (bookData.title && bookData.author) {
+                    var copies = Number(bookData.copies) || 1;
+                    var newBook = {
+                        id: generateBookId(),
+                        title: bookData.title,
+                        author: bookData.author,
+                        category: bookData.category || "Other",
+                        totalCopies: copies,
+                        availableCopies: copies,
+                        cover: createBookCoverDataUri(bookData.title, bookData.author, bookData.category)
+                    };
+                    books.push(newBook);
+                    saveBooks();
+                    renderAll();
+                    actionExecuted = true;
+                }
+            } catch (jsonErr) {
+                console.error("Error parsing AI book action:", jsonErr);
+            }
+            rawReply = rawReply.replace(/\[\[ACTION_ADD:\s*\{.*?\}\]\]/g, "").trim();
+        }
+
+        var loadingBubble = document.getElementById(loadingId);
+        if (loadingBubble) {
+            var replyHtml = formatMarkdown(rawReply);
+            if (actionExecuted) {
+                replyHtml += "<div style='margin-top: 10px; font-size: 11px; font-weight: 600; color: #059669; background: #d1fae5; padding: 6px 12px; border-radius: 8px; border: 1px solid #10b981;'>"
+                    + "✨ Decision Executed by Gemini AI: New Book Added to Inventory Database!</div>";
+            }
+            loadingBubble.innerHTML = replyHtml;
+        }
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return;
+    }
+
+    // 4. Local fallback engine (processes full inventory JSON data and decision rules locally)
     handleLocalChatbotResponse(userText, loadingId);
 }
 

@@ -227,9 +227,12 @@
         <!-- AI Chatbot Sidebar -->
         <div class="ai-chatbot-sidebar">
             <div class="chatbot-header">
-                <div class="chatbot-title">
-                    <span class="status-dot"></span>
-                    <h3>🤖 ShelfSense AI Assistant</h3>
+                <div class="chatbot-title" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="status-dot"></span>
+                        <h3>🤖 ShelfSense AI</h3>
+                    </div>
+                    <button onclick="promptGeminiApiKey()" title="Set Gemini API Key for direct AI queries" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #2563eb; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; cursor: pointer;">🔑 API Key</button>
                 </div>
                 <span id="chatbotSubtitle" class="chatbot-subtitle">Check availability &amp; get recommendations</span>
             </div>
