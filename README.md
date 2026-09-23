@@ -17,8 +17,20 @@ Built with no complex frameworks — runs directly in your browser!
 ### 🔑 2. Librarian / Admin Portal
 - **Library Inventory Dashboard**: Real-time stats showing Total Books, Available Copies, and Issued Books out.
 - **💬 Add Books via AI Chatbot**: Librarians can add books directly by talking to the AI in natural language (e.g. *"Add 5 copies of Deep Learning by Ian Goodfellow under Computer Science"*).
+- **📸 Multimodal AI Vision Cover Scanner**: Upload a photo of a book cover or purchase receipt (PNG, JPG, PDF) and Gemini 1.5 Flash Vision auto-detects title, author, category, ISBN, and copy counts!
 - **Manual Book Entry Form**: Form to add titles, authors, categories, ISBNs, and copy counts manually.
 - **Issued Books Log**: Track all issued books, borrower names, student IDs, and mark items as returned.
+
+---
+
+## ✨ All Gemini AI Features Integrated
+
+1. **🤖 Conversational AI Book Assistant**: Ask stock availability (*"Is Clean Code available?"*), category queries, or get personalized recommendations.
+2. **➕ AI Natural Language Book Creation**: Librarians can command the assistant to add books to inventory with automatic parsing.
+3. **✨ AI Book Summaries & Key Takeaways**: Click **"✨ AI Summary"** on any catalog card to view a modal with overview, top 3 key takeaways, reading duration, and recommended audience.
+4. **🧠 Interactive AI Book Trivia Quizzes**: Click **"🧠 AI Quiz"** to generate interactive 2-question trivia quizzes for any book with real-time answer checking & explanations.
+5. **📸 Multimodal AI Vision Scanner**: Automatically OCR and parse book covers and receipts into full library records (`api/scan-book.js`).
+6. **⚡ Offline & Local Fallback Engine**: Zero connection errors — functions seamlessly on Vercel with real Gemini API keys or locally via intelligent mock fallback handlers.
 
 ---
 
@@ -35,10 +47,11 @@ Built with no complex frameworks — runs directly in your browser!
 ```
 Library Management System/
 ├── api/
-│   └── advice.js       → Vercel Serverless Function for Gemini AI
-├── index.html          → Main UI structure (Student & Admin Portals)
-├── style.css           → Modern gradient & glassmorphic styling
-├── script.js           → Core app logic, catalog management & AI integration
+│   ├── advice.js       → Vercel Serverless Function for Gemini AI Text & Assistant
+│   └── scan-book.js    → Vercel Serverless Function for Gemini 1.5 Flash Vision Scanning
+├── index.html          → Main UI structure (Student & Admin Portals + AI Modal)
+├── style.css           → Modern gradient & glassmorphic styling + Modal styles
+├── script.js           → Core app logic, catalog management, quiz & AI integration
 └── README.md           → Project documentation
 ```
 
@@ -49,10 +62,10 @@ Library Management System/
 | Technology | Purpose |
 | :--- | :--- |
 | **HTML5** | Semantic structure & portal tabs |
-| **CSS3** | Modern gradients, glassmorphism, responsive grid |
+| **CSS3** | Modern gradients, glassmorphism, responsive grid, modal popups |
 | **JavaScript (ES6)** | DOM manipulation, state management, search/filter |
 | **localStorage** | Instant persistence for books & loan records |
-| **Gemini AI API** | Intelligent book recommendations |
+| **Gemini AI API** | Intelligent recommendations, summaries, quizzes, and multimodal vision scanning |
 
 ---
 

@@ -528,3 +528,169 @@ input:focus, select:focus {
         height: 500px;
     }
 }
+
+/* ========================================== */
+/*  AI MODAL & QUIZ STYLES                    */
+/* ========================================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-card {
+    background: white;
+    width: 100%;
+    max-width: 580px;
+    max-height: 85vh;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close-modal-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+.summary-btn {
+    background: #6366f1;
+    color: white;
+}
+.summary-btn:hover {
+    background: #4f46e5;
+}
+
+.quiz-btn {
+    background: #8b5cf6;
+    color: white;
+}
+.quiz-btn:hover {
+    background: #7c3aed;
+}
+
+.card-action-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.card-action-row .action-btn {
+    flex: 1;
+    text-align: center;
+    padding: 6px 4px;
+    font-size: 11px;
+}
+
+/* Quiz UI inside Modal */
+.quiz-question-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.quiz-question-box h4 {
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 12px;
+}
+
+.quiz-option-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quiz-option-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.quiz-option-btn.correct {
+    background: #d1fae5 !important;
+    border-color: #10b981 !important;
+    color: #065f46 !important;
+    font-weight: 600;
+}
+
+.quiz-option-btn.incorrect {
+    background: #fee2e2 !important;
+    border-color: #ef4444 !important;
+    color: #991b1b !important;
+}
+
+.quiz-feedback {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+}

@@ -99,6 +99,17 @@
                     <button id="addBookBtn" class="primary-btn">Add Book to Library</button>
                 </div>
 
+                <!-- AI Book Cover & Receipt Vision Scanner -->
+                <div class="card-container ai-scanner-card">
+                    <h2>📸 Scan Book Cover / Receipt (AI Vision Import)</h2>
+                    <p class="ai-desc">Upload a photo of a book cover or receipt (PNG, JPG, PDF). Gemini AI vision auto-reads details!</p>
+                    <div class="form-grid">
+                        <input type="file" id="scanFileInput" accept=".png, .jpg, .jpeg, .pdf">
+                        <button id="scanCoverBtn" class="primary-btn scan-btn">📷 Scan Cover with AI</button>
+                    </div>
+                    <div id="scanStatus" style="margin-top: 10px; font-size: 13px; font-weight: 500;"></div>
+                </div>
+
                 <!-- Issued Books Management -->
                 <div class="card-container">
                     <h2>📋 Issued Books Log</h2>
@@ -149,6 +160,17 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- AI Modal Dialog for Summary & Quiz -->
+    <div id="aiModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">✨ AI Book Insights</h3>
+                <button class="close-modal-btn" onclick="closeAiModal()">✖</button>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
     </div>
 
     <!-- JavaScript File -->
