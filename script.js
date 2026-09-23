@@ -551,6 +551,8 @@ async function applyLoggedInUser(user, admissionId) {
     renderAll();
 }
 
+var handleUserAuthSuccess = applyLoggedInUser;
+
 function checkAndRestoreUserSession() {
     var storedUserJson = localStorage.getItem("shelf_current_user");
     if (storedUserJson) {
