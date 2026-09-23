@@ -1,6 +1,87 @@
-/* ShelfSense: AI-Powered Smart Library Management System */
+function createBookCoverDataUri(title, author, category) {
+    title = title || "Engineering Textbook";
+    author = author || "Engineering Faculty";
+    category = category || "General Engineering";
 
-var DEFAULT_COVER = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80";
+    var icon = "📚";
+    var gradStart = "#1e3c72";
+    var gradEnd = "#2a5298";
+    var accentColor = "#60a5fa";
+
+    var catLower = String(category).toLowerCase();
+    if (catLower.includes("computer") || catLower.includes("cse") || catLower.includes("algorithm") || catLower.includes("code")) {
+        icon = "💻"; gradStart = "#0f172a"; gradEnd = "#1e293b"; accentColor = "#38bdf8";
+    } else if (catLower.includes("technology") || catLower.includes("it") || catLower.includes("data science")) {
+        icon = "🌐"; gradStart = "#0284c7"; gradEnd = "#0369a1"; accentColor = "#7dd3fc";
+    } else if (catLower.includes("ai") || catLower.includes("intelligence") || catLower.includes("machine learning")) {
+        icon = "🤖"; gradStart = "#4c1d95"; gradEnd = "#312e81"; accentColor = "#a78bfa";
+    } else if (catLower.includes("electronics") || catLower.includes("ece") || catLower.includes("eee") || catLower.includes("circuit")) {
+        icon = "⚡"; gradStart = "#b45309"; gradEnd = "#78350f"; accentColor = "#fde047";
+    } else if (catLower.includes("mechanical") || catLower.includes("me") || catLower.includes("machine")) {
+        icon = "⚙️"; gradStart = "#1f2937"; gradEnd = "#111827"; accentColor = "#fbbf24";
+    } else if (catLower.includes("civil") || catLower.includes("ce") || catLower.includes("structure")) {
+        icon = "🏗️"; gradStart = "#9a3412"; gradEnd = "#7c2d12"; accentColor = "#ffedd5";
+    } else if (catLower.includes("aktu")) {
+        icon = "📜"; gradStart = "#881337"; gradEnd = "#4c0519"; accentColor = "#fde68a";
+    } else if (catLower.includes("science") || catLower.includes("bsh") || catLower.includes("math") || catLower.includes("physics")) {
+        icon = "📐"; gradStart = "#064e3b"; gradEnd = "#022c22"; accentColor = "#6ee7b7";
+    }
+
+    var safeTitle = String(title).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var safeAuthor = String(author).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var safeCategory = String(category).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    var words = safeTitle.split(" ");
+    var line1 = "", line2 = "", line3 = "";
+
+    for (var i = 0; i < words.length; i++) {
+        if ((line1 + words[i]).length <= 15) {
+            line1 += (line1 ? " " : "") + words[i];
+        } else if ((line2 + words[i]).length <= 18) {
+            line2 += (line2 ? " " : "") + words[i];
+        } else {
+            line3 += (line3 ? " " : "") + words[i];
+        }
+    }
+    if (line3.length > 18) line3 = line3.substring(0, 15) + "...";
+
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">'
+        + '<defs>'
+        + '  <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">'
+        + '    <stop offset="0%" stop-color="' + gradStart + '" />'
+        + '    <stop offset="100%" stop-color="' + gradEnd + '" />'
+        + '  </linearGradient>'
+        + '</defs>'
+        + '<rect width="300" height="400" rx="12" fill="url(#bgGrad)" />'
+        + '<rect x="12" y="12" width="276" height="376" rx="8" fill="none" stroke="' + accentColor + '" stroke-width="2" stroke-dasharray="6 4" opacity="0.4" />'
+        + '<rect x="0" y="0" width="18" height="400" fill="rgba(0,0,0,0.25)" />'
+        + '<text x="150" y="65" font-family="sans-serif" font-size="38" text-anchor="middle" fill="#ffffff">' + icon + '</text>'
+        + '<text x="150" y="100" font-family="sans-serif" font-size="11" font-weight="bold" letter-spacing="1.5" text-anchor="middle" fill="' + accentColor + '">' + safeCategory.toUpperCase() + '</text>'
+        + '<line x1="40" y1="115" x2="260" y2="115" stroke="' + accentColor + '" stroke-width="1.5" opacity="0.6" />'
+        + '<text x="150" y="160" font-family="sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#ffffff">' + line1 + '</text>'
+        + (line2 ? '<text x="150" y="195" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#ffffff">' + line2 + '</text>' : '')
+        + (line3 ? '<text x="150" y="225" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#ffffff">' + line3 + '</text>' : '')
+        + '<line x1="60" y1="270" x2="240" y2="270" stroke="rgba(255,255,255,0.3)" stroke-width="1" />'
+        + '<text x="150" y="310" font-family="sans-serif" font-size="13" font-style="italic" text-anchor="middle" fill="#e2e8f0">Author</text>'
+        + '<text x="150" y="335" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">' + safeAuthor + '</text>'
+        + '<rect x="90" y="360" width="120" height="22" rx="4" fill="rgba(0,0,0,0.4)" />'
+        + '<text x="150" y="375" font-family="sans-serif" font-size="10" font-weight="bold" letter-spacing="1" text-anchor="middle" fill="' + accentColor + '">SHELFSENSE LIBRARY</text>'
+        + '</svg>';
+
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+function handleCoverError(imgEl, title, author, category) {
+    if (!imgEl) return;
+    imgEl.onerror = null;
+    imgEl.src = createBookCoverDataUri(title, author, category);
+}
+
+function escapeJsAttr(str) {
+    return String(str || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
+var DEFAULT_COVER = createBookCoverDataUri("Engineering Library Book", "AKTU Faculty", "Computer Science & Engineering");
 
 var sampleBooks = [
     // ==========================================
@@ -858,9 +939,13 @@ function renderCatalog() {
             actionBtnHtml = '<button class="action-btn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%;">Out of Stock</button>';
         }
 
+        var attrTitle = escapeJsAttr(book.title);
+        var attrAuthor = escapeJsAttr(book.author);
+        var attrCategory = escapeJsAttr(book.category);
+
         card.innerHTML = ''
             + '<div class="book-cover-wrap">'
-            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + safeTitle + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
+            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + safeTitle + '" onerror="handleCoverError(this, \'' + attrTitle + '\', \'' + attrAuthor + '\', \'' + attrCategory + '\')">'
             + '</div>'
             + '<div class="book-info">'
             + '    <h4>' + book.title + '</h4>'
@@ -1012,9 +1097,13 @@ function renderMyBorrowed() {
         var card = document.createElement("div");
         card.className = "book-card";
 
+        var attrTitle = escapeJsAttr(item.title);
+        var attrAuthor = escapeJsAttr(item.author);
+        var attrCategory = escapeJsAttr(bookObj ? bookObj.category : "General Engineering");
+
         card.innerHTML = ''
             + '<div class="book-cover-wrap">'
-            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + item.title + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
+            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + item.title + '" onerror="handleCoverError(this, \'' + attrTitle + '\', \'' + attrAuthor + '\', \'' + attrCategory + '\')">'
             + '</div>'
             + '<div class="book-info">'
             + '    <h4>' + item.title + '</h4>'
@@ -1259,9 +1348,13 @@ function renderAdminInventory() {
         var card = document.createElement("div");
         card.className = "book-card";
 
+        var attrTitle = escapeJsAttr(book.title);
+        var attrAuthor = escapeJsAttr(book.author);
+        var attrCategory = escapeJsAttr(book.category);
+
         card.innerHTML = ''
             + '<div class="book-cover-wrap">'
-            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + book.title + '" onerror="this.src=\'' + DEFAULT_COVER + '\'">'
+            + '    <img src="' + coverUrl + '" class="book-cover-img" alt="' + book.title + '" onerror="handleCoverError(this, \'' + attrTitle + '\', \'' + attrAuthor + '\', \'' + attrCategory + '\')">'
             + '</div>'
             + '<div class="book-info">'
             + '    <h4>' + book.title + '</h4>'
@@ -1607,11 +1700,24 @@ function appendBubble(text, className, id) {
 }
 
 function formatMarkdown(text) {
-    text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    text = text.replace(/###\s?(.*)/g, "<strong>$1</strong>");
-    text = text.replace(/##\s?(.*)/g, "<strong>$1</strong>");
-    text = text.replace(/\n/g, "<br>");
-    return text;
+    if (!text) return "";
+    var html = text;
+    // Code blocks & inline code
+    html = html.replace(/```([\s\S]*?)```/g, "<pre style='background: #0f172a; color: #f8fafc; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; overflow-x: auto; margin: 6px 0;'><code>$1</code></pre>");
+    html = html.replace(/`([^`]+)`/g, "<code style='background: rgba(0,0,0,0.1); color: #2563eb; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px;'>$1</code>");
+    // Bold & Italics
+    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+    // Headings
+    html = html.replace(/^###\s?(.*)$/gm, "<div style='font-weight: 700; font-size: 1rem; color: #1e3c72; margin-top: 10px; margin-bottom: 4px;'>$1</div>");
+    html = html.replace(/^##\s?(.*)$/gm, "<div style='font-weight: 700; font-size: 1.05rem; color: #1e3c72; margin-top: 12px; margin-bottom: 6px;'>$1</div>");
+    // Bullet lists
+    html = html.replace(/^[\*\-\•]\s?(.*)$/gm, "<li style='margin-left: 18px; margin-bottom: 4px; list-style-type: disc;'>$1</li>");
+    // Line breaks
+    html = html.replace(/\n/g, "<br>");
+    // Clean double breaks around list items
+    html = html.replace(/(<br>\s*)+<li/g, "<li");
+    return html;
 }
 
 // AI Modal

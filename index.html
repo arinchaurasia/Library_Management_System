@@ -153,22 +153,22 @@
                 </div>
 
                 <!-- Bulk Book Upload Card -->
-                <div class="card-container bulk-upload-card" style="border: 1.5px solid #10b981; background: rgba(16, 185, 129, 0.02);">
+                <div class="card-container bulk-upload-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
-                        <h2 style="color: #059669; margin: 0;">📊 Bulk Book Upload (CSV / Google Sheets)</h2>
-                        <button class="action-btn" onclick="downloadSampleCsvTemplate()" style="background: #10b981; color: white; padding: 6px 14px; font-weight: 600; font-size: 0.82rem; border-radius: 6px;">📥 Download Sample CSV Template</button>
+                        <h2>📊 Bulk Book Upload (CSV / Google Sheets)</h2>
+                        <button class="action-btn" onclick="downloadSampleCsvTemplate()" style="background: #10b981; color: white; padding: 8px 16px; font-weight: 600; font-size: 0.85rem; border-radius: 8px;">📥 Download Sample CSV Template</button>
                     </div>
-                    <p style="color: #475569; font-size: 0.88rem; margin-bottom: 14px;">Upload a <strong>.CSV file</strong> exported from Google Sheets or Excel (Columns: <code>Title, Author, Category, Copies, CoverURL</code>):</p>
+                    <p>Upload a <strong>.CSV file</strong> exported from Google Sheets or Excel (Columns: <code>Title, Author, Category, Copies, CoverURL</code>):</p>
                     
                     <div class="form-grid" style="margin-bottom: 12px;">
-                        <input type="file" id="bulkCsvInput" accept=".csv, .txt" style="padding: 10px;">
-                        <button id="importCsvBtn" class="primary-btn" style="background: #059669;">🚀 Import Books from CSV File</button>
+                        <input type="file" id="bulkCsvInput" accept=".csv, .txt">
+                        <button id="importCsvBtn" class="primary-btn" style="background: #10b981;">🚀 Import Books from CSV File</button>
                     </div>
                     
-                    <details style="margin-top: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px;">
-                        <summary style="font-weight: 600; cursor: pointer; color: #0f172a; font-size: 0.9rem;">📝 Or Paste CSV Text directly to import</summary>
-                        <textarea id="bulkCsvTextarea" rows="4" placeholder="Title, Author, Category, Copies, CoverURL&#10;Data Structures in C, Reema Thareja, Computer Science & Engineering, 10, https://...&#10;Engineering Physics, Gaur & Gupta, Basic Sciences & Humanities, 8, https://..." style="width: 100%; margin-top: 10px; padding: 10px; font-family: monospace; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea>
-                        <button id="importPasteBtn" class="primary-btn" style="margin-top: 8px; background: #059669; width: 100%;">⚡ Import Pasted CSV Data</button>
+                    <details>
+                        <summary>📝 Or Paste CSV Text directly to import</summary>
+                        <textarea id="bulkCsvTextarea" rows="4" placeholder="Title, Author, Category, Copies, CoverURL&#10;Data Structures in C, Reema Thareja, Computer Science & Engineering, 10, https://...&#10;Engineering Physics, Gaur & Gupta, Basic Sciences & Humanities, 8, https://..."></textarea>
+                        <button id="importPasteBtn" class="primary-btn" style="margin-top: 10px; background: #10b981; width: 100%;">⚡ Import Pasted CSV Data</button>
                     </details>
                     
                     <div id="bulkUploadStatus" style="margin-top: 10px; font-size: 13px; font-weight: 600;"></div>
