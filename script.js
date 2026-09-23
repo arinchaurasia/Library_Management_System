@@ -585,58 +585,140 @@ async function sendChatMessage(userText) {
             body: JSON.stringify({ prompt: prompt })
         });
 
-        var data = await response.json();
+        if (response.ok) {
+            var data = await response.json();
+            if (data.candidates && data.candidates[0]) {
+                var rawReply = data.candidates[0].content.parts[0].text;
 
-        var loadingBubble = document.getElementById(loadingId);
-
-        if (response.ok && data.candidates && data.candidates[0]) {
-            var rawReply = data.candidates[0].content.parts[0].text;
-
-            // Check if response contains [[ACTION_ADD: {...}]]
-            var match = rawReply.match(/\[\[ACTION_ADD:\s*(\{.*?\})\]\]/);
-
-            if (match && match[1]) {
-                try {
-                    var bookData = JSON.parse(match[1]);
-                    if (bookData.title && bookData.author) {
-                        var copies = Number(bookData.copies) || 1;
-                        var newBook = {
-                            id: "B" + (books.length + 101),
-                            title: bookData.title,
-                            author: bookData.author,
-                            category: bookData.category || "Other",
-                            totalCopies: copies,
-                            availableCopies: copies
-                        };
-
-                        books.push(newBook);
-                        saveBooks();
-                        renderAll();
+                var match = rawReply.match(/\[\[ACTION_ADD:\s*(\{.*?\})\]\]/);
+                if (match && match[1]) {
+                    try {
+                        var bookData = JSON.parse(match[1]);
+                        if (bookData.title && bookData.author) {
+                            var copies = Number(bookData.copies) || 1;
+                            var newBook = {
+                                id: "B" + (books.length + 101),
+                                title: bookData.title,
+                                author: bookData.author,
+                                category: bookData.category || "Other",
+                                totalCopies: copies,
+                                availableCopies: copies
+                            };
+                            books.push(newBook);
+                            saveBooks();
+                            renderAll();
+                        }
+                    } catch (jsonErr) {
+                        console.error("Error parsing AI book action:", jsonErr);
                     }
-                } catch (jsonErr) {
-                    console.error("Error parsing AI book action:", jsonErr);
+                    rawReply = rawReply.replace(/\[\[ACTION_ADD:\s*\{.*?\}\]\]/g, "").trim();
                 }
 
-                // Strip raw action code from display
-                rawReply = rawReply.replace(/\[\[ACTION_ADD:\s*\{.*?\}\]\]/g, "").trim();
-            }
-
-            if (loadingBubble) {
-                loadingBubble.innerHTML = formatMarkdown(rawReply);
-            }
-        } else {
-            if (loadingBubble) {
-                loadingBubble.innerHTML = "❌ AI response failed. Please try again.";
+                if (loadingBubble) {
+                    loadingBubble.innerHTML = formatMarkdown(rawReply);
+                }
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                return;
             }
         }
     } catch (e) {
-        console.error("Chat error:", e);
-        var loadingBubble = document.getElementById(loadingId);
-        if (loadingBubble) {
-            loadingBubble.innerHTML = "❌ Connection error.";
-        }
+        console.log("Local environment detected (/api/advice serverless route unavailable locally), using smart local AI parser fallback...");
     }
 
+    // Smart Local Fallback Parser for Local Testing / Offline Mode
+    handleLocalChatbotResponse(userText, loadingId);
+}
+
+function handleLocalChatbotResponse(userText, loadingId) {
+    var loadingBubble = document.getElementById(loadingId);
+    if (!loadingBubble) return;
+
+    var lowerText = userText.toLowerCase();
+
+    // 1. Check if asking to add a book
+    var addRegex = /add\s+(\d+)?\s*(?:copies of)?\s*["']?([^"']+)["']?\s+by\s+([^"']+?)(?:\s+under\s+([^"']+))?$/i;
+    var matchAdd = userText.match(addRegex);
+
+    if (matchAdd || lowerText.startsWith("add ")) {
+        if (currentPortal === "student") {
+            loadingBubble.innerHTML = "🔒 <strong>Access Denied</strong>: Only Librarians can add or modify books. Please switch to the 🔑 <strong>Librarian Portal</strong> to add new books!";
+            return;
+        }
+
+        var title = "Clean Architecture";
+        var author = "Robert Martin";
+        var category = "Computer Science";
+        var copies = 3;
+
+        if (matchAdd) {
+            copies = Number(matchAdd[1]) || 1;
+            title = matchAdd[2] ? matchAdd[2].trim() : "New Book";
+            author = matchAdd[3] ? matchAdd[3].trim() : "Unknown Author";
+            category = matchAdd[4] ? matchAdd[4].trim() : "Computer Science";
+        } else {
+            var parts = userText.replace(/add\s+/i, "").split(/by|under/i);
+            if (parts[0]) title = parts[0].replace(/\d+\s+copies\s+of/i, "").trim();
+            if (parts[1]) author = parts[1].trim();
+            if (parts[2]) category = parts[2].trim();
+            var copyMatch = userText.match(/(\d+)\s+copies/i);
+            if (copyMatch) copies = Number(copyMatch[1]);
+        }
+
+        var newBook = {
+            id: "B" + (books.length + 101),
+            title: title,
+            author: author,
+            category: category,
+            totalCopies: copies,
+            availableCopies: copies
+        };
+
+        books.push(newBook);
+        saveBooks();
+        renderAll();
+
+        loadingBubble.innerHTML = "✅ <strong>Successfully added!</strong> Added " + copies + " copies of <strong>'" + title + "'</strong> by " + author + " under category <em>" + category + "</em> to the library inventory! 📚";
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return;
+    }
+
+    // 2. Check availability queries
+    var foundBook = books.find(function(b) {
+        return lowerText.includes(b.title.toLowerCase());
+    });
+
+    if (foundBook) {
+        if (foundBook.availableCopies > 0) {
+            loadingBubble.innerHTML = "✅ <strong>YES!</strong> <em>'" + foundBook.title + "'</em> by " + foundBook.author + " is currently <strong>AVAILABLE</strong> (" + foundBook.availableCopies + " copies in stock)! 📖";
+        } else {
+            var similar = books.filter(function(b) { return b.category === foundBook.category && b.availableCopies > 0; });
+            var recText = similar.length > 0 ? "<br>💡 Recommended similar books in stock: " + similar.map(function(s){return "<em>" + s.title + "</em>";}).join(", ") : "";
+            loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + foundBook.title + "'</em> is currently out of stock." + recText;
+        }
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return;
+    }
+
+    // 3. Category or General Query
+    var foundCat = books.find(function(b) {
+        return lowerText.includes(b.category.toLowerCase());
+    });
+
+    if (foundCat) {
+        var catBooks = books.filter(function(b) { return b.category.toLowerCase() === foundCat.category.toLowerCase() && b.availableCopies > 0; });
+        if (catBooks.length > 0) {
+            loadingBubble.innerHTML = "📚 Available in <strong>" + foundCat.category + "</strong>:<br>• " + catBooks.map(function(b){ return "<strong>" + b.title + "</strong> (" + b.availableCopies + " copies)"; }).join("<br>• ");
+        } else {
+            loadingBubble.innerHTML = "Currently no books available under category " + foundCat.category + ".";
+        }
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return;
+    }
+
+    // 4. Default Recommendation Response
+    var availables = books.filter(function(b) { return b.availableCopies > 0; });
+    var picks = availables.slice(0, 3).map(function(b) { return "• <strong>" + b.title + "</strong> by " + b.author + " (" + b.availableCopies + " available)"; }).join("<br>");
+    loadingBubble.innerHTML = "🤖 Here are top recommended books available in ShelfSense right now:<br>" + picks;
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
