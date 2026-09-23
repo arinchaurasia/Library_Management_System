@@ -31,7 +31,8 @@ Built with no complex frameworks — runs directly in your browser!
 3. **✨ AI Book Summaries & Key Takeaways**: Click **"✨ AI Summary"** on any catalog card to view a modal with overview, top 3 key takeaways, reading duration, and recommended audience.
 4. **🧠 Interactive AI Book Trivia Quizzes**: Click **"🧠 AI Quiz"** to generate interactive 2-question trivia quizzes for any book with real-time answer checking & explanations.
 5. **📸 Multimodal AI Vision Scanner**: Automatically OCR and parse book covers and receipts into full library records (`api/scan-book.js`).
-6. **🔥 Realtime Firebase Integration**: Real-time cloud synchronization for inventory and borrowed logs across multiple devices with fallback to `localStorage`.
+6. **🔑 Firebase Google Authentication**: 1-click Sign in with Google popup with live profile avatar & auto-filling student names on book borrowing.
+7. **🔥 Realtime Firebase Integration**: Real-time cloud synchronization for inventory and borrowed logs across multiple devices with fallback to `localStorage`.
 
 ---
 

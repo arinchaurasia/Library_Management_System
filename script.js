@@ -147,6 +147,41 @@ function setupEventListeners() {
         scanCoverBtn.addEventListener("click", scanBookCoverFile);
     }
 
+    var googleSignInBtn = document.getElementById("googleSignInBtn");
+    var googleSignOutBtn = document.getElementById("googleSignOutBtn");
+
+    if (googleSignInBtn) {
+        googleSignInBtn.addEventListener("click", function() {
+            if (typeof signInWithGoogle === "function") signInWithGoogle();
+        });
+    }
+    if (googleSignOutBtn) {
+        googleSignOutBtn.addEventListener("click", function() {
+            if (typeof signOutGoogle === "function") signOutGoogle();
+        });
+    }
+
+    if (typeof auth !== "undefined" && auth) {
+        auth.onAuthStateChanged(function(user) {
+            var googleSignInBtn = document.getElementById("googleSignInBtn");
+            var userProfile = document.getElementById("userProfile");
+            var userAvatar = document.getElementById("userAvatar");
+            var userName = document.getElementById("userName");
+
+            if (user) {
+                currentUser = user;
+                if (googleSignInBtn) googleSignInBtn.style.display = "none";
+                if (userProfile) userProfile.style.display = "flex";
+                if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+                if (userName) userName.innerText = user.displayName || user.email || "User";
+            } else {
+                currentUser = null;
+                if (googleSignInBtn) googleSignInBtn.style.display = "flex";
+                if (userProfile) userProfile.style.display = "none";
+            }
+        });
+    }
+
     sendChatBtn.addEventListener("click", function() {
         sendChatMessage(chatInput.value.trim());
     });
@@ -357,7 +392,8 @@ function borrowBook(bookId) {
         return;
     }
 
-    var studentName = prompt("Enter your Name:");
+    var defaultName = (typeof currentUser !== "undefined" && currentUser && currentUser.displayName) ? currentUser.displayName : "";
+    var studentName = prompt("Enter your Name:", defaultName);
     if (!studentName || !studentName.trim()) return;
 
     var studentId = prompt("Enter your Student ID (e.g. ST-101):") || "ST-REG";
