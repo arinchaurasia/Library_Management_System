@@ -797,3 +797,95 @@ input:focus, select:focus {
     font-weight: 600;
     margin-top: 8px;
 }
+
+/* ========================================== */
+/*  FULL-SCREEN AUTH LOCK GATE                */
+/* ========================================== */
+
+.auth-lock-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f172a, #1e3c72, #2a5298);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.auth-lock-card {
+    background: rgba(255, 255, 255, 0.96);
+    width: 100%;
+    max-width: 440px;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: authPop 0.4s ease-out;
+}
+
+@keyframes authPop {
+    from { opacity: 0; transform: translateY(15px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.auth-lock-icon {
+    font-size: 52px;
+    margin-bottom: 12px;
+}
+
+.auth-lock-card h2 {
+    font-size: 22px;
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.auth-lock-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.auth-lock-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 20px 0;
+}
+
+.auth-lock-desc {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.google-gate-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #ffffff;
+    color: #1e293b;
+    border: 2px solid #cbd5e1;
+    border-radius: 30px;
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', Arial, sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+.google-gate-btn:hover {
+    background: #f8fafc;
+    border-color: #2a5298;
+    box-shadow: 0 6px 20px rgba(42, 82, 152, 0.2);
+    transform: translateY(-2px);
+}

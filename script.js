@@ -149,9 +149,15 @@ function setupEventListeners() {
 
     var googleSignInBtn = document.getElementById("googleSignInBtn");
     var googleSignOutBtn = document.getElementById("googleSignOutBtn");
+    var gateGoogleSignInBtn = document.getElementById("gateGoogleSignInBtn");
 
     if (googleSignInBtn) {
         googleSignInBtn.addEventListener("click", function() {
+            if (typeof signInWithGoogle === "function") signInWithGoogle();
+        });
+    }
+    if (gateGoogleSignInBtn) {
+        gateGoogleSignInBtn.addEventListener("click", function() {
             if (typeof signInWithGoogle === "function") signInWithGoogle();
         });
     }
@@ -167,15 +173,22 @@ function setupEventListeners() {
             var userProfile = document.getElementById("userProfile");
             var userAvatar = document.getElementById("userAvatar");
             var userName = document.getElementById("userName");
+            var authLockScreen = document.getElementById("authLockScreen");
+            var appLayout = document.getElementById("appLayout");
 
             if (user) {
                 currentUser = user;
+                if (authLockScreen) authLockScreen.style.display = "none";
+                if (appLayout) appLayout.style.display = "grid";
                 if (googleSignInBtn) googleSignInBtn.style.display = "none";
                 if (userProfile) userProfile.style.display = "flex";
                 if (userAvatar) userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
                 if (userName) userName.innerText = user.displayName || user.email || "User";
+                renderAll();
             } else {
                 currentUser = null;
+                if (authLockScreen) authLockScreen.style.display = "flex";
+                if (appLayout) appLayout.style.display = "none";
                 if (googleSignInBtn) googleSignInBtn.style.display = "flex";
                 if (userProfile) userProfile.style.display = "none";
             }

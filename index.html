@@ -11,7 +11,23 @@
 </head>
 <body>
 
-    <div class="app-layout">
+    <!-- Full-Screen Auth Lock Screen (Requires Sign-In to Access Site) -->
+    <div id="authLockScreen" class="auth-lock-screen">
+        <div class="auth-lock-card">
+            <div class="auth-lock-icon">📚</div>
+            <h2>ShelfSense Library System</h2>
+            <p class="auth-lock-subtitle">AI-Powered Smart Library Portal</p>
+            <div class="auth-lock-divider"></div>
+            <p class="auth-lock-desc">🔒 Access Restricted. Please sign in with your Google account to view library catalog, borrow books, or use the AI Assistant.</p>
+            <button id="gateGoogleSignInBtn" class="google-gate-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="22" height="22">
+                Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Application Layout -->
+    <div id="appLayout" class="app-layout" style="display: none;">
 
         <!-- Left / Main Portal Content -->
         <div class="main-content">
