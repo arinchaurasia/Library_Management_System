@@ -3,382 +3,385 @@
 var DEFAULT_COVER = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80";
 
 var sampleBooks = [
-  // ==========================================
-  // COMPUTER SCIENCE & ENGINEERING (CSE) - 35 BOOKS
-  // ==========================================
-  { id: "CSE101", title: "Introduction to Algorithms", author: "Thomas H. Cormen, Charles E. Leiserson", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780262033848-M.jpg" },
-  { id: "CSE102", title: "Operating System Concepts", author: "Abraham Silberschatz, Peter B. Galvin", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781119800361-M.jpg" },
-  { id: "CSE103", title: "Computer Networks", author: "Andrew S. Tanenbaum, David J. Wetherall", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780132126953-M.jpg" },
-  { id: "CSE104", title: "Database System Concepts", author: "Abraham Silberschatz, Henry F. Korth", category: "Computer Science & Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073523323-M.jpg" },
-  { id: "CSE105", title: "Compilers: Principles, Techniques, & Tools", author: "Alfred V. Aho, Monica S. Lam", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780321486813-M.jpg" },
-  { id: "CSE106", title: "Computer Organization and Design", author: "David A. Patterson, John L. Hennessy", category: "Computer Science & Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780128017334-M.jpg" },
-  { id: "CSE107", title: "Artificial Intelligence: A Modern Approach", author: "Stuart Russell, Peter Norvig", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780134610993-M.jpg" },
-  { id: "CSE108", title: "Clean Code: A Handbook of Agile Software Craftsmanship", author: "Robert C. Martin", category: "Computer Science & Engineering", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780132350884-M.jpg" },
-  { id: "CSE109", title: "The Pragmatic Programmer", author: "Andrew Hunt, David Thomas", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780201616224-M.jpg" },
-  { id: "CSE110", title: "Design Patterns: Elements of Reusable Object-Oriented Software", author: "Erich Gamma, Richard Helm, Ralph Johnson", category: "Computer Science & Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780201633610-M.jpg" },
-  { id: "CSE111", title: "Modern Operating Systems", author: "Andrew S. Tanenbaum, Herbert Bos", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780133591620-M.jpg" },
-  { id: "CSE112", title: "Algorithms", author: "Robert Sedgewick, Kevin Wayne", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780321573513-M.jpg" },
-  { id: "CSE113", title: "Theory of Computer Science: Automata, Languages and Computation", author: "K.L.P. Mishra, N. Chandrasekaran", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80" },
-  { id: "CSE114", title: "Digital Logic and Computer Design", author: "M. Morris Mano", category: "Computer Science & Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
-  { id: "CSE115", title: "Software Engineering: A Practitioner's Approach", author: "Roger S. Pressman, Bruce R. Maxim", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780078022128-M.jpg" },
-  { id: "CSE116", title: "Data Structures and Algorithm Analysis in C++", author: "Mark Allen Weiss", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780132847377-M.jpg" },
-  { id: "CSE117", title: "Computer Graphics: Principles and Practice", author: "John F. Hughes, Andries van Dam", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780321399526-M.jpg" },
-  { id: "CSE118", title: "Object-Oriented Programming with C++", author: "E. Balagurusamy", category: "Computer Science & Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400&q=80" },
-  { id: "CSE119", title: "Programming in ANSI C", author: "E. Balagurusamy", category: "Computer Science & Engineering", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
-  { id: "CSE120", title: "Java: The Complete Reference", author: "Herbert Schildt", category: "Computer Science & Engineering", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781260440232-M.jpg" },
-  { id: "CSE121", title: "The C Programming Language", author: "Brian W. Kernighan, Dennis M. Ritchie", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780131103627-M.jpg" },
-  { id: "CSE122", title: "Data Mining: Concepts and Techniques", author: "Jiawei Han, Micheline Kamber", category: "Computer Science & Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780123814791-M.jpg" },
-  { id: "CSE123", title: "Computer Networking: A Top-Down Approach", author: "James F. Kurose, Keith W. Ross", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780133594140-M.jpg" },
-  { id: "CSE124", title: "Cryptography and Network Security", author: "William Stallings", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780134444284-M.jpg" },
-  { id: "CSE125", title: "Distributed Systems: Concepts and Design", author: "George Coulouris, Jean Dollimore", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780132143011-M.jpg" },
-  { id: "CSE126", title: "Discrete Mathematics and Its Applications", author: "Kenneth H. Rosen", category: "Computer Science & Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073383095-M.jpg" },
-  { id: "CSE127", title: "Fundamentals of Software Engineering", author: "Rajib Mall", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&q=80" },
-  { id: "CSE128", title: "Linux Kernel Development", author: "Robert Love", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780672329463-M.jpg" },
-  { id: "CSE129", title: "Structure and Interpretation of Computer Programs", author: "Harold Abelson, Gerald Jay Sussman", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780262510875-M.jpg" },
-  { id: "CSE130", title: "Microprocessors and Microcontrollers", author: "N. Senthil Kumar, M. Saravanan", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "CSE131", title: "Compiler Design in C", author: "Allen I. Holub", category: "Computer Science & Engineering", totalCopies: 4, availableCopies: 4, cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80" },
-  { id: "CSE132", title: "Concrete Mathematics: A Foundation for Computer Science", author: "Ronald L. Graham, Donald E. Knuth", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780201558029-M.jpg" },
-  { id: "CSE133", title: "The Art of Computer Programming, Vol 1", author: "Donald E. Knuth", category: "Computer Science & Engineering", totalCopies: 4, availableCopies: 4, cover: "https://covers.openlibrary.org/b/isbn/9780201896831-M.jpg" },
-  { id: "CSE134", title: "Real-Time Systems", author: "Jane W. S. Liu", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780130568878-M.jpg" },
-  { id: "CSE135", title: "Python Programming: An Introduction to Computer Science", author: "John Zelle", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9781590282410-M.jpg" },
+    // ==========================================
+    // COMPUTER SCIENCE & ENGINEERING (CSE) - 35 BOOKS
+    // ==========================================
+    { id: "CSE101", title: "Introduction to Algorithms", author: "Thomas H. Cormen, Charles E. Leiserson", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780262033848-M.jpg" },
+    { id: "CSE102", title: "Operating System Concepts", author: "Abraham Silberschatz, Peter B. Galvin", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781119800361-M.jpg" },
+    { id: "CSE103", title: "Computer Networks", author: "Andrew S. Tanenbaum, David J. Wetherall", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780132126953-M.jpg" },
+    { id: "CSE104", title: "Database System Concepts", author: "Abraham Silberschatz, Henry F. Korth", category: "Computer Science & Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073523323-M.jpg" },
+    { id: "CSE105", title: "Compilers: Principles, Techniques, & Tools", author: "Alfred V. Aho, Monica S. Lam", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780321486813-M.jpg" },
+    { id: "CSE106", title: "Computer Organization and Design", author: "David A. Patterson, John L. Hennessy", category: "Computer Science & Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780128017334-M.jpg" },
+    { id: "CSE107", title: "Artificial Intelligence: A Modern Approach", author: "Stuart Russell, Peter Norvig", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780134610993-M.jpg" },
+    { id: "CSE108", title: "Clean Code: A Handbook of Agile Software Craftsmanship", author: "Robert C. Martin", category: "Computer Science & Engineering", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780132350884-M.jpg" },
+    { id: "CSE109", title: "The Pragmatic Programmer", author: "Andrew Hunt, David Thomas", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780201616224-M.jpg" },
+    { id: "CSE110", title: "Design Patterns: Elements of Reusable Object-Oriented Software", author: "Erich Gamma, Richard Helm, Ralph Johnson", category: "Computer Science & Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780201633610-M.jpg" },
+    { id: "CSE111", title: "Modern Operating Systems", author: "Andrew S. Tanenbaum, Herbert Bos", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780133591620-M.jpg" },
+    { id: "CSE112", title: "Algorithms", author: "Robert Sedgewick, Kevin Wayne", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780321573513-M.jpg" },
+    { id: "CSE113", title: "Theory of Computer Science: Automata, Languages and Computation", author: "K.L.P. Mishra, N. Chandrasekaran", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80" },
+    { id: "CSE114", title: "Digital Logic and Computer Design", author: "M. Morris Mano", category: "Computer Science & Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
+    { id: "CSE115", title: "Software Engineering: A Practitioner's Approach", author: "Roger S. Pressman, Bruce R. Maxim", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780078022128-M.jpg" },
+    { id: "CSE116", title: "Data Structures and Algorithm Analysis in C++", author: "Mark Allen Weiss", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780132847377-M.jpg" },
+    { id: "CSE117", title: "Computer Graphics: Principles and Practice", author: "John F. Hughes, Andries van Dam", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780321399526-M.jpg" },
+    { id: "CSE118", title: "Object-Oriented Programming with C++", author: "E. Balagurusamy", category: "Computer Science & Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400&q=80" },
+    { id: "CSE119", title: "Programming in ANSI C", author: "E. Balagurusamy", category: "Computer Science & Engineering", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
+    { id: "CSE120", title: "Java: The Complete Reference", author: "Herbert Schildt", category: "Computer Science & Engineering", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781260440232-M.jpg" },
+    { id: "CSE121", title: "The C Programming Language", author: "Brian W. Kernighan, Dennis M. Ritchie", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780131103627-M.jpg" },
+    { id: "CSE122", title: "Data Mining: Concepts and Techniques", author: "Jiawei Han, Micheline Kamber", category: "Computer Science & Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780123814791-M.jpg" },
+    { id: "CSE123", title: "Computer Networking: A Top-Down Approach", author: "James F. Kurose, Keith W. Ross", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780133594140-M.jpg" },
+    { id: "CSE124", title: "Cryptography and Network Security", author: "William Stallings", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780134444284-M.jpg" },
+    { id: "CSE125", title: "Distributed Systems: Concepts and Design", author: "George Coulouris, Jean Dollimore", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780132143011-M.jpg" },
+    { id: "CSE126", title: "Discrete Mathematics and Its Applications", author: "Kenneth H. Rosen", category: "Computer Science & Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073383095-M.jpg" },
+    { id: "CSE127", title: "Fundamentals of Software Engineering", author: "Rajib Mall", category: "Computer Science & Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&q=80" },
+    { id: "CSE128", title: "Linux Kernel Development", author: "Robert Love", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780672329463-M.jpg" },
+    { id: "CSE129", title: "Structure and Interpretation of Computer Programs", author: "Harold Abelson, Gerald Jay Sussman", category: "Computer Science & Engineering", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780262510875-M.jpg" },
+    { id: "CSE130", title: "Microprocessors and Microcontrollers", author: "N. Senthil Kumar, M. Saravanan", category: "Computer Science & Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "CSE131", title: "Compiler Design in C", author: "Allen I. Holub", category: "Computer Science & Engineering", totalCopies: 4, availableCopies: 4, cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80" },
+    { id: "CSE132", title: "Concrete Mathematics: A Foundation for Computer Science", author: "Ronald L. Graham, Donald E. Knuth", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780201558029-M.jpg" },
+    { id: "CSE133", title: "The Art of Computer Programming, Vol 1", author: "Donald E. Knuth", category: "Computer Science & Engineering", totalCopies: 4, availableCopies: 4, cover: "https://covers.openlibrary.org/b/isbn/9780201896831-M.jpg" },
+    { id: "CSE134", title: "Real-Time Systems", author: "Jane W. S. Liu", category: "Computer Science & Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780130568878-M.jpg" },
+    { id: "CSE135", title: "Python Programming: An Introduction to Computer Science", author: "John Zelle", category: "Computer Science & Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9781590282410-M.jpg" },
 
-  // ==========================================
-  // INFORMATION TECHNOLOGY (IT) - 30 BOOKS
-  // ==========================================
-  { id: "IT201", title: "Data Communications and Networking", author: "Behrouz A. Forouzan", category: "Information Technology", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780073376226-M.jpg" },
-  { id: "IT202", title: "Cloud Computing: Concepts, Technology & Architecture", author: "Thomas Erl, Ricardo Puttini", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133387520-M.jpg" },
-  { id: "IT203", title: "Cybersecurity Essentials", author: "Charles J. Brooks, Christopher Grow", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781119362395-M.jpg" },
-  { id: "IT204", title: "Internet of Things: A Hands-On Approach", author: "Arshdeep Bahga, Vijay Madisetti", category: "Information Technology", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780996025515-M.jpg" },
-  { id: "IT205", title: "DevOps Handbook", author: "Gene Kim, Jez Humble, Patrick Debois", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781942788003-M.jpg" },
-  { id: "IT206", title: "Software Testing: Principles and Practices", author: "Srinivasan Desikan, Gopalaswamy Ramesh", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80" },
-  { id: "IT207", title: "Management Information Systems", author: "Kenneth C. Laudon, Jane P. Laudon", category: "Information Technology", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780135191798-M.jpg" },
-  { id: "IT208", title: "Web Technologies: HTML, JavaScript, PHP & Java", author: "A.A. Puntambekar", category: "Information Technology", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&q=80" },
-  { id: "IT209", title: "Building Microservices", author: "Sam Newman", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781491950357-M.jpg" },
-  { id: "IT210", title: "Docker Deep Dive", author: "Nigel Poulton", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781916585256-M.jpg" },
-  { id: "IT211", title: "Continuous Delivery", author: "Jez Humble, David Farley", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780321601910-M.jpg" },
-  { id: "IT212", title: "Site Reliability Engineering", author: "Betsy Beyer, Chris Jones, Jennifer Petoff", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781491929124-M.jpg" },
-  { id: "IT213", title: "Ethical Hacking and Penetration Testing Guide", author: "Rafay Baloch", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781482231618-M.jpg" },
-  { id: "IT214", title: "Information Security Principles", author: "Mark Stamp", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781118027202-M.jpg" },
-  { id: "IT215", title: "Mobile Communications", author: "Jochen Schiller", category: "Information Technology", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780321123817-M.jpg" },
-  { id: "IT216", title: "Wireless Communications & Networks", author: "William Stallings", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780131918351-M.jpg" },
-  { id: "IT217", title: "E-Commerce: Business, Technology, Society", author: "Kenneth C. Laudon, Carol Guercio Traver", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780134998459-M.jpg" },
-  { id: "IT218", title: "System Analysis and Design", author: "Kenneth E. Kendall, Julie E. Kendall", category: "Information Technology", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780134785554-M.jpg" },
-  { id: "IT219", title: "Kubernetes Up & Running", author: "Kelsey Hightower, Brendan Burns, Joe Beda", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781492046530-M.jpg" },
-  { id: "IT220", title: "Agile Software Development", author: "Robert C. Martin", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780135974445-M.jpg" },
-  { id: "IT221", title: "Enterprise Integration Patterns", author: "Gregor Hohpe, Bobby Woolf", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780321200686-M.jpg" },
-  { id: "IT222", title: "Information Theory, Coding and Cryptography", author: "Ranjan Bose", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&q=80" },
-  { id: "IT223", title: "High Performance Web Sites", author: "Steve Souders", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780596529307-M.jpg" },
-  { id: "IT224", title: "Learning Python", author: "Mark Lutz", category: "Information Technology", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781449355739-M.jpg" },
-  { id: "IT225", title: "React Up & Running", author: "Stoyan Stefanov", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781491931820-M.jpg" },
-  { id: "IT226", title: "Web Development with Node and Express", author: "Ethan Brown", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781491949306-M.jpg" },
-  { id: "IT227", title: "Professional Android 4 Application Development", author: "Reto Meier", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781118102275-M.jpg" },
-  { id: "IT228", title: "iOS Programming: The Big Nerd Ranch Guide", author: "Christian Keur, Aaron Hillegass", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780134682334-M.jpg" },
-  { id: "IT229", title: "Big Data: Principles and Best Practices", author: "Nathan Marz, James Warren", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781617290343-M.jpg" },
-  { id: "IT230", title: "Network Security Essentials", author: "William Stallings", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780134527338-M.jpg" },
+    // ==========================================
+    // INFORMATION TECHNOLOGY (IT) - 30 BOOKS
+    // ==========================================
+    { id: "IT201", title: "Data Communications and Networking", author: "Behrouz A. Forouzan", category: "Information Technology", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780073376226-M.jpg" },
+    { id: "IT202", title: "Cloud Computing: Concepts, Technology & Architecture", author: "Thomas Erl, Ricardo Puttini", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133387520-M.jpg" },
+    { id: "IT203", title: "Cybersecurity Essentials", author: "Charles J. Brooks, Christopher Grow", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781119362395-M.jpg" },
+    { id: "IT204", title: "Internet of Things: A Hands-On Approach", author: "Arshdeep Bahga, Vijay Madisetti", category: "Information Technology", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780996025515-M.jpg" },
+    { id: "IT205", title: "DevOps Handbook", author: "Gene Kim, Jez Humble, Patrick Debois", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781942788003-M.jpg" },
+    { id: "IT206", title: "Software Testing: Principles and Practices", author: "Srinivasan Desikan, Gopalaswamy Ramesh", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80" },
+    { id: "IT207", title: "Management Information Systems", author: "Kenneth C. Laudon, Jane P. Laudon", category: "Information Technology", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780135191798-M.jpg" },
+    { id: "IT208", title: "Web Technologies: HTML, JavaScript, PHP & Java", author: "A.A. Puntambekar", category: "Information Technology", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&q=80" },
+    { id: "IT209", title: "Building Microservices", author: "Sam Newman", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781491950357-M.jpg" },
+    { id: "IT210", title: "Docker Deep Dive", author: "Nigel Poulton", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781916585256-M.jpg" },
+    { id: "IT211", title: "Continuous Delivery", author: "Jez Humble, David Farley", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780321601910-M.jpg" },
+    { id: "IT212", title: "Site Reliability Engineering", author: "Betsy Beyer, Chris Jones, Jennifer Petoff", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781491929124-M.jpg" },
+    { id: "IT213", title: "Ethical Hacking and Penetration Testing Guide", author: "Rafay Baloch", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781482231618-M.jpg" },
+    { id: "IT214", title: "Information Security Principles", author: "Mark Stamp", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781118027202-M.jpg" },
+    { id: "IT215", title: "Mobile Communications", author: "Jochen Schiller", category: "Information Technology", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780321123817-M.jpg" },
+    { id: "IT216", title: "Wireless Communications & Networks", author: "William Stallings", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780131918351-M.jpg" },
+    { id: "IT217", title: "E-Commerce: Business, Technology, Society", author: "Kenneth C. Laudon, Carol Guercio Traver", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780134998459-M.jpg" },
+    { id: "IT218", title: "System Analysis and Design", author: "Kenneth E. Kendall, Julie E. Kendall", category: "Information Technology", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780134785554-M.jpg" },
+    { id: "IT219", title: "Kubernetes Up & Running", author: "Kelsey Hightower, Brendan Burns, Joe Beda", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781492046530-M.jpg" },
+    { id: "IT220", title: "Agile Software Development", author: "Robert C. Martin", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780135974445-M.jpg" },
+    { id: "IT221", title: "Enterprise Integration Patterns", author: "Gregor Hohpe, Bobby Woolf", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780321200686-M.jpg" },
+    { id: "IT222", title: "Information Theory, Coding and Cryptography", author: "Ranjan Bose", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&q=80" },
+    { id: "IT223", title: "High Performance Web Sites", author: "Steve Souders", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780596529307-M.jpg" },
+    { id: "IT224", title: "Learning Python", author: "Mark Lutz", category: "Information Technology", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781449355739-M.jpg" },
+    { id: "IT225", title: "React Up & Running", author: "Stoyan Stefanov", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781491931820-M.jpg" },
+    { id: "IT226", title: "Web Development with Node and Express", author: "Ethan Brown", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781491949306-M.jpg" },
+    { id: "IT227", title: "Professional Android 4 Application Development", author: "Reto Meier", category: "Information Technology", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781118102275-M.jpg" },
+    { id: "IT228", title: "iOS Programming: The Big Nerd Ranch Guide", author: "Christian Keur, Aaron Hillegass", category: "Information Technology", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780134682334-M.jpg" },
+    { id: "IT229", title: "Big Data: Principles and Best Practices", author: "Nathan Marz, James Warren", category: "Information Technology", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781617290343-M.jpg" },
+    { id: "IT230", title: "Network Security Essentials", author: "William Stallings", category: "Information Technology", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780134527338-M.jpg" },
 
-  // ==========================================
-  // ARTIFICIAL INTELLIGENCE & DATA SCIENCE (AI & DS) - 25 BOOKS
-  // ==========================================
-  { id: "AIDS301", title: "Deep Learning", author: "Ian Goodfellow, Yoshua Bengio, Aaron Courville", category: "Artificial Intelligence & Data Science", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780262035613-M.jpg" },
-  { id: "AIDS302", title: "Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow", author: "Aurélien Géron", category: "Artificial Intelligence & Data Science", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9781492032649-M.jpg" },
-  { id: "AIDS303", title: "Pattern Recognition and Machine Learning", author: "Christopher M. Bishop", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780387310732-M.jpg" },
-  { id: "AIDS304", title: "Machine Learning", author: "Tom M. Mitchell", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780070428072-M.jpg" },
-  { id: "AIDS305", title: "Python for Data Analysis", author: "Wes McKinney", category: "Artificial Intelligence & Data Science", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781491957660-M.jpg" },
-  { id: "AIDS306", title: "Data Science from Scratch", author: "Joel Grus", category: "Artificial Intelligence & Data Science", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781492041139-M.jpg" },
-  { id: "AIDS307", title: "Reinforcement Learning: An Introduction", author: "Richard S. Sutton, Andrew G. Barto", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780262039246-M.jpg" },
-  { id: "AIDS308", title: "Speech and Language Processing", author: "Daniel Jurafsky, James H. Martin", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780131873216-M.jpg" },
-  { id: "AIDS309", title: "Computer Vision: Algorithms and Applications", author: "Richard Szeliski", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781848829343-M.jpg" },
-  { id: "AIDS310", title: "Natural Language Processing with Python", author: "Steven Bird, Ewan Klein, Edward Loper", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780596516499-M.jpg" },
-  { id: "AIDS311", title: "Probabilistic Graphical Models", author: "Daphne Koller, Nir Friedman", category: "Artificial Intelligence & Data Science", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780262013192-M.jpg" },
-  { id: "AIDS312", title: "Deep Learning with Python", author: "François Chollet", category: "Artificial Intelligence & Data Science", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781617294433-M.jpg" },
-  { id: "AIDS313", title: "Mathematics for Machine Learning", author: "Marc Peter Deisenroth, A. Aldo Faisal", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9781108455145-M.jpg" },
-  { id: "AIDS314", title: "Python Machine Learning", author: "Sebastian Raschka, Vahid Mirjalili", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781789955750-M.jpg" },
-  { id: "AIDS315", title: "Practical Statistics for Data Scientists", author: "Peter Bruce, Andrew Bruce, Peter Gedeck", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781492072942-M.jpg" },
-  { id: "AIDS316", title: "Mining of Massive Datasets", author: "Jure Leskovec, Anand Rajaraman, Jeffrey D. Ullman", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781107077232-M.jpg" },
-  { id: "AIDS317", title: "Generative Deep Learning", author: "David Foster", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781492041948-M.jpg" },
-  { id: "AIDS318", title: "Transformers for Natural Language Processing", author: "Denis Rothman", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781800563193-M.jpg" },
-  { id: "AIDS319", title: "Feature Engineering for Machine Learning", author: "Alice Zheng, Amanda Casari", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781491953242-M.jpg" },
-  { id: "AIDS320", title: "Applied Predictive Modeling", author: "Max Kuhn, Kjell Johnson", category: "Artificial Intelligence & Data Science", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9781461468486-M.jpg" },
-  { id: "AIDS321", title: "Introduction to Data Mining", author: "Pang-Ning Tan, Michael Steinbach", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133128901-M.jpg" },
-  { id: "AIDS322", title: "Neural Networks and Deep Learning", author: "Michael Nielsen", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" },
-  { id: "AIDS323", title: "Data Analytics with R", author: "R.N. Prasad, Seema Acharya", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80" },
-  { id: "AIDS324", title: "Business Intelligence and Analytics", author: "Ramesh Sharda, Dursun Delen", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780133051056-M.jpg" },
-  { id: "AIDS325", title: "Machine Learning Yearning", author: "Andrew Ng", category: "Artificial Intelligence & Data Science", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=400&q=80" },
+    // ==========================================
+    // ARTIFICIAL INTELLIGENCE & DATA SCIENCE (AI & DS) - 25 BOOKS
+    // ==========================================
+    { id: "AIDS301", title: "Deep Learning", author: "Ian Goodfellow, Yoshua Bengio, Aaron Courville", category: "Artificial Intelligence & Data Science", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780262035613-M.jpg" },
+    { id: "AIDS302", title: "Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow", author: "Aurélien Géron", category: "Artificial Intelligence & Data Science", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9781492032649-M.jpg" },
+    { id: "AIDS303", title: "Pattern Recognition and Machine Learning", author: "Christopher M. Bishop", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780387310732-M.jpg" },
+    { id: "AIDS304", title: "Machine Learning", author: "Tom M. Mitchell", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780070428072-M.jpg" },
+    { id: "AIDS305", title: "Python for Data Analysis", author: "Wes McKinney", category: "Artificial Intelligence & Data Science", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781491957660-M.jpg" },
+    { id: "AIDS306", title: "Data Science from Scratch", author: "Joel Grus", category: "Artificial Intelligence & Data Science", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781492041139-M.jpg" },
+    { id: "AIDS307", title: "Reinforcement Learning: An Introduction", author: "Richard S. Sutton, Andrew G. Barto", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780262039246-M.jpg" },
+    { id: "AIDS308", title: "Speech and Language Processing", author: "Daniel Jurafsky, James H. Martin", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780131873216-M.jpg" },
+    { id: "AIDS309", title: "Computer Vision: Algorithms and Applications", author: "Richard Szeliski", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781848829343-M.jpg" },
+    { id: "AIDS310", title: "Natural Language Processing with Python", author: "Steven Bird, Ewan Klein, Edward Loper", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780596516499-M.jpg" },
+    { id: "AIDS311", title: "Probabilistic Graphical Models", author: "Daphne Koller, Nir Friedman", category: "Artificial Intelligence & Data Science", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780262013192-M.jpg" },
+    { id: "AIDS312", title: "Deep Learning with Python", author: "François Chollet", category: "Artificial Intelligence & Data Science", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781617294433-M.jpg" },
+    { id: "AIDS313", title: "Mathematics for Machine Learning", author: "Marc Peter Deisenroth, A. Aldo Faisal", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9781108455145-M.jpg" },
+    { id: "AIDS314", title: "Python Machine Learning", author: "Sebastian Raschka, Vahid Mirjalili", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781789955750-M.jpg" },
+    { id: "AIDS315", title: "Practical Statistics for Data Scientists", author: "Peter Bruce, Andrew Bruce, Peter Gedeck", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781492072942-M.jpg" },
+    { id: "AIDS316", title: "Mining of Massive Datasets", author: "Jure Leskovec, Anand Rajaraman, Jeffrey D. Ullman", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781107077232-M.jpg" },
+    { id: "AIDS317", title: "Generative Deep Learning", author: "David Foster", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781492041948-M.jpg" },
+    { id: "AIDS318", title: "Transformers for Natural Language Processing", author: "Denis Rothman", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9781800563193-M.jpg" },
+    { id: "AIDS319", title: "Feature Engineering for Machine Learning", author: "Alice Zheng, Amanda Casari", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781491953242-M.jpg" },
+    { id: "AIDS320", title: "Applied Predictive Modeling", author: "Max Kuhn, Kjell Johnson", category: "Artificial Intelligence & Data Science", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9781461468486-M.jpg" },
+    { id: "AIDS321", title: "Introduction to Data Mining", author: "Pang-Ning Tan, Michael Steinbach", category: "Artificial Intelligence & Data Science", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133128901-M.jpg" },
+    { id: "AIDS322", title: "Neural Networks and Deep Learning", author: "Michael Nielsen", category: "Artificial Intelligence & Data Science", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" },
+    { id: "AIDS323", title: "Data Analytics with R", author: "R.N. Prasad, Seema Acharya", category: "Artificial Intelligence & Data Science", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80" },
+    { id: "AIDS324", title: "Business Intelligence and Analytics", author: "Ramesh Sharda, Dursun Delen", category: "Artificial Intelligence & Data Science", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780133051056-M.jpg" },
+    { id: "AIDS325", title: "Machine Learning Yearning", author: "Andrew Ng", category: "Artificial Intelligence & Data Science", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=400&q=80" },
 
-  // ==========================================
-  // ELECTRONICS & COMMUNICATION ENGINEERING (ECE) - 30 BOOKS
-  // ==========================================
-  { id: "ECE401", title: "Microelectronic Circuits", author: "Adel S. Sedra, Kenneth C. Smith", category: "Electronics & Communication", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780199333134-M.jpg" },
-  { id: "ECE402", title: "Electronic Devices and Circuit Theory", author: "Robert L. Boylestad, Louis Nashelsky", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780132622264-M.jpg" },
-  { id: "ECE403", title: "Digital Signal Processing", author: "John G. Proakis, Dimitris G. Manolakis", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780131873742-M.jpg" },
-  { id: "ECE404", title: "Signals and Systems", author: "Alan V. Oppenheim, Alan S. Willsky", category: "Electronics & Communication", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780138147570-M.jpg" },
-  { id: "ECE405", title: "Communication Systems", author: "Simon Haykin", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780471697909-M.jpg" },
-  { id: "ECE406", title: "Modern Digital and Analog Communication Systems", author: "B.P. Lathi, Zhi Ding", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780195331455-M.jpg" },
-  { id: "ECE407", title: "CMOS VLSI Design", author: "Neil H.E. Weste, David Money Harris", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780321547743-M.jpg" },
-  { id: "ECE408", title: "Antenna Theory: Analysis and Design", author: "Constantine A. Balanis", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781118642061-M.jpg" },
-  { id: "ECE409", title: "Fundamentals of Electric Circuits", author: "Charles K. Alexander, Matthew N.O. Sadiku", category: "Electronics & Communication", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780078028229-M.jpg" },
-  { id: "ECE410", title: "Linear Integrated Circuits", author: "D. Roy Choudhury, Shail B. Jain", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "ECE411", title: "Microwave Engineering", author: "David M. Pozar", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780470631553-M.jpg" },
-  { id: "ECE412", title: "Optical Fiber Communications", author: "Gerd Keiser", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780073380711-M.jpg" },
-  { id: "ECE413", title: "Digital Integrated Circuits", author: "Jan M. Rabaey, Anantha Chandrakasan", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780130909961-M.jpg" },
-  { id: "ECE414", title: "Electromagnetic Waves and Radiating Systems", author: "Edward C. Jordan, Keith G. Balmain", category: "Electronics & Communication", totalCopies: 5, availableCopies: 5, cover: "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=400&q=80" },
-  { id: "ECE415", title: "Embedded Systems: Architecture, Programming & Design", author: "Raj Kamal", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ECE416", title: "Digital Communications", author: "John G. Proakis, Masoud Salehi", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780072957167-M.jpg" },
-  { id: "ECE417", title: "Control Systems Engineering", author: "I.J. Nagrath, M. Gopal", category: "Electronics & Communication", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ECE418", title: "Wireless Communications", author: "Andreas F. Molisch", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780470741863-M.jpg" },
-  { id: "ECE419", title: "Fiber-Optic Communication Systems", author: "Govind P. Agrawal", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780470505113-M.jpg" },
-  { id: "ECE420", title: "Semiconductor Physics and Devices", author: "Donald A. Neamen", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780073529585-M.jpg" },
-  { id: "ECE421", title: "Electronic Communication Systems", author: "George Kennedy, Bernard Davis", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780074636824-M.jpg" },
-  { id: "ECE422", title: "Principles of Electromagnetics", author: "Matthew N.O. Sadiku", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780199461851-M.jpg" },
-  { id: "ECE423", title: "Satellite Communications", author: "Timothy Pratt, Charles W. Bostian", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780471370079-M.jpg" },
-  { id: "ECE424", title: "VLSI Design", author: "Debaprasad Das", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "ECE425", title: "RF Microelectronics", author: "Behzad Razavi", category: "Electronics & Communication", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780137134731-M.jpg" },
-  { id: "ECE426", title: "Analog Integrated Circuit Design", author: "David A. Johns, Ken Martin", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780471144489-M.jpg" },
-  { id: "ECE427", title: "Digital Logic & State Machine Design", author: "David J. Comer", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780195107241-M.jpg" },
-  { id: "ECE428", title: "Introduction to Embedded Systems", author: "Shibu K.V.", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=400&q=80" },
-  { id: "ECE429", title: "DSP Processor Architecture and Applications", author: "B. Venkataramani, M. Bhaskar", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ECE430", title: "Real-Time Digital Signal Processing", author: "Sen M. Kuo, Woon-Seng Gan", category: "Electronics & Communication", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780470014950-M.jpg" },
+    // ==========================================
+    // ELECTRONICS & COMMUNICATION ENGINEERING (ECE) - 30 BOOKS
+    // ==========================================
+    { id: "ECE401", title: "Microelectronic Circuits", author: "Adel S. Sedra, Kenneth C. Smith", category: "Electronics & Communication", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780199333134-M.jpg" },
+    { id: "ECE402", title: "Electronic Devices and Circuit Theory", author: "Robert L. Boylestad, Louis Nashelsky", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780132622264-M.jpg" },
+    { id: "ECE403", title: "Digital Signal Processing", author: "John G. Proakis, Dimitris G. Manolakis", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780131873742-M.jpg" },
+    { id: "ECE404", title: "Signals and Systems", author: "Alan V. Oppenheim, Alan S. Willsky", category: "Electronics & Communication", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780138147570-M.jpg" },
+    { id: "ECE405", title: "Communication Systems", author: "Simon Haykin", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780471697909-M.jpg" },
+    { id: "ECE406", title: "Modern Digital and Analog Communication Systems", author: "B.P. Lathi, Zhi Ding", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780195331455-M.jpg" },
+    { id: "ECE407", title: "CMOS VLSI Design", author: "Neil H.E. Weste, David Money Harris", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780321547743-M.jpg" },
+    { id: "ECE408", title: "Antenna Theory: Analysis and Design", author: "Constantine A. Balanis", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9781118642061-M.jpg" },
+    { id: "ECE409", title: "Fundamentals of Electric Circuits", author: "Charles K. Alexander, Matthew N.O. Sadiku", category: "Electronics & Communication", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780078028229-M.jpg" },
+    { id: "ECE410", title: "Linear Integrated Circuits", author: "D. Roy Choudhury, Shail B. Jain", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "ECE411", title: "Microwave Engineering", author: "David M. Pozar", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780470631553-M.jpg" },
+    { id: "ECE412", title: "Optical Fiber Communications", author: "Gerd Keiser", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780073380711-M.jpg" },
+    { id: "ECE413", title: "Digital Integrated Circuits", author: "Jan M. Rabaey, Anantha Chandrakasan", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780130909961-M.jpg" },
+    { id: "ECE414", title: "Electromagnetic Waves and Radiating Systems", author: "Edward C. Jordan, Keith G. Balmain", category: "Electronics & Communication", totalCopies: 5, availableCopies: 5, cover: "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=400&q=80" },
+    { id: "ECE415", title: "Embedded Systems: Architecture, Programming & Design", author: "Raj Kamal", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ECE416", title: "Digital Communications", author: "John G. Proakis, Masoud Salehi", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780072957167-M.jpg" },
+    { id: "ECE417", title: "Control Systems Engineering", author: "I.J. Nagrath, M. Gopal", category: "Electronics & Communication", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ECE418", title: "Wireless Communications", author: "Andreas F. Molisch", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780470741863-M.jpg" },
+    { id: "ECE419", title: "Fiber-Optic Communication Systems", author: "Govind P. Agrawal", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780470505113-M.jpg" },
+    { id: "ECE420", title: "Semiconductor Physics and Devices", author: "Donald A. Neamen", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780073529585-M.jpg" },
+    { id: "ECE421", title: "Electronic Communication Systems", author: "George Kennedy, Bernard Davis", category: "Electronics & Communication", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780074636824-M.jpg" },
+    { id: "ECE422", title: "Principles of Electromagnetics", author: "Matthew N.O. Sadiku", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780199461851-M.jpg" },
+    { id: "ECE423", title: "Satellite Communications", author: "Timothy Pratt, Charles W. Bostian", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780471370079-M.jpg" },
+    { id: "ECE424", title: "VLSI Design", author: "Debaprasad Das", category: "Electronics & Communication", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "ECE425", title: "RF Microelectronics", author: "Behzad Razavi", category: "Electronics & Communication", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780137134731-M.jpg" },
+    { id: "ECE426", title: "Analog Integrated Circuit Design", author: "David A. Johns, Ken Martin", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780471144489-M.jpg" },
+    { id: "ECE427", title: "Digital Logic & State Machine Design", author: "David J. Comer", category: "Electronics & Communication", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780195107241-M.jpg" },
+    { id: "ECE428", title: "Introduction to Embedded Systems", author: "Shibu K.V.", category: "Electronics & Communication", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=400&q=80" },
+    { id: "ECE429", title: "DSP Processor Architecture and Applications", author: "B. Venkataramani, M. Bhaskar", category: "Electronics & Communication", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ECE430", title: "Real-Time Digital Signal Processing", author: "Sen M. Kuo, Woon-Seng Gan", category: "Electronics & Communication", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780470014950-M.jpg" },
 
-  // ==========================================
-  // ELECTRICAL & ELECTRONICS ENGINEERING (EEE) - 25 BOOKS
-  // ==========================================
-  { id: "EEE501", title: "Electrical Machinery", author: "P.S. Bimbhra", category: "Electrical & Electronics", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "EEE502", title: "Power System Engineering", author: "I.J. Nagrath, D.P. Kothari", category: "Electrical & Electronics", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
-  { id: "EEE503", title: "Power Electronics: Circuits, Devices & Applications", author: "Muhammad H. Rashid", category: "Electrical & Electronics", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780133125900-M.jpg" },
-  { id: "EEE504", title: "Electric Machines", author: "D.P. Kothari, I.J. Nagrath", category: "Electrical & Electronics", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "EEE505", title: "A Course in Electrical Measurements & Instrumentation", author: "A.K. Sawhney", category: "Electrical & Electronics", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "EEE506", title: "Switchgear Protection and Power Systems", author: "Sunil S. Rao", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "EEE507", title: "Automatic Control Systems", author: "Benjamin C. Kuo, Farid Golnaraghi", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780471134763-M.jpg" },
-  { id: "EEE508", title: "Elements of Power System Analysis", author: "William D. Stevenson Jr.", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780070612938-M.jpg" },
-  { id: "EEE509", title: "Power System Protection and Switchgear", author: "Badri Ram, D.N. Vishwakarma", category: "Electrical & Electronics", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "EEE510", title: "High Voltage Engineering", author: "M.S. Naidu, V. Kamaraju", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
-  { id: "EEE511", title: "Utilization of Electrical Energy", author: "E. Openshaw Taylor", category: "Electrical & Electronics", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
-  { id: "EEE512", title: "Electric Drives: Concepts and Applications", author: "Vedam Subrahmanyam", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "EEE513", title: "Renewable Energy Resources", author: "John Twidell, Tony Weir", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780415584388-M.jpg" },
-  { id: "EEE514", title: "Circuit Theory: Analysis and Synthesis", author: "A. Chakrabarti", category: "Electrical & Electronics", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "EEE515", title: "Generalized Theory of Electrical Machines", author: "P.S. Bimbhra", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "EEE516", title: "Basic Electrical Engineering", author: "V.K. Mehta, Rohit Mehta", category: "Electrical & Electronics", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "EEE517", title: "Electrical Power Systems", author: "C.L. Wadhwa", category: "Electrical & Electronics", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
-  { id: "EEE518", title: "Control Systems Engineering", author: "Norman S. Nise", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9781118170519-M.jpg" },
-  { id: "EEE519", title: "Electric Power Generation, Transmission & Distribution", author: "S.N. Singh", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "EEE520", title: "Smart Grid: Technology and Applications", author: "Janaka Ekanayake, Kithsiri Liyanage", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780470740309-M.jpg" },
-  { id: "EEE521", title: "Microcontrollers: Architecture, Programming & Interfacing", author: "Raj Kamal", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "EEE522", title: "Solid State Electronic Devices", author: "Ben G. Streetman, Sanjay Kumar Banerjee", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133356038-M.jpg" },
-  { id: "EEE523", title: "Electric Motor Drives: Modeling, Analysis, and Control", author: "R. Krishnan", category: "Electrical & Electronics", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780130910141-M.jpg" },
-  { id: "EEE524", title: "Industrial Drives and Applications", author: "G.K. Dubey", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "EEE525", title: "Power System Operation and Control", author: "S. Sivanagaraju, G. Sreenivasan", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
+    // ==========================================
+    // ELECTRICAL & ELECTRONICS ENGINEERING (EEE) - 25 BOOKS
+    // ==========================================
+    { id: "EEE501", title: "Electrical Machinery", author: "P.S. Bimbhra", category: "Electrical & Electronics", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "EEE502", title: "Power System Engineering", author: "I.J. Nagrath, D.P. Kothari", category: "Electrical & Electronics", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
+    { id: "EEE503", title: "Power Electronics: Circuits, Devices & Applications", author: "Muhammad H. Rashid", category: "Electrical & Electronics", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780133125900-M.jpg" },
+    { id: "EEE504", title: "Electric Machines", author: "D.P. Kothari, I.J. Nagrath", category: "Electrical & Electronics", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "EEE505", title: "A Course in Electrical Measurements & Instrumentation", author: "A.K. Sawhney", category: "Electrical & Electronics", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "EEE506", title: "Switchgear Protection and Power Systems", author: "Sunil S. Rao", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "EEE507", title: "Automatic Control Systems", author: "Benjamin C. Kuo, Farid Golnaraghi", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780471134763-M.jpg" },
+    { id: "EEE508", title: "Elements of Power System Analysis", author: "William D. Stevenson Jr.", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780070612938-M.jpg" },
+    { id: "EEE509", title: "Power System Protection and Switchgear", author: "Badri Ram, D.N. Vishwakarma", category: "Electrical & Electronics", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "EEE510", title: "High Voltage Engineering", author: "M.S. Naidu, V. Kamaraju", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
+    { id: "EEE511", title: "Utilization of Electrical Energy", author: "E. Openshaw Taylor", category: "Electrical & Electronics", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+    { id: "EEE512", title: "Electric Drives: Concepts and Applications", author: "Vedam Subrahmanyam", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "EEE513", title: "Renewable Energy Resources", author: "John Twidell, Tony Weir", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780415584388-M.jpg" },
+    { id: "EEE514", title: "Circuit Theory: Analysis and Synthesis", author: "A. Chakrabarti", category: "Electrical & Electronics", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "EEE515", title: "Generalized Theory of Electrical Machines", author: "P.S. Bimbhra", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "EEE516", title: "Basic Electrical Engineering", author: "V.K. Mehta, Rohit Mehta", category: "Electrical & Electronics", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "EEE517", title: "Electrical Power Systems", author: "C.L. Wadhwa", category: "Electrical & Electronics", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
+    { id: "EEE518", title: "Control Systems Engineering", author: "Norman S. Nise", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9781118170519-M.jpg" },
+    { id: "EEE519", title: "Electric Power Generation, Transmission & Distribution", author: "S.N. Singh", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "EEE520", title: "Smart Grid: Technology and Applications", author: "Janaka Ekanayake, Kithsiri Liyanage", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780470740309-M.jpg" },
+    { id: "EEE521", title: "Microcontrollers: Architecture, Programming & Interfacing", author: "Raj Kamal", category: "Electrical & Electronics", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "EEE522", title: "Solid State Electronic Devices", author: "Ben G. Streetman, Sanjay Kumar Banerjee", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780133356038-M.jpg" },
+    { id: "EEE523", title: "Electric Motor Drives: Modeling, Analysis, and Control", author: "R. Krishnan", category: "Electrical & Electronics", totalCopies: 6, availableCopies: 6, cover: "https://covers.openlibrary.org/b/isbn/9780130910141-M.jpg" },
+    { id: "EEE524", title: "Industrial Drives and Applications", author: "G.K. Dubey", category: "Electrical & Electronics", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "EEE525", title: "Power System Operation and Control", author: "S. Sivanagaraju, G. Sreenivasan", category: "Electrical & Electronics", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
 
-  // ==========================================
-  // MECHANICAL ENGINEERING (ME) - 30 BOOKS
-  // ==========================================
-  { id: "ME601", title: "Shigley's Mechanical Engineering Design", author: "Richard G. Budynas, J. Keith Nisbett", category: "Mechanical Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073398204-M.jpg" },
-  { id: "ME602", title: "Theory of Machines", author: "S.S. Rattan", category: "Mechanical Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME603", title: "Internal Combustion Engines", author: "V. Ganesan", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400&q=80" },
-  { id: "ME604", title: "Fluid Mechanics and Hydraulic Machines", author: "R.K. Bansal", category: "Mechanical Engineering", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME605", title: "Heat and Mass Transfer", author: "R.K. Rajput", category: "Mechanical Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
-  { id: "ME606", title: "Engineering Thermodynamics", author: "P.K. Nag", category: "Mechanical Engineering", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME607", title: "Strength of Materials", author: "R.K. Rajput", category: "Mechanical Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME608", title: "A Textbook of Thermal Engineering", author: "R.S. Khurmi, J.K. Gupta", category: "Mechanical Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
-  { id: "ME609", title: "Manufacturing Science", author: "Amitabha Ghosh, Asok Kumar Mallik", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME610", title: "Production Technology", author: "R.K. Jain", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME611", title: "CAD/CAM: Principles and Applications", author: "P.N. Rao", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME612", title: "Operations Research: An Introduction", author: "Hamdy A. Taha", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780134444017-M.jpg" },
-  { id: "ME613", title: "Refrigeration and Air Conditioning", author: "C.P. Arora", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME614", title: "Finite Element Analysis", author: "S.S. Bhavikatti", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME615", title: "Mechanical Vibrations", author: "V.P. Singh", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME616", title: "Design of Machine Elements", author: "V.B. Bhandari", category: "Mechanical Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME617", title: "Kinematics and Dynamics of Machinery", author: "Robert L. Norton", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780073529356-M.jpg" },
-  { id: "ME618", title: "Materials Science and Engineering", author: "William D. Callister Jr.", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781118324578-M.jpg" },
-  { id: "ME619", title: "Fundamentals of Compressible Flow", author: "S.M. Yahya", category: "Mechanical Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME620", title: "Power Plant Engineering", author: "P.K. Nag", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "ME621", title: "Industrial Engineering and Management", author: "O.P. Khanna", category: "Mechanical Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME622", title: "Mechatronics: Electronic Control Systems in ME", author: "W. Bolton", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780273742869-M.jpg" },
-  { id: "ME623", title: "Robotics and Control", author: "R.K. Mittal, I.J. Nagrath", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&q=80" },
-  { id: "ME624", title: "Gas Turbines", author: "V. Ganesan", category: "Mechanical Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400&q=80" },
-  { id: "ME625", title: "Automobile Engineering Vol I & II", author: "Kirpal Singh", category: "Mechanical Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80" },
-  { id: "ME626", title: "Computational Fluid Dynamics", author: "John D. Anderson Jr.", category: "Mechanical Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780070016859-M.jpg" },
-  { id: "ME627", title: "Welding Engineering and Technology", author: "R.S. Parmar", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80" },
-  { id: "ME628", title: "Tool Design", author: "Cyril Donaldson, George H. LeCain", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "ME629", title: "Metrology and Quality Control", author: "R.K. Jain", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "ME630", title: "Tribology in Industry", author: "B.C. Majumdar", category: "Mechanical Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    // ==========================================
+    // MECHANICAL ENGINEERING (ME) - 30 BOOKS
+    // ==========================================
+    { id: "ME601", title: "Shigley's Mechanical Engineering Design", author: "Richard G. Budynas, J. Keith Nisbett", category: "Mechanical Engineering", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780073398204-M.jpg" },
+    { id: "ME602", title: "Theory of Machines", author: "S.S. Rattan", category: "Mechanical Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME603", title: "Internal Combustion Engines", author: "V. Ganesan", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400&q=80" },
+    { id: "ME604", title: "Fluid Mechanics and Hydraulic Machines", author: "R.K. Bansal", category: "Mechanical Engineering", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME605", title: "Heat and Mass Transfer", author: "R.K. Rajput", category: "Mechanical Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+    { id: "ME606", title: "Engineering Thermodynamics", author: "P.K. Nag", category: "Mechanical Engineering", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME607", title: "Strength of Materials", author: "R.K. Rajput", category: "Mechanical Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME608", title: "A Textbook of Thermal Engineering", author: "R.S. Khurmi, J.K. Gupta", category: "Mechanical Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+    { id: "ME609", title: "Manufacturing Science", author: "Amitabha Ghosh, Asok Kumar Mallik", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME610", title: "Production Technology", author: "R.K. Jain", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME611", title: "CAD/CAM: Principles and Applications", author: "P.N. Rao", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME612", title: "Operations Research: An Introduction", author: "Hamdy A. Taha", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780134444017-M.jpg" },
+    { id: "ME613", title: "Refrigeration and Air Conditioning", author: "C.P. Arora", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME614", title: "Finite Element Analysis", author: "S.S. Bhavikatti", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME615", title: "Mechanical Vibrations", author: "V.P. Singh", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME616", title: "Design of Machine Elements", author: "V.B. Bhandari", category: "Mechanical Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME617", title: "Kinematics and Dynamics of Machinery", author: "Robert L. Norton", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780073529356-M.jpg" },
+    { id: "ME618", title: "Materials Science and Engineering", author: "William D. Callister Jr.", category: "Mechanical Engineering", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9781118324578-M.jpg" },
+    { id: "ME619", title: "Fundamentals of Compressible Flow", author: "S.M. Yahya", category: "Mechanical Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME620", title: "Power Plant Engineering", author: "P.K. Nag", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "ME621", title: "Industrial Engineering and Management", author: "O.P. Khanna", category: "Mechanical Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME622", title: "Mechatronics: Electronic Control Systems in ME", author: "W. Bolton", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780273742869-M.jpg" },
+    { id: "ME623", title: "Robotics and Control", author: "R.K. Mittal, I.J. Nagrath", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&q=80" },
+    { id: "ME624", title: "Gas Turbines", author: "V. Ganesan", category: "Mechanical Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400&q=80" },
+    { id: "ME625", title: "Automobile Engineering Vol I & II", author: "Kirpal Singh", category: "Mechanical Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80" },
+    { id: "ME626", title: "Computational Fluid Dynamics", author: "John D. Anderson Jr.", category: "Mechanical Engineering", totalCopies: 5, availableCopies: 5, cover: "https://covers.openlibrary.org/b/isbn/9780070016859-M.jpg" },
+    { id: "ME627", title: "Welding Engineering and Technology", author: "R.S. Parmar", category: "Mechanical Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80" },
+    { id: "ME628", title: "Tool Design", author: "Cyril Donaldson, George H. LeCain", category: "Mechanical Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "ME629", title: "Metrology and Quality Control", author: "R.K. Jain", category: "Mechanical Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "ME630", title: "Tribology in Industry", author: "B.C. Majumdar", category: "Mechanical Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
 
-  // ==========================================
-  // CIVIL ENGINEERING (CE) - 25 BOOKS
-  // ==========================================
-  { id: "CE701", title: "Building Construction", author: "B.C. Punmia, Ashok Kumar Jain", category: "Civil Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE702", title: "Soil Mechanics and Foundations", author: "B.C. Punmia, Ashok Kumar Jain", category: "Civil Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE703", title: "Design of Reinforced Concrete Structures", author: "N. Krishna Raju", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE704", title: "Surveying Vol I & II", author: "B.C. Punmia, Ashok Kumar Jain", category: "Civil Engineering", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE705", title: "Theory of Structures", author: "S. Ramamrutham, R. Narayan", category: "Civil Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE706", title: "Environmental Engineering Vol I & II", author: "S.K. Garg", category: "Civil Engineering", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
-  { id: "CE707", title: "Transportation Engineering", author: "S.K. Khanna, C.E.G. Justo", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE708", title: "Structural Analysis", author: "R.C. Hibbeler", category: "Civil Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780134610672-M.jpg" },
-  { id: "CE709", title: "Fluid Mechanics and Hydraulics", author: "R.K. Rajput", category: "Civil Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE710", title: "Design of Steel Structures", author: "N. Subramanian", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE711", title: "Hydraulics and Fluid Mechanics", author: "P.N. Modi, S.M. Seth", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE712", title: "Concrete Technology: Theory & Practice", author: "M.S. Shetty", category: "Civil Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE713", title: "Limit State Design of Reinforced Concrete", author: "P.C. Varghese", category: "Civil Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE714", title: "Foundation Engineering", author: "V.N.S. Murthy", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE715", title: "Irrigation Engineering & Hydraulic Structures", author: "S.K. Garg", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
-  { id: "CE716", title: "Town Planning", author: "S.C. Rangwala", category: "Civil Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80" },
-  { id: "CE717", title: "Construction Management and Planning", author: "B.S. Patil", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE718", title: "Applied Mechanics", author: "S.S. Bhavikatti", category: "Civil Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE719", title: "Prestressed Concrete", author: "N. Krishna Raju", category: "Civil Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE720", title: "Highway Engineering", author: "S.K. Khanna, C.E.G. Justo", category: "Civil Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE721", title: "Bridge Engineering", author: "S. Ponnuswamy", category: "Civil Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1477959858617-67f30ac4ce78?w=400&q=80" },
-  { id: "CE722", title: "Quantity Surveying and Valuation", author: "B.N. Dutta", category: "Civil Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "CE723", title: "Remote Sensing and GIS", author: "B. Bhatta", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
-  { id: "CE724", title: "Earthquake Resistant Design of Structures", author: "Pankaj Agarwal, Manish Shrikhande", category: "Civil Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "CE725", title: "Geotechnical Engineering", author: "C. Venkatramaiah", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    // ==========================================
+    // CIVIL ENGINEERING (CE) - 25 BOOKS
+    // ==========================================
+    { id: "CE701", title: "Building Construction", author: "B.C. Punmia, Ashok Kumar Jain", category: "Civil Engineering", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE702", title: "Soil Mechanics and Foundations", author: "B.C. Punmia, Ashok Kumar Jain", category: "Civil Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE703", title: "Design of Reinforced Concrete Structures", author: "N. Krishna Raju", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE704", title: "Surveying Vol I & II", author: "B.C. Punmia, Ashok Kumar Jain", category: "Civil Engineering", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE705", title: "Theory of Structures", author: "S. Ramamrutham, R. Narayan", category: "Civil Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE706", title: "Environmental Engineering Vol I & II", author: "S.K. Garg", category: "Civil Engineering", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+    { id: "CE707", title: "Transportation Engineering", author: "S.K. Khanna, C.E.G. Justo", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE708", title: "Structural Analysis", author: "R.C. Hibbeler", category: "Civil Engineering", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780134610672-M.jpg" },
+    { id: "CE709", title: "Fluid Mechanics and Hydraulics", author: "R.K. Rajput", category: "Civil Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE710", title: "Design of Steel Structures", author: "N. Subramanian", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE711", title: "Hydraulics and Fluid Mechanics", author: "P.N. Modi, S.M. Seth", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE712", title: "Concrete Technology: Theory & Practice", author: "M.S. Shetty", category: "Civil Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE713", title: "Limit State Design of Reinforced Concrete", author: "P.C. Varghese", category: "Civil Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE714", title: "Foundation Engineering", author: "V.N.S. Murthy", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE715", title: "Irrigation Engineering & Hydraulic Structures", author: "S.K. Garg", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+    { id: "CE716", title: "Town Planning", author: "S.C. Rangwala", category: "Civil Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80" },
+    { id: "CE717", title: "Construction Management and Planning", author: "B.S. Patil", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE718", title: "Applied Mechanics", author: "S.S. Bhavikatti", category: "Civil Engineering", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE719", title: "Prestressed Concrete", author: "N. Krishna Raju", category: "Civil Engineering", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE720", title: "Highway Engineering", author: "S.K. Khanna, C.E.G. Justo", category: "Civil Engineering", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE721", title: "Bridge Engineering", author: "S. Ponnuswamy", category: "Civil Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1477959858617-67f30ac4ce78?w=400&q=80" },
+    { id: "CE722", title: "Quantity Surveying and Valuation", author: "B.N. Dutta", category: "Civil Engineering", totalCopies: 9, availableCopies: 9, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "CE723", title: "Remote Sensing and GIS", author: "B. Bhatta", category: "Civil Engineering", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
+    { id: "CE724", title: "Earthquake Resistant Design of Structures", author: "Pankaj Agarwal, Manish Shrikhande", category: "Civil Engineering", totalCopies: 6, availableCopies: 6, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "CE725", title: "Geotechnical Engineering", author: "C. Venkatramaiah", category: "Civil Engineering", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
 
-  // ==========================================
-  // BASIC SCIENCES & HUMANITIES (BSH) - 25 BOOKS
-  // ==========================================
-  { id: "BSH801", title: "Advanced Engineering Mathematics", author: "Erwin Kreyszig", category: "Basic Sciences & Humanities", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780470458365-M.jpg" },
-  { id: "BSH802", title: "Higher Engineering Mathematics", author: "B.S. Grewal", category: "Basic Sciences & Humanities", totalCopies: 20, availableCopies: 20, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
-  { id: "BSH803", title: "Fundamentals of Physics", author: "David Halliday, Robert Resnick, Jearl Walker", category: "Basic Sciences & Humanities", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9781118230718-M.jpg" },
-  { id: "BSH804", title: "Engineering Chemistry", author: "Jain & Jain", category: "Basic Sciences & Humanities", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&q=80" },
-  { id: "BSH805", title: "Technical Communication: Principles and Practice", author: "Meenakshi Raman, Sangeeta Sharma", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
-  { id: "BSH806", title: "University Physics with Modern Physics", author: "Hugh D. Young, Roger A. Freedman", category: "Basic Sciences & Humanities", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780133983654-M.jpg" },
-  { id: "BSH807", title: "Engineering Physics", author: "H.K. Malik, A. Singh", category: "Basic Sciences & Humanities", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
-  { id: "BSH808", title: "A Textbook of Engineering Mathematics", author: "N.P. Bali, Manish Goyal", category: "Basic Sciences & Humanities", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
-  { id: "BSH809", title: "Calculus and Analytic Geometry", author: "George B. Thomas, Ross L. Finney", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780201531749-M.jpg" },
-  { id: "BSH810", title: "Linear Algebra and Its Applications", author: "Gilbert Strang", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780030105677-M.jpg" },
-  { id: "BSH811", title: "Differential Equations and Boundary Value Problems", author: "William E. Boyce, Richard C. DiPrima", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780470458310-M.jpg" },
-  { id: "BSH812", title: "Environmental Studies", author: "R. Rajagopalan", category: "Basic Sciences & Humanities", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
-  { id: "BSH813", title: "Professional Ethics and Human Values", author: "R.S. Naagarazan", category: "Basic Sciences & Humanities", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
-  { id: "BSH814", title: "Concepts of Modern Physics", author: "Arthur Beiser", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780072448481-M.jpg" },
-  { id: "BSH815", title: "Quantum Mechanics: Theory & Applications", author: "A. Ghatak, S. Lokanathan", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" },
-  { id: "BSH816", title: "Introduction to Electrodynamics", author: "David J. Griffiths", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780321856562-M.jpg" },
-  { id: "BSH817", title: "Thermal Physics", author: "P.K. Nag", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
-  { id: "BSH818", title: "Probability and Statistics for Engineers", author: "Ronald E. Walpole, Raymond H. Myers", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780321694010-M.jpg" },
-  { id: "BSH819", title: "Organic Chemistry", author: "Robert Thornton Morrison, Robert Neilson Boyd", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780136436690-M.jpg" },
-  { id: "BSH820", title: "Physical Chemistry", author: "Peter Atkins, Julio de Paula", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781429218122-M.jpg" },
-  { id: "BSH821", title: "Engineering Graphics & Drawing", author: "N.D. Bhatt", category: "Basic Sciences & Humanities", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
-  { id: "BSH822", title: "Vector Analysis (Schaum's Outlines)", author: "Murray R. Spiegel", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780071615457-M.jpg" },
-  { id: "BSH823", title: "Complex Variables and Applications", author: "James Ward Brown, Ruel V. Churchill", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780073051949-M.jpg" },
-  { id: "BSH824", title: "Introduction to Probability Models", author: "Sheldon M. Ross", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780123756862-M.jpg" },
-  { id: "BSH825", title: "Business Communication: Building Critical Skills", author: "Kitty O. Locker", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780073403151-M.jpg" },
+    // ==========================================
+    // BASIC SCIENCES & HUMANITIES (BSH) - 25 BOOKS
+    // ==========================================
+    { id: "BSH801", title: "Advanced Engineering Mathematics", author: "Erwin Kreyszig", category: "Basic Sciences & Humanities", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780470458365-M.jpg" },
+    { id: "BSH802", title: "Higher Engineering Mathematics", author: "B.S. Grewal", category: "Basic Sciences & Humanities", totalCopies: 20, availableCopies: 20, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+    { id: "BSH803", title: "Fundamentals of Physics", author: "David Halliday, Robert Resnick, Jearl Walker", category: "Basic Sciences & Humanities", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9781118230718-M.jpg" },
+    { id: "BSH804", title: "Engineering Chemistry", author: "Jain & Jain", category: "Basic Sciences & Humanities", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&q=80" },
+    { id: "BSH805", title: "Technical Communication: Principles and Practice", author: "Meenakshi Raman, Sangeeta Sharma", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+    { id: "BSH806", title: "University Physics with Modern Physics", author: "Hugh D. Young, Roger A. Freedman", category: "Basic Sciences & Humanities", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780133983654-M.jpg" },
+    { id: "BSH807", title: "Engineering Physics", author: "H.K. Malik, A. Singh", category: "Basic Sciences & Humanities", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
+    { id: "BSH808", title: "A Textbook of Engineering Mathematics", author: "N.P. Bali, Manish Goyal", category: "Basic Sciences & Humanities", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+    { id: "BSH809", title: "Calculus and Analytic Geometry", author: "George B. Thomas, Ross L. Finney", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780201531749-M.jpg" },
+    { id: "BSH810", title: "Linear Algebra and Its Applications", author: "Gilbert Strang", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780030105677-M.jpg" },
+    { id: "BSH811", title: "Differential Equations and Boundary Value Problems", author: "William E. Boyce, Richard C. DiPrima", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780470458310-M.jpg" },
+    { id: "BSH812", title: "Environmental Studies", author: "R. Rajagopalan", category: "Basic Sciences & Humanities", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+    { id: "BSH813", title: "Professional Ethics and Human Values", author: "R.S. Naagarazan", category: "Basic Sciences & Humanities", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+    { id: "BSH814", title: "Concepts of Modern Physics", author: "Arthur Beiser", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780072448481-M.jpg" },
+    { id: "BSH815", title: "Quantum Mechanics: Theory & Applications", author: "A. Ghatak, S. Lokanathan", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 7, cover: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" },
+    { id: "BSH816", title: "Introduction to Electrodynamics", author: "David J. Griffiths", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780321856562-M.jpg" },
+    { id: "BSH817", title: "Thermal Physics", author: "P.K. Nag", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+    { id: "BSH818", title: "Probability and Statistics for Engineers", author: "Ronald E. Walpole, Raymond H. Myers", category: "Basic Sciences & Humanities", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780321694010-M.jpg" },
+    { id: "BSH819", title: "Organic Chemistry", author: "Robert Thornton Morrison, Robert Neilson Boyd", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780136436690-M.jpg" },
+    { id: "BSH820", title: "Physical Chemistry", author: "Peter Atkins, Julio de Paula", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9781429218122-M.jpg" },
+    { id: "BSH821", title: "Engineering Graphics & Drawing", author: "N.D. Bhatt", category: "Basic Sciences & Humanities", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+    { id: "BSH822", title: "Vector Analysis (Schaum's Outlines)", author: "Murray R. Spiegel", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780071615457-M.jpg" },
+    { id: "BSH823", title: "Complex Variables and Applications", author: "James Ward Brown, Ruel V. Churchill", category: "Basic Sciences & Humanities", totalCopies: 8, availableCopies: 8, cover: "https://covers.openlibrary.org/b/isbn/9780073051949-M.jpg" },
+    { id: "BSH824", title: "Introduction to Probability Models", author: "Sheldon M. Ross", category: "Basic Sciences & Humanities", totalCopies: 7, availableCopies: 7, cover: "https://covers.openlibrary.org/b/isbn/9780123756862-M.jpg" },
+    { id: "BSH825", title: "Business Communication: Building Critical Skills", author: "Kitty O. Locker", category: "Basic Sciences & Humanities", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780073403151-M.jpg" },
 
-  // ==========================================
-  // DR. A.P.J. ABDUL KALAM TECHNICAL UNIVERSITY (AKTU) 4-YEAR B.TECH SYLLABUS BOOKS
-  // ==========================================
+    // ==========================================
+    // DR. A.P.J. ABDUL KALAM TECHNICAL UNIVERSITY (AKTU) 4-YEAR B.TECH SYLLABUS BOOKS
+    // ==========================================
 
-  // --- AKTU 1ST YEAR (COMMON SEM 1 & 2) ---
-  { id: "AKTU101", title: "Engineering Mathematics - I (AKTU BAS-103)", author: "H.K. Dass, Dr. Rama Verma", category: "AKTU 1st Year", totalCopies: 20, availableCopies: 20, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
-  { id: "AKTU102", title: "Engineering Mathematics - II (AKTU BAS-203)", author: "H.K. Dass, Rajnish Verma", category: "AKTU 1st Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
-  { id: "AKTU103", title: "Engineering Physics (AKTU BAS-101)", author: "Hitendra K. Malik, A.K. Singh", category: "AKTU 1st Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
-  { id: "AKTU104", title: "Engineering Chemistry (AKTU BAS-102)", author: "Dr. Shashi Chawla, Dr. Avinash Agarwal", category: "AKTU 1st Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&q=80" },
-  { id: "AKTU105", title: "Programming for Problem Solving in C (AKTU KCS-101T)", author: "E. Balagurusamy, Reema Thareja", category: "AKTU 1st Year", totalCopies: 22, availableCopies: 22, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
-  { id: "AKTU106", title: "Basic Electrical Engineering (AKTU KEE-101T)", author: "D.C. Kulshreshtha, V.K. Mehta", category: "AKTU 1st Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU107", title: "Basic Electronics Engineering (AKTU KEC-101T)", author: "Sanjay Sharma, J.B. Gupta", category: "AKTU 1st Year", totalCopies: 17, availableCopies: 17, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "AKTU108", title: "Fundamentals of Mechanical Engineering (AKTU KME-101T)", author: "Pravin Kumar, R.K. Rajput", category: "AKTU 1st Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "AKTU109", title: "Environment & Ecology (AKTU KNC-101)", author: "Dr. A.K. Pahari, Anubha Kaushik", category: "AKTU 1st Year", totalCopies: 22, availableCopies: 22, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+    // --- AKTU 1ST YEAR (COMMON SEM 1 & 2) ---
+    { id: "AKTU101", title: "Engineering Mathematics - I (AKTU BAS-103)", author: "H.K. Dass, Dr. Rama Verma", category: "AKTU 1st Year", totalCopies: 20, availableCopies: 20, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+    { id: "AKTU102", title: "Engineering Mathematics - II (AKTU BAS-203)", author: "H.K. Dass, Rajnish Verma", category: "AKTU 1st Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&q=80" },
+    { id: "AKTU103", title: "Engineering Physics (AKTU BAS-101)", author: "Hitendra K. Malik, A.K. Singh", category: "AKTU 1st Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" },
+    { id: "AKTU104", title: "Engineering Chemistry (AKTU BAS-102)", author: "Dr. Shashi Chawla, Dr. Avinash Agarwal", category: "AKTU 1st Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&q=80" },
+    { id: "AKTU105", title: "Programming for Problem Solving in C (AKTU KCS-101T)", author: "E. Balagurusamy, Reema Thareja", category: "AKTU 1st Year", totalCopies: 22, availableCopies: 22, cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80" },
+    { id: "AKTU106", title: "Basic Electrical Engineering (AKTU KEE-101T)", author: "D.C. Kulshreshtha, V.K. Mehta", category: "AKTU 1st Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU107", title: "Basic Electronics Engineering (AKTU KEC-101T)", author: "Sanjay Sharma, J.B. Gupta", category: "AKTU 1st Year", totalCopies: 17, availableCopies: 17, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "AKTU108", title: "Fundamentals of Mechanical Engineering (AKTU KME-101T)", author: "Pravin Kumar, R.K. Rajput", category: "AKTU 1st Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "AKTU109", title: "Environment & Ecology (AKTU KNC-101)", author: "Dr. A.K. Pahari, Anubha Kaushik", category: "AKTU 1st Year", totalCopies: 22, availableCopies: 22, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
 
-  // --- AKTU 2ND YEAR (SEM 3 & 4) ---
-  { id: "AKTU201", title: "Universal Human Values & Professional Ethics (AKTU KNC-301)", author: "R.R. Gaur, R. Sangal, G.P. Bagaria", category: "AKTU 2nd Year", totalCopies: 25, availableCopies: 25, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
-  { id: "AKTU202", title: "Technical Communication (AKTU KAS-301)", author: "Meenakshi Raman, Sangeeta Sharma", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
-  { id: "AKTU203", title: "Data Structures using C (AKTU KCS-301)", author: "Reema Thareja, Seymour Lipschutz", category: "AKTU 2nd Year", totalCopies: 20, availableCopies: 20, cover: "https://covers.openlibrary.org/b/isbn/9780198099307-M.jpg" },
-  { id: "AKTU204", title: "Computer Organization & Architecture (AKTU KCS-302)", author: "M. Morris Mano, Carl Hamacher", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
-  { id: "AKTU205", title: "Discrete Structures & Theory of Logic (AKTU KCS-303)", author: "J.P. Tremblay, R. Manohar", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780074631133-M.jpg" },
-  { id: "AKTU206", title: "Operating Systems (AKTU KCS-401)", author: "Abraham Silberschatz, Peter B. Galvin", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://covers.openlibrary.org/b/isbn/9781119800361-M.jpg" },
-  { id: "AKTU207", title: "Theory of Automata & Formal Languages (AKTU KCS-402)", author: "K.L.P. Mishra, N. Chandrasekaran", category: "AKTU 2nd Year", totalCopies: 17, availableCopies: 17, cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80" },
-  { id: "AKTU208", title: "Microprocessor & Interfacing (AKTU KCS-403)", author: "Ramesh S. Gaonkar, A.K. Ray", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "AKTU209", title: "Network Analysis & Synthesis (AKTU KEC-301)", author: "A. Chakrabarti, M.E. Van Valkenburg", category: "AKTU 2nd Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { id: "AKTU210", title: "Digital System Design (AKTU KEC-302)", author: "M. Morris Mano, Charles H. Roth", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
-  { id: "AKTU211", title: "Solid State Devices (AKTU KEC-303)", author: "Ben G. Streetman, Sanjay Banerjee", category: "AKTU 2nd Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780133356038-M.jpg" },
-  { id: "AKTU212", title: "Analog Circuits (AKTU KEC-401)", author: "Adel S. Sedra, Kenneth C. Smith", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780199333134-M.jpg" },
-  { id: "AKTU213", title: "Signals & Systems (AKTU KEC-402)", author: "Alan V. Oppenheim, Sanjay Sharma", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://covers.openlibrary.org/b/isbn/9780138147570-M.jpg" },
-  { id: "AKTU214", title: "Communication Engineering (AKTU KEC-403)", author: "Sanjay Sharma, B.P. Lathi", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780195331455-M.jpg" },
-  { id: "AKTU215", title: "Electrical Machines - I (AKTU KEE-301)", author: "P.S. Bimbhra, J.B. Gupta", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "AKTU216", title: "Electrical Machines - II (AKTU KEE-401)", author: "P.S. Bimbhra, D.P. Kothari", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
-  { id: "AKTU217", title: "Thermodynamics (AKTU KME-301)", author: "P.K. Nag, Yunus A. Cengel", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU218", title: "Strength of Materials (AKTU KME-302)", author: "R.K. Rajput, S. Ramamrutham", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "AKTU219", title: "Manufacturing Processes (AKTU KME-303)", author: "Serope Kalpakjian, B.S. Raghuwanshi", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU220", title: "Applied Thermodynamics (AKTU KME-401)", author: "R. Yadav, Onkar Singh", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
-  { id: "AKTU221", title: "Fluid Mechanics & Machines (AKTU KME-402)", author: "R.K. Bansal, P.N. Modi", category: "AKTU 2nd Year", totalCopies: 19, availableCopies: 19, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "AKTU222", title: "Building Materials & Construction (AKTU KCE-301)", author: "S.K. Duggal, S.C. Rangwala", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "AKTU223", title: "Surveying & Geomatics (AKTU KCE-302)", author: "B.C. Punmia, Ashok Kumar Jain", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "AKTU224", title: "Structural Analysis - I (AKTU KCE-401)", author: "S. Ramamrutham, S.S. Bhavikatti", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    // --- AKTU 2ND YEAR (SEM 3 & 4) ---
+    { id: "AKTU201", title: "Universal Human Values & Professional Ethics (AKTU KNC-301)", author: "R.R. Gaur, R. Sangal, G.P. Bagaria", category: "AKTU 2nd Year", totalCopies: 25, availableCopies: 25, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+    { id: "AKTU202", title: "Technical Communication (AKTU KAS-301)", author: "Meenakshi Raman, Sangeeta Sharma", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+    { id: "AKTU203", title: "Data Structures using C (AKTU KCS-301)", author: "Reema Thareja, Seymour Lipschutz", category: "AKTU 2nd Year", totalCopies: 20, availableCopies: 20, cover: "https://covers.openlibrary.org/b/isbn/9780198099307-M.jpg" },
+    { id: "AKTU204", title: "Computer Organization & Architecture (AKTU KCS-302)", author: "M. Morris Mano, Carl Hamacher", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
+    { id: "AKTU205", title: "Discrete Structures & Theory of Logic (AKTU KCS-303)", author: "J.P. Tremblay, R. Manohar", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780074631133-M.jpg" },
+    { id: "AKTU206", title: "Operating Systems (AKTU KCS-401)", author: "Abraham Silberschatz, Peter B. Galvin", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://covers.openlibrary.org/b/isbn/9781119800361-M.jpg" },
+    { id: "AKTU207", title: "Theory of Automata & Formal Languages (AKTU KCS-402)", author: "K.L.P. Mishra, N. Chandrasekaran", category: "AKTU 2nd Year", totalCopies: 17, availableCopies: 17, cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80" },
+    { id: "AKTU208", title: "Microprocessor & Interfacing (AKTU KCS-403)", author: "Ramesh S. Gaonkar, A.K. Ray", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "AKTU209", title: "Network Analysis & Synthesis (AKTU KEC-301)", author: "A. Chakrabarti, M.E. Van Valkenburg", category: "AKTU 2nd Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
+    { id: "AKTU210", title: "Digital System Design (AKTU KEC-302)", author: "M. Morris Mano, Charles H. Roth", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780132145107-M.jpg" },
+    { id: "AKTU211", title: "Solid State Devices (AKTU KEC-303)", author: "Ben G. Streetman, Sanjay Banerjee", category: "AKTU 2nd Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780133356038-M.jpg" },
+    { id: "AKTU212", title: "Analog Circuits (AKTU KEC-401)", author: "Adel S. Sedra, Kenneth C. Smith", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780199333134-M.jpg" },
+    { id: "AKTU213", title: "Signals & Systems (AKTU KEC-402)", author: "Alan V. Oppenheim, Sanjay Sharma", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://covers.openlibrary.org/b/isbn/9780138147570-M.jpg" },
+    { id: "AKTU214", title: "Communication Engineering (AKTU KEC-403)", author: "Sanjay Sharma, B.P. Lathi", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780195331455-M.jpg" },
+    { id: "AKTU215", title: "Electrical Machines - I (AKTU KEE-301)", author: "P.S. Bimbhra, J.B. Gupta", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "AKTU216", title: "Electrical Machines - II (AKTU KEE-401)", author: "P.S. Bimbhra, D.P. Kothari", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" },
+    { id: "AKTU217", title: "Thermodynamics (AKTU KME-301)", author: "P.K. Nag, Yunus A. Cengel", category: "AKTU 2nd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU218", title: "Strength of Materials (AKTU KME-302)", author: "R.K. Rajput, S. Ramamrutham", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "AKTU219", title: "Manufacturing Processes (AKTU KME-303)", author: "Serope Kalpakjian, B.S. Raghuwanshi", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU220", title: "Applied Thermodynamics (AKTU KME-401)", author: "R. Yadav, Onkar Singh", category: "AKTU 2nd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+    { id: "AKTU221", title: "Fluid Mechanics & Machines (AKTU KME-402)", author: "R.K. Bansal, P.N. Modi", category: "AKTU 2nd Year", totalCopies: 19, availableCopies: 19, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "AKTU222", title: "Building Materials & Construction (AKTU KCE-301)", author: "S.K. Duggal, S.C. Rangwala", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "AKTU223", title: "Surveying & Geomatics (AKTU KCE-302)", author: "B.C. Punmia, Ashok Kumar Jain", category: "AKTU 2nd Year", totalCopies: 18, availableCopies: 18, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "AKTU224", title: "Structural Analysis - I (AKTU KCE-401)", author: "S. Ramamrutham, S.S. Bhavikatti", category: "AKTU 2nd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
 
-  // --- AKTU 3RD YEAR (SEM 5 & 6) ---
-  { id: "AKTU301", title: "Constitution of India & Law (AKTU KNC-501)", author: "Madhav Khosla, D.D. Basu", category: "AKTU 3rd Year", totalCopies: 20, availableCopies: 20, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
-  { id: "AKTU302", title: "Database Management System (AKTU KCS-501)", author: "Henry F. Korth, Abraham Silberschatz", category: "AKTU 3rd Year", totalCopies: 19, availableCopies: 19, cover: "https://covers.openlibrary.org/b/isbn/9780073523323-M.jpg" },
-  { id: "AKTU303", title: "Web Designing & Technology (AKTU KCS-502)", author: "Uttam K. Roy, Harvey Deitel", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&q=80" },
-  { id: "AKTU304", title: "Design & Analysis of Algorithms (AKTU KCS-503)", author: "Thomas H. Cormen, Ellis Horowitz", category: "AKTU 3rd Year", totalCopies: 20, availableCopies: 20, cover: "https://covers.openlibrary.org/b/isbn/9780262033848-M.jpg" },
-  { id: "AKTU305", title: "Compiler Design (AKTU KCS-601)", author: "Alfred V. Aho, Jeffrey D. Ullman", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780321486813-M.jpg" },
-  { id: "AKTU306", title: "Software Engineering (AKTU KCS-602)", author: "Rajib Mall, Roger S. Pressman", category: "AKTU 3rd Year", totalCopies: 16, availableCopies: 16, cover: "https://covers.openlibrary.org/b/isbn/9780078022128-M.jpg" },
-  { id: "AKTU307", title: "Computer Networks (AKTU KCS-603)", author: "Behrouz A. Forouzan, Andrew S. Tanenbaum", category: "AKTU 3rd Year", totalCopies: 18, availableCopies: 18, cover: "https://covers.openlibrary.org/b/isbn/9780073376226-M.jpg" },
-  { id: "AKTU308", title: "Electromagnetic Field Theory (AKTU KEC-501)", author: "Matthew N.O. Sadiku", category: "AKTU 3rd Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780199461851-M.jpg" },
-  { id: "AKTU309", title: "Digital Signal Processing (AKTU KEC-502)", author: "S. Salivahanan, John G. Proakis", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780131873742-M.jpg" },
-  { id: "AKTU310", title: "VLSI Design (AKTU KEC-601)", author: "Debaprasad Das, Neil H.E. Weste", category: "AKTU 3rd Year", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780321547743-M.jpg" },
-  { id: "AKTU311", title: "Control Systems (AKTU KEE-402 / KEC-602)", author: "I.J. Nagrath, M. Gopal", category: "AKTU 3rd Year", totalCopies: 17, availableCopies: 17, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "AKTU312", title: "Power System - I (AKTU KEE-501)", author: "C.L. Wadhwa, V.K. Mehta", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
-  { id: "AKTU313", title: "Power Electronics (AKTU KEE-502)", author: "P.S. Bimbhra, M.H. Rashid", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780133125900-M.jpg" },
-  { id: "AKTU314", title: "Theory of Machines (AKTU KME-501)", author: "S.S. Rattan, R.S. Khurmi", category: "AKTU 3rd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU315", title: "Heat & Mass Transfer (AKTU KME-502)", author: "R.K. Rajput, P.K. Nag", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
-  { id: "AKTU316", title: "Design of Machine Elements (AKTU KME-601)", author: "V.B. Bhandari, R.S. Khurmi", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU317", title: "Design of Concrete Structures (AKTU KCE-502)", author: "N. Krishna Raju, Pillai & Menon", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "AKTU318", title: "Geotechnical Engineering (AKTU KCE-503)", author: "K.R. Arora, B.C. Punmia", category: "AKTU 3rd Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
-  { id: "AKTU319", title: "Environmental Engineering (AKTU KCE-601)", author: "S.K. Garg", category: "AKTU 3rd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
-  { id: "AKTU320", title: "Design of Steel Structures (AKTU KCE-602)", author: "N. Subramanian, S.K. Duggal", category: "AKTU 3rd Year", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "AKTU321", title: "Transportation Engineering (AKTU KCE-603)", author: "S.K. Khanna, C.E.G. Justo", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    // --- AKTU 3RD YEAR (SEM 5 & 6) ---
+    { id: "AKTU301", title: "Constitution of India & Law (AKTU KNC-501)", author: "Madhav Khosla, D.D. Basu", category: "AKTU 3rd Year", totalCopies: 20, availableCopies: 20, cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" },
+    { id: "AKTU302", title: "Database Management System (AKTU KCS-501)", author: "Henry F. Korth, Abraham Silberschatz", category: "AKTU 3rd Year", totalCopies: 19, availableCopies: 19, cover: "https://covers.openlibrary.org/b/isbn/9780073523323-M.jpg" },
+    { id: "AKTU303", title: "Web Designing & Technology (AKTU KCS-502)", author: "Uttam K. Roy, Harvey Deitel", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&q=80" },
+    { id: "AKTU304", title: "Design & Analysis of Algorithms (AKTU KCS-503)", author: "Thomas H. Cormen, Ellis Horowitz", category: "AKTU 3rd Year", totalCopies: 20, availableCopies: 20, cover: "https://covers.openlibrary.org/b/isbn/9780262033848-M.jpg" },
+    { id: "AKTU305", title: "Compiler Design (AKTU KCS-601)", author: "Alfred V. Aho, Jeffrey D. Ullman", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780321486813-M.jpg" },
+    { id: "AKTU306", title: "Software Engineering (AKTU KCS-602)", author: "Rajib Mall, Roger S. Pressman", category: "AKTU 3rd Year", totalCopies: 16, availableCopies: 16, cover: "https://covers.openlibrary.org/b/isbn/9780078022128-M.jpg" },
+    { id: "AKTU307", title: "Computer Networks (AKTU KCS-603)", author: "Behrouz A. Forouzan, Andrew S. Tanenbaum", category: "AKTU 3rd Year", totalCopies: 18, availableCopies: 18, cover: "https://covers.openlibrary.org/b/isbn/9780073376226-M.jpg" },
+    { id: "AKTU308", title: "Electromagnetic Field Theory (AKTU KEC-501)", author: "Matthew N.O. Sadiku", category: "AKTU 3rd Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780199461851-M.jpg" },
+    { id: "AKTU309", title: "Digital Signal Processing (AKTU KEC-502)", author: "S. Salivahanan, John G. Proakis", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780131873742-M.jpg" },
+    { id: "AKTU310", title: "VLSI Design (AKTU KEC-601)", author: "Debaprasad Das, Neil H.E. Weste", category: "AKTU 3rd Year", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780321547743-M.jpg" },
+    { id: "AKTU311", title: "Control Systems (AKTU KEE-402 / KEC-602)", author: "I.J. Nagrath, M. Gopal", category: "AKTU 3rd Year", totalCopies: 17, availableCopies: 17, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "AKTU312", title: "Power System - I (AKTU KEE-501)", author: "C.L. Wadhwa, V.K. Mehta", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400&q=80" },
+    { id: "AKTU313", title: "Power Electronics (AKTU KEE-502)", author: "P.S. Bimbhra, M.H. Rashid", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780133125900-M.jpg" },
+    { id: "AKTU314", title: "Theory of Machines (AKTU KME-501)", author: "S.S. Rattan, R.S. Khurmi", category: "AKTU 3rd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU315", title: "Heat & Mass Transfer (AKTU KME-502)", author: "R.K. Rajput, P.K. Nag", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&q=80" },
+    { id: "AKTU316", title: "Design of Machine Elements (AKTU KME-601)", author: "V.B. Bhandari, R.S. Khurmi", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU317", title: "Design of Concrete Structures (AKTU KCE-502)", author: "N. Krishna Raju, Pillai & Menon", category: "AKTU 3rd Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "AKTU318", title: "Geotechnical Engineering (AKTU KCE-503)", author: "K.R. Arora, B.C. Punmia", category: "AKTU 3rd Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" },
+    { id: "AKTU319", title: "Environmental Engineering (AKTU KCE-601)", author: "S.K. Garg", category: "AKTU 3rd Year", totalCopies: 16, availableCopies: 16, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+    { id: "AKTU320", title: "Design of Steel Structures (AKTU KCE-602)", author: "N. Subramanian, S.K. Duggal", category: "AKTU 3rd Year", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "AKTU321", title: "Transportation Engineering (AKTU KCE-603)", author: "S.K. Khanna, C.E.G. Justo", category: "AKTU 3rd Year", totalCopies: 15, availableCopies: 15, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
 
-  // --- AKTU 4TH YEAR (SEM 7 & 8) ---
-  { id: "AKTU401", title: "Artificial Intelligence (AKTU KCS-071)", author: "Stuart Russell, Peter Norvig", category: "AKTU 4th Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780134610993-M.jpg" },
-  { id: "AKTU402", title: "Natural Language Processing (AKTU KCS-072)", author: "Daniel Jurafsky, James H. Martin", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780131873216-M.jpg" },
-  { id: "AKTU403", title: "Cloud Computing (AKTU KCS-073)", author: "Rajiv Chopra, Thomas Erl", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780133387520-M.jpg" },
-  { id: "AKTU404", title: "Cryptography & Network Security (AKTU KCS-074)", author: "William Stallings, Atul Kahate", category: "AKTU 4th Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780134444284-M.jpg" },
-  { id: "AKTU405", title: "Machine Learning Techniques (AKTU KCS-078)", author: "Tom M. Mitchell, Aurélien Géron", category: "AKTU 4th Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9781492032649-M.jpg" },
-  { id: "AKTU406", title: "Big Data Analytics (AKTU KCS-081)", author: "V.K. Jain, Nathan Marz", category: "AKTU 4th Year", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781617290343-M.jpg" },
-  { id: "AKTU407", title: "Deep Learning (AKTU KCS-082)", author: "Ian Goodfellow, Yoshua Bengio", category: "AKTU 4th Year", totalCopies: 13, availableCopies: 13, cover: "https://covers.openlibrary.org/b/isbn/9780262035613-M.jpg" },
-  { id: "AKTU408", title: "Internet of Things - IoT (AKTU KCS-085)", author: "Arshdeep Bahga, Vijay Madisetti", category: "AKTU 4th Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780996025515-M.jpg" },
-  { id: "AKTU409", title: "Wireless & Mobile Communication (AKTU KEC-071)", author: "Andreas F. Molisch, Sanjay Sharma", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780470741863-M.jpg" },
-  { id: "AKTU410", title: "Optical Communication (AKTU KEC-072)", author: "Gerd Keiser, Govind P. Agrawal", category: "AKTU 4th Year", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780073380711-M.jpg" },
-  { id: "AKTU411", title: "Satellite Communication (AKTU KEC-081)", author: "Timothy Pratt, Charles Bostian", category: "AKTU 4th Year", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780471370079-M.jpg" },
-  { id: "AKTU412", title: "Embedded Systems Architecture (AKTU KEC-082)", author: "Raj Kamal, Shibu K.V.", category: "AKTU 4th Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU413", title: "Electric Drives & Applications (AKTU KEE-071)", author: "Vedam Subrahmanyam, G.K. Dubey", category: "AKTU 4th Year", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
-  { id: "AKTU414", title: "Renewable Energy Resources (AKTU KEE-072)", author: "John Twidell, Tony Weir", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780415584388-M.jpg" },
-  { id: "AKTU415", title: "Smart Grid Technologies (AKTU KEE-081)", author: "Janaka Ekanayake, Kithsiri Liyanage", category: "AKTU 4th Year", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780470740309-M.jpg" },
-  { id: "AKTU416", title: "Computer Aided Design - CAD/CAM (AKTU KME-071)", author: "P.N. Rao", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
-  { id: "AKTU417", title: "Automobile Engineering (AKTU KME-072)", author: "Kirpal Singh, V. Ganesan", category: "AKTU 4th Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80" },
-  { id: "AKTU418", title: "Industrial Engineering & Operations Research (AKTU KME-081)", author: "O.P. Khanna, Hamdy A. Taha", category: "AKTU 4th Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780134444017-M.jpg" },
-  { id: "AKTU419", title: "Earthquake Resistant Design (AKTU KCE-071)", author: "Pankaj Agarwal, Manish Shrikhande", category: "AKTU 4th Year", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "AKTU420", title: "Irrigation Engineering & Hydraulic Structures (AKTU KCE-072)", author: "S.K. Garg", category: "AKTU 4th Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
-  { id: "AKTU421", title: "Construction Technology & Management (AKTU KCE-081)", author: "B.S. Patil", category: "AKTU 4th Year", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
-  { id: "AKTU422", title: "Remote Sensing & GIS Applications (AKTU KCE-082)", author: "B. Bhatta", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" }
+    // --- AKTU 4TH YEAR (SEM 7 & 8) ---
+    { id: "AKTU401", title: "Artificial Intelligence (AKTU KCS-071)", author: "Stuart Russell, Peter Norvig", category: "AKTU 4th Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780134610993-M.jpg" },
+    { id: "AKTU402", title: "Natural Language Processing (AKTU KCS-072)", author: "Daniel Jurafsky, James H. Martin", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780131873216-M.jpg" },
+    { id: "AKTU403", title: "Cloud Computing (AKTU KCS-073)", author: "Rajiv Chopra, Thomas Erl", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780133387520-M.jpg" },
+    { id: "AKTU404", title: "Cryptography & Network Security (AKTU KCS-074)", author: "William Stallings, Atul Kahate", category: "AKTU 4th Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780134444284-M.jpg" },
+    { id: "AKTU405", title: "Machine Learning Techniques (AKTU KCS-078)", author: "Tom M. Mitchell, Aurélien Géron", category: "AKTU 4th Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9781492032649-M.jpg" },
+    { id: "AKTU406", title: "Big Data Analytics (AKTU KCS-081)", author: "V.K. Jain, Nathan Marz", category: "AKTU 4th Year", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9781617290343-M.jpg" },
+    { id: "AKTU407", title: "Deep Learning (AKTU KCS-082)", author: "Ian Goodfellow, Yoshua Bengio", category: "AKTU 4th Year", totalCopies: 13, availableCopies: 13, cover: "https://covers.openlibrary.org/b/isbn/9780262035613-M.jpg" },
+    { id: "AKTU408", title: "Internet of Things - IoT (AKTU KCS-085)", author: "Arshdeep Bahga, Vijay Madisetti", category: "AKTU 4th Year", totalCopies: 14, availableCopies: 14, cover: "https://covers.openlibrary.org/b/isbn/9780996025515-M.jpg" },
+    { id: "AKTU409", title: "Wireless & Mobile Communication (AKTU KEC-071)", author: "Andreas F. Molisch, Sanjay Sharma", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780470741863-M.jpg" },
+    { id: "AKTU410", title: "Optical Communication (AKTU KEC-072)", author: "Gerd Keiser, Govind P. Agrawal", category: "AKTU 4th Year", totalCopies: 10, availableCopies: 10, cover: "https://covers.openlibrary.org/b/isbn/9780073380711-M.jpg" },
+    { id: "AKTU411", title: "Satellite Communication (AKTU KEC-081)", author: "Timothy Pratt, Charles Bostian", category: "AKTU 4th Year", totalCopies: 11, availableCopies: 11, cover: "https://covers.openlibrary.org/b/isbn/9780471370079-M.jpg" },
+    { id: "AKTU412", title: "Embedded Systems Architecture (AKTU KEC-082)", author: "Raj Kamal, Shibu K.V.", category: "AKTU 4th Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU413", title: "Electric Drives & Applications (AKTU KEE-071)", author: "Vedam Subrahmanyam, G.K. Dubey", category: "AKTU 4th Year", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80" },
+    { id: "AKTU414", title: "Renewable Energy Resources (AKTU KEE-072)", author: "John Twidell, Tony Weir", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://covers.openlibrary.org/b/isbn/9780415584388-M.jpg" },
+    { id: "AKTU415", title: "Smart Grid Technologies (AKTU KEE-081)", author: "Janaka Ekanayake, Kithsiri Liyanage", category: "AKTU 4th Year", totalCopies: 9, availableCopies: 9, cover: "https://covers.openlibrary.org/b/isbn/9780470740309-M.jpg" },
+    { id: "AKTU416", title: "Computer Aided Design - CAD/CAM (AKTU KME-071)", author: "P.N. Rao", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" },
+    { id: "AKTU417", title: "Automobile Engineering (AKTU KME-072)", author: "Kirpal Singh, V. Ganesan", category: "AKTU 4th Year", totalCopies: 14, availableCopies: 14, cover: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80" },
+    { id: "AKTU418", title: "Industrial Engineering & Operations Research (AKTU KME-081)", author: "O.P. Khanna, Hamdy A. Taha", category: "AKTU 4th Year", totalCopies: 15, availableCopies: 15, cover: "https://covers.openlibrary.org/b/isbn/9780134444017-M.jpg" },
+    { id: "AKTU419", title: "Earthquake Resistant Design (AKTU KCE-071)", author: "Pankaj Agarwal, Manish Shrikhande", category: "AKTU 4th Year", totalCopies: 10, availableCopies: 10, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "AKTU420", title: "Irrigation Engineering & Hydraulic Structures (AKTU KCE-072)", author: "S.K. Garg", category: "AKTU 4th Year", totalCopies: 13, availableCopies: 13, cover: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80" },
+    { id: "AKTU421", title: "Construction Technology & Management (AKTU KCE-081)", author: "B.S. Patil", category: "AKTU 4th Year", totalCopies: 11, availableCopies: 11, cover: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400&q=80" },
+    { id: "AKTU422", title: "Remote Sensing & GIS Applications (AKTU KCE-082)", author: "B. Bhatta", category: "AKTU 4th Year", totalCopies: 12, availableCopies: 12, cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80" }
 ];
 
 // DOM Elements
 var studentTabBtn = document.getElementById("studentTabBtn");
-var adminTabBtn   = document.getElementById("adminTabBtn");
+var adminTabBtn = document.getElementById("adminTabBtn");
 var studentPortal = document.getElementById("studentPortal");
-var adminPortal   = document.getElementById("adminPortal");
+var adminPortal = document.getElementById("adminPortal");
 
-var searchInput     = document.getElementById("searchInput");
-var categoryFilter  = document.getElementById("categoryFilter");
-var catalogList     = document.getElementById("catalogList");
-var myBorrowedList  = document.getElementById("myBorrowedList");
+var searchInput = document.getElementById("searchInput");
+var categoryFilter = document.getElementById("categoryFilter");
+var catalogList = document.getElementById("catalogList");
+var myBorrowedList = document.getElementById("myBorrowedList");
 
-var chatInput   = document.getElementById("chatInput");
+var chatInput = document.getElementById("chatInput");
 var sendChatBtn = document.getElementById("sendChatBtn");
 var chatHistory = document.getElementById("chatHistory");
 
-var bookTitle           = document.getElementById("bookTitle");
-var bookAuthor          = document.getElementById("bookAuthor");
-var bookCategory        = document.getElementById("bookCategory");
-var bookIsbn            = document.getElementById("bookIsbn");
-var bookCopies          = document.getElementById("bookCopies");
-var bookCover           = document.getElementById("bookCover");
-var addBookBtn          = document.getElementById("addBookBtn");
-var issuedLogList       = document.getElementById("issuedLogList");
-var adminInventoryList  = document.getElementById("adminInventoryList");
+var bookTitle = document.getElementById("bookTitle");
+var bookAuthor = document.getElementById("bookAuthor");
+var bookCategory = document.getElementById("bookCategory");
+var bookIsbn = document.getElementById("bookIsbn");
+var bookCopies = document.getElementById("bookCopies");
+var bookCover = document.getElementById("bookCover");
+var addBookBtn = document.getElementById("addBookBtn");
+var issuedLogList = document.getElementById("issuedLogList");
+var adminInventoryList = document.getElementById("adminInventoryList");
 var quickChipsContainer = document.getElementById("quickChipsContainer");
-var chatbotSubtitle     = document.getElementById("chatbotSubtitle");
+var chatbotSubtitle = document.getElementById("chatbotSubtitle");
 
 var books = [];
 var borrowedBooks = [];
 var currentPortal = "student";
+var catalogCurrentPage = 1;
+var adminInventoryCurrentPage = 1;
+var ITEMS_PER_PAGE = 12;
 
 // Generate a unique book ID using timestamp to avoid duplicates
 function generateBookId() {
@@ -417,13 +420,13 @@ function recalculateAvailability() {
 
 function getPopularAvailableBooks(limit) {
     limit = limit || 12;
-    var availables = books.filter(function(b) { return b.availableCopies > 0; });
+    var availables = books.filter(function (b) { return b.availableCopies > 0; });
 
     var popularIds = ["CSE101", "CSE108", "CSE102", "CSE107", "CSE120", "CSE135", "IT201", "AKTU101", "AKTU201", "AKTU301", "AKTU401", "ECE301", "EEE301", "ME301", "BSH101"];
     var popularList = [];
 
     for (var i = 0; i < popularIds.length; i++) {
-        var found = availables.find(function(b) { return b.id === popularIds[i]; });
+        var found = availables.find(function (b) { return b.id === popularIds[i]; });
         if (found) popularList.push(found);
     }
 
@@ -467,7 +470,7 @@ function loadData() {
 
     // Firebase realtime sync listeners
     if (typeof isFirebaseActive !== "undefined" && isFirebaseActive && db) {
-        db.ref("books").on("value", function(snapshot) {
+        db.ref("books").on("value", function (snapshot) {
             var data = snapshot.val();
             if (data && Array.isArray(data)) {
                 books = data;
@@ -477,7 +480,7 @@ function loadData() {
             }
         });
 
-        db.ref("borrowed").on("value", function(snapshot) {
+        db.ref("borrowed").on("value", function (snapshot) {
             var data = snapshot.val();
             if (data && Array.isArray(data)) {
                 borrowedBooks = data;
@@ -493,7 +496,7 @@ function loadData() {
 function getMyBorrowedBooks() {
     if (!currentUser) return [];
     var uid = currentUser.uid;
-    return borrowedBooks.filter(function(item) {
+    return borrowedBooks.filter(function (item) {
         return item.uid === uid;
     });
 }
@@ -513,11 +516,41 @@ function saveBorrowed() {
 }
 
 function setupEventListeners() {
-    studentTabBtn.addEventListener("click", function() { switchPortal("student"); });
-    adminTabBtn.addEventListener("click", function() { switchPortal("admin"); });
+    studentTabBtn.addEventListener("click", function () { switchPortal("student"); });
+    adminTabBtn.addEventListener("click", function () { switchPortal("admin"); });
 
-    searchInput.addEventListener("input", renderCatalog);
-    categoryFilter.addEventListener("change", renderCatalog);
+    searchInput.addEventListener("input", function() {
+        catalogCurrentPage = 1;
+        renderCatalog();
+    });
+    categoryFilter.addEventListener("change", function() {
+        catalogCurrentPage = 1;
+        renderCatalog();
+    });
+
+    var adminSearchInput = document.getElementById("adminSearchInput");
+    var adminCategoryFilter = document.getElementById("adminCategoryFilter");
+    var adminIssuedSearchInput = document.getElementById("adminIssuedSearchInput");
+    var adminIssuedFilter = document.getElementById("adminIssuedFilter");
+
+    if (adminSearchInput) {
+        adminSearchInput.addEventListener("input", function() {
+            adminInventoryCurrentPage = 1;
+            renderAdminInventory();
+        });
+    }
+    if (adminCategoryFilter) {
+        adminCategoryFilter.addEventListener("change", function() {
+            adminInventoryCurrentPage = 1;
+            renderAdminInventory();
+        });
+    }
+    if (adminIssuedSearchInput) {
+        adminIssuedSearchInput.addEventListener("input", renderIssuedLog);
+    }
+    if (adminIssuedFilter) {
+        adminIssuedFilter.addEventListener("change", renderIssuedLog);
+    }
 
     addBookBtn.addEventListener("click", addNewBook);
 
@@ -531,24 +564,24 @@ function setupEventListeners() {
     var gateGoogleSignInBtn = document.getElementById("gateGoogleSignInBtn");
 
     if (googleSignInBtn) {
-        googleSignInBtn.addEventListener("click", function() {
+        googleSignInBtn.addEventListener("click", function () {
             if (typeof signInWithGoogle === "function") signInWithGoogle();
         });
     }
     if (gateGoogleSignInBtn) {
-        gateGoogleSignInBtn.addEventListener("click", function() {
+        gateGoogleSignInBtn.addEventListener("click", function () {
             if (typeof signInWithGoogle === "function") signInWithGoogle();
         });
     }
     if (googleSignOutBtn) {
-        googleSignOutBtn.addEventListener("click", function() {
+        googleSignOutBtn.addEventListener("click", function () {
             if (typeof signOutGoogle === "function") signOutGoogle();
         });
     }
 
     // Firebase auth state listener
     if (typeof auth !== "undefined" && auth) {
-        auth.onAuthStateChanged(function(user) {
+        auth.onAuthStateChanged(function (user) {
             var signInBtn = document.getElementById("googleSignInBtn");
             var userProfile = document.getElementById("userProfile");
             var userAvatar = document.getElementById("userAvatar");
@@ -591,11 +624,11 @@ function setupEventListeners() {
         });
     }
 
-    sendChatBtn.addEventListener("click", function() {
+    sendChatBtn.addEventListener("click", function () {
         sendChatMessage(chatInput.value.trim());
     });
 
-    chatInput.addEventListener("keypress", function(e) {
+    chatInput.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
             sendChatMessage(chatInput.value.trim());
         }
@@ -625,7 +658,7 @@ function renderQuickChips() {
     if (!quickChipsContainer) return;
 
     if (currentPortal === "student") {
-        var availableBooksList = books.filter(function(b) { return b.availableCopies > 0; });
+        var availableBooksList = books.filter(function (b) { return b.availableCopies > 0; });
         var sampleBook1 = (availableBooksList[0] || books[0] || { title: "Clean Code", category: "Computer Science" });
         var sampleBook2 = (availableBooksList[1] || books[1] || { title: "Atomic Habits", category: "Self-Help" });
         var sampleCat = sampleBook1.category || "Computer Science";
@@ -718,13 +751,14 @@ function renderCatalog() {
     var category = categoryFilter.value;
 
     catalogList.innerHTML = "";
+    var catalogPagination = document.getElementById("catalogPagination");
 
     var filtered = [];
 
     if (category === "Popular Available") {
         filtered = getPopularAvailableBooks(24);
     } else {
-        filtered = books.filter(function(book) {
+        filtered = books.filter(function (book) {
             var matchesQuery = book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query) || book.category.toLowerCase().includes(query);
             var matchesCategory = (category === "All" || book.category === category || (category === "AKTU Curriculum" && book.category.indexOf("AKTU") !== -1));
             return matchesQuery && matchesCategory;
@@ -742,8 +776,16 @@ function renderCatalog() {
         filtered = popularList;
     }
 
-    for (var i = 0; i < filtered.length; i++) {
-        var book = filtered[i];
+    // Pagination slicing
+    var totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+    if (catalogCurrentPage > totalPages) catalogCurrentPage = totalPages;
+    if (catalogCurrentPage < 1) catalogCurrentPage = 1;
+
+    var startIdx = (catalogCurrentPage - 1) * ITEMS_PER_PAGE;
+    var pageItems = filtered.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+    for (var i = 0; i < pageItems.length; i++) {
+        var book = pageItems[i];
         var isAvailable = book.availableCopies > 0;
 
         var card = document.createElement("div");
@@ -764,7 +806,7 @@ function renderCatalog() {
             + '<div class="book-meta">'
             + '    <span class="badge badge-category">' + book.category + '</span>'
             + '    <span class="badge ' + (isAvailable ? 'badge-available' : 'badge-issued') + '">'
-            +          (isAvailable ? book.availableCopies + '/' + book.totalCopies + ' Available' : 'Out of Stock')
+            + (isAvailable ? book.availableCopies + '/' + book.totalCopies + ' Available' : 'Out of Stock')
             + '    </span>'
             + '</div>'
             + (isAvailable
@@ -777,6 +819,24 @@ function renderCatalog() {
 
         catalogList.appendChild(card);
     }
+
+    if (catalogPagination) {
+        if (totalPages <= 1) {
+            catalogPagination.innerHTML = "";
+        } else {
+            catalogPagination.innerHTML = ''
+                + '<button class="pagination-btn" ' + (catalogCurrentPage === 1 ? 'disabled' : '') + ' onclick="changeCatalogPage(-1)">◀ Previous</button>'
+                + '<span class="pagination-info">Page ' + catalogCurrentPage + ' of ' + totalPages + ' (' + filtered.length + ' Books)</span>'
+                + '<button class="pagination-btn" ' + (catalogCurrentPage === totalPages ? 'disabled' : '') + ' onclick="changeCatalogPage(1)">Next ▶</button>';
+        }
+    }
+}
+
+function changeCatalogPage(delta) {
+    catalogCurrentPage += delta;
+    renderCatalog();
+    var catalogEl = document.getElementById("catalogList");
+    if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
 }
 
 function getStudentAdmissionId() {
@@ -795,7 +855,7 @@ function getStudentAdmissionId() {
 }
 
 function borrowBook(bookId) {
-    var book = books.find(function(b) { return b.id === bookId; });
+    var book = books.find(function (b) { return b.id === bookId; });
 
     if (!book || book.availableCopies <= 0) {
         alert("Sorry, this book is currently out of stock!");
@@ -855,7 +915,7 @@ function renderMyBorrowed() {
             fineAmount = diffDays * 20;
         }
 
-        var bookObj = books.find(function(b) { return b.id === item.bookId; });
+        var bookObj = books.find(function (b) { return b.id === item.bookId; });
         var coverUrl = (bookObj && bookObj.cover) ? bookObj.cover : DEFAULT_COVER;
         var isReturnPending = item.returnRequested === true;
 
@@ -872,11 +932,11 @@ function renderMyBorrowed() {
             + '</div>'
             + '<div class="book-meta">'
             + '    <span style="font-size: 11px; color: #64748b;">Due: ' + item.dueDate + '</span>'
-            +      (isOverdue
-                    ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
-                    : (isReturnPending
-                        ? '<span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #d97706; font-weight: 600;">⏳ Return Requested</span>'
-                        : '<span class="badge badge-available">On Time</span>'))
+            + (isOverdue
+                ? '<span class="badge badge-issued">⚠️ Overdue (Fine: ₹' + fineAmount + ')</span>'
+                : (isReturnPending
+                    ? '<span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #d97706; font-weight: 600;">⏳ Return Requested</span>'
+                    : '<span class="badge badge-available">On Time</span>'))
             + '</div>'
             + (isReturnPending
                 ? '<button class="action-btn" disabled style="opacity: 0.6; cursor: not-allowed; width: 100%; background: #64748b; color: white;">⏳ Awaiting Librarian Approval</button>'
@@ -887,7 +947,7 @@ function renderMyBorrowed() {
 }
 
 function requestReturnBook(borrowId) {
-    var item = borrowedBooks.find(function(b) { return b.id === borrowId; });
+    var item = borrowedBooks.find(function (b) { return b.id === borrowId; });
     if (!item) return;
 
     item.returnRequested = true;
@@ -900,7 +960,7 @@ function requestReturnBook(borrowId) {
 }
 
 function approveReturn(borrowId) {
-    var index = borrowedBooks.findIndex(function(b) { return b.id === borrowId; });
+    var index = borrowedBooks.findIndex(function (b) { return b.id === borrowId; });
     if (index === -1) return;
 
     var item = borrowedBooks[index];
@@ -914,22 +974,22 @@ function approveReturn(borrowId) {
     alert("✅ Return approved for '" + item.title + "' (Borrower: " + item.studentName + ")!\nBook copy is returned to active catalog inventory.");
 }
 
-    borrowedBooks.splice(index, 1);
+borrowedBooks.splice(index, 1);
 
-    saveBooks();
-    saveBorrowed();
-    renderAll();
+saveBooks();
+saveBorrowed();
+renderAll();
 
-    alert("Thank you! Book returned successfully.");
+alert("Thank you! Book returned successfully.");
 }
 
 function addNewBook() {
-    var title    = bookTitle.value.trim();
-    var author   = bookAuthor.value.trim();
+    var title = bookTitle.value.trim();
+    var author = bookAuthor.value.trim();
     var category = bookCategory.value;
-    var isbn     = bookIsbn.value.trim() || generateBookId();
-    var copies   = Number(bookCopies.value);
-    var cover    = (bookCover && bookCover.value.trim()) ? bookCover.value.trim() : DEFAULT_COVER;
+    var isbn = bookIsbn.value.trim() || generateBookId();
+    var copies = Number(bookCopies.value);
+    var cover = (bookCover && bookCover.value.trim()) ? bookCover.value.trim() : DEFAULT_COVER;
 
     if (!title || !author || !category || copies <= 0) {
         alert("Please fill in all book details with valid values.");
@@ -937,7 +997,7 @@ function addNewBook() {
     }
 
     // Prevent duplicate ISBN/ID
-    var existingBook = books.find(function(b) { return b.id === isbn; });
+    var existingBook = books.find(function (b) { return b.id === isbn; });
     if (existingBook) {
         alert("A book with ID '" + isbn + "' already exists. Please use a different ISBN/ID.");
         return;
@@ -969,15 +1029,36 @@ function addNewBook() {
 }
 
 function renderAdminInventory() {
+    var adminSearchInput = document.getElementById("adminSearchInput");
+    var adminCategoryFilter = document.getElementById("adminCategoryFilter");
+    var adminInventoryPagination = document.getElementById("adminInventoryPagination");
+
+    var query = adminSearchInput ? adminSearchInput.value.toLowerCase().trim() : "";
+    var category = adminCategoryFilter ? adminCategoryFilter.value : "All";
+
     adminInventoryList.innerHTML = "";
 
-    if (books.length === 0) {
-        adminInventoryList.innerHTML = '<p class="empty-msg">No books in inventory.</p>';
+    var filtered = books.filter(function (book) {
+        var matchesQuery = book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query) || book.category.toLowerCase().includes(query) || book.id.toLowerCase().includes(query);
+        var matchesCategory = (category === "All" || book.category === category || (category === "AKTU Curriculum" && book.category.indexOf("AKTU") !== -1));
+        return matchesQuery && matchesCategory;
+    });
+
+    if (filtered.length === 0) {
+        adminInventoryList.innerHTML = '<p class="empty-msg" style="grid-column: 1 / -1;">No matching books found in inventory.</p>';
+        if (adminInventoryPagination) adminInventoryPagination.innerHTML = "";
         return;
     }
 
-    for (var i = 0; i < books.length; i++) {
-        var book = books[i];
+    var totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+    if (adminInventoryCurrentPage > totalPages) adminInventoryCurrentPage = totalPages;
+    if (adminInventoryCurrentPage < 1) adminInventoryCurrentPage = 1;
+
+    var startIdx = (adminInventoryCurrentPage - 1) * ITEMS_PER_PAGE;
+    var pageItems = filtered.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+    for (var i = 0; i < pageItems.length; i++) {
+        var book = pageItems[i];
         var coverUrl = book.cover || DEFAULT_COVER;
 
         var card = document.createElement("div");
@@ -999,13 +1080,29 @@ function renderAdminInventory() {
 
         adminInventoryList.appendChild(card);
     }
+
+    if (adminInventoryPagination) {
+        if (totalPages <= 1) {
+            adminInventoryPagination.innerHTML = "";
+        } else {
+            adminInventoryPagination.innerHTML = ''
+                + '<button class="pagination-btn" ' + (adminInventoryCurrentPage === 1 ? 'disabled' : '') + ' onclick="changeAdminInventoryPage(-1)">◀ Previous</button>'
+                + '<span class="pagination-info">Page ' + adminInventoryCurrentPage + ' of ' + totalPages + ' (' + filtered.length + ' Books)</span>'
+                + '<button class="pagination-btn" ' + (adminInventoryCurrentPage === totalPages ? 'disabled' : '') + ' onclick="changeAdminInventoryPage(1)">Next ▶</button>';
+        }
+    }
+}
+
+function changeAdminInventoryPage(delta) {
+    adminInventoryCurrentPage += delta;
+    renderAdminInventory();
 }
 
 function deleteBook(bookId) {
     if (!confirm("Are you sure you want to delete this book from inventory?")) return;
 
-    books = books.filter(function(b) { return b.id !== bookId; });
-    borrowedBooks = borrowedBooks.filter(function(b) { return b.bookId !== bookId; });
+    books = books.filter(function (b) { return b.id !== bookId; });
+    borrowedBooks = borrowedBooks.filter(function (b) { return b.bookId !== bookId; });
 
     saveBooks();
     saveBorrowed();
@@ -1013,17 +1110,40 @@ function deleteBook(bookId) {
 }
 
 function renderIssuedLog() {
-    issuedLogList.innerHTML = "";
+    var adminIssuedSearchInput = document.getElementById("adminIssuedSearchInput");
+    var adminIssuedFilter = document.getElementById("adminIssuedFilter");
 
-    if (borrowedBooks.length === 0) {
-        issuedLogList.innerHTML = '<p class="empty-msg">No books currently issued out.</p>';
-        return;
-    }
+    var query = adminIssuedSearchInput ? adminIssuedSearchInput.value.toLowerCase().trim() : "";
+    var filterVal = adminIssuedFilter ? adminIssuedFilter.value : "All";
+
+    issuedLogList.innerHTML = "";
 
     var nowTime = Date.now();
 
-    for (var i = 0; i < borrowedBooks.length; i++) {
-        var item = borrowedBooks[i];
+    var filtered = borrowedBooks.filter(function(item) {
+        var name = (item.studentName || "").toLowerCase();
+        var sid = (item.studentId || "").toLowerCase();
+        var title = (item.title || "").toLowerCase();
+        var matchesQuery = name.includes(query) || sid.includes(query) || title.includes(query);
+
+        var isPending = item.returnRequested === true;
+        var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
+
+        var matchesFilter = true;
+        if (filterVal === "Pending") matchesFilter = isPending;
+        else if (filterVal === "Overdue") matchesFilter = isOverdue;
+        else if (filterVal === "Active") matchesFilter = (!isPending && !isOverdue);
+
+        return matchesQuery && matchesFilter;
+    });
+
+    if (filtered.length === 0) {
+        issuedLogList.innerHTML = '<p class="empty-msg">No matching issued records found.</p>';
+        return;
+    }
+
+    for (var i = 0; i < filtered.length; i++) {
+        var item = filtered[i];
         var isOverdue = item.dueTimestamp && nowTime > item.dueTimestamp;
         var fineAmount = 0;
 
@@ -1072,7 +1192,7 @@ async function sendChatMessage(userText) {
     var loadingId = "ai-loading-" + Date.now();
     appendBubble("Thinking...", "ai-bubble", loadingId);
 
-    var inventoryContext = books.map(function(b) {
+    var inventoryContext = books.map(function (b) {
         return "- '" + b.title + "' by " + b.author + " [Category: " + b.category + "] -> Available Copies: " + b.availableCopies + "/" + b.totalCopies;
     }).join("\n");
 
@@ -1216,14 +1336,14 @@ function handleLocalChatbotResponse(userText, loadingId) {
     }
 
     var popList = getPopularAvailableBooks(4);
-    var popFormatted = popList.map(function(b) {
+    var popFormatted = popList.map(function (b) {
         return "• <strong>" + b.title + "</strong> by " + b.author + " (<em>" + b.category + "</em>) — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
     }).join("<br>");
 
     // Check availability queries (fuzzy search title or author)
     var cleanKeyword = lowerText.replace(/is|available|in stock|do you have|book|copies|the|\?/gi, "").trim();
 
-    var foundBook = books.find(function(b) {
+    var foundBook = books.find(function (b) {
         var bTitle = b.title.toLowerCase();
         var bAuthor = b.author.toLowerCase();
         return lowerText.includes(bTitle) || (cleanKeyword.length > 2 && (bTitle.includes(cleanKeyword) || bAuthor.includes(cleanKeyword)));
@@ -1235,9 +1355,9 @@ function handleLocalChatbotResponse(userText, loadingId) {
             loadingBubble.innerHTML = "✅ <strong>YES!</strong> <em>'" + foundBook.title + "'</em> by " + foundBook.author + " (" + foundBook.category + ") is currently <strong>AVAILABLE</strong> (" + foundBook.availableCopies + "/" + foundBook.totalCopies + " copies in stock)! 📖";
         } else {
             // Give recommendations ONLY if answer is NO
-            var similar = books.filter(function(b) { return b.category === foundBook.category && b.availableCopies > 0 && b.id !== foundBook.id; });
+            var similar = books.filter(function (b) { return b.category === foundBook.category && b.availableCopies > 0 && b.id !== foundBook.id; });
             var recText = similar.length > 0
-                ? "<br><br>💡 <strong>Recommended available books in " + foundBook.category + ":</strong><br>" + similar.slice(0, 3).map(function(s){return "• <strong>" + s.title + "</strong> (" + s.availableCopies + "/" + s.totalCopies + " available)";}).join("<br>")
+                ? "<br><br>💡 <strong>Recommended available books in " + foundBook.category + ":</strong><br>" + similar.slice(0, 3).map(function (s) { return "• <strong>" + s.title + "</strong> (" + s.availableCopies + "/" + s.totalCopies + " available)"; }).join("<br>")
                 : "<br><br>🔥 <strong>Popular Books Available Right Now:</strong><br>" + popFormatted;
             loadingBubble.innerHTML = "❌ <strong>NO</strong>: <em>'" + foundBook.title + "'</em> is currently out of stock." + recText;
         }
@@ -1246,14 +1366,14 @@ function handleLocalChatbotResponse(userText, loadingId) {
     }
 
     // Category query
-    var foundCat = books.find(function(b) {
+    var foundCat = books.find(function (b) {
         return lowerText.includes(b.category.toLowerCase());
     });
 
     if (foundCat) {
-        var catBooks = books.filter(function(b) { return b.category.toLowerCase() === foundCat.category.toLowerCase() && b.availableCopies > 0; });
+        var catBooks = books.filter(function (b) { return b.category.toLowerCase() === foundCat.category.toLowerCase() && b.availableCopies > 0; });
         if (catBooks.length > 0) {
-            loadingBubble.innerHTML = "📚 Available in <strong>" + foundCat.category + "</strong>:<br>• " + catBooks.slice(0, 5).map(function(b){ return "<strong>" + b.title + "</strong> (" + b.availableCopies + "/" + b.totalCopies + " available)"; }).join("<br>• ");
+            loadingBubble.innerHTML = "📚 Available in <strong>" + foundCat.category + "</strong>:<br>• " + catBooks.slice(0, 5).map(function (b) { return "<strong>" + b.title + "</strong> (" + b.availableCopies + "/" + b.totalCopies + " available)"; }).join("<br>• ");
         } else {
             loadingBubble.innerHTML = "Currently no books available under department " + foundCat.category + ".<br><br>🔥 <strong>Popular Books Available Right Now:</strong><br>" + popFormatted;
         }
@@ -1289,9 +1409,9 @@ function formatMarkdown(text) {
 }
 
 // AI Modal
-var aiModal    = document.getElementById("aiModal");
+var aiModal = document.getElementById("aiModal");
 var modalTitle = document.getElementById("modalTitle");
-var modalBody  = document.getElementById("modalBody");
+var modalBody = document.getElementById("modalBody");
 
 function openAiModal(title, content) {
     if (modalTitle) modalTitle.innerText = title;
@@ -1304,7 +1424,7 @@ function closeAiModal() {
 }
 
 if (aiModal) {
-    aiModal.addEventListener("click", function(e) {
+    aiModal.addEventListener("click", function (e) {
         if (e.target === aiModal) closeAiModal();
     });
 }
@@ -1441,7 +1561,7 @@ function checkQuizAnswer(btn, isCorrect, explanation) {
     var feedbackBox = parent.querySelector(".quiz-feedback");
     var allBtns = parent.querySelectorAll(".quiz-option-btn");
 
-    allBtns.forEach(function(b) { b.disabled = true; });
+    allBtns.forEach(function (b) { b.disabled = true; });
 
     if (isCorrect) {
         btn.classList.add("correct");
@@ -1472,7 +1592,7 @@ async function scanBookCoverFile() {
     scanStatus.innerHTML = "<span style='color: #2563eb;'>⏳ Gemini 1.5 Vision is scanning cover image...</span>";
 
     var reader = new FileReader();
-    reader.onload = async function(e) {
+    reader.onload = async function (e) {
         var base64Data = e.target.result.split(',')[1];
         var mimeType = file.type || "image/png";
         var coverDataUrl = e.target.result;

@@ -97,6 +97,7 @@
                 <div class="card-container">
                     <h2>📚 Engineering Library Catalog</h2>
                     <div id="catalogList" class="book-grid"></div>
+                    <div id="catalogPagination" class="pagination-container"></div>
                 </div>
             </div>
 
@@ -141,7 +142,16 @@
                 </div>
 
                 <div class="card-container">
-                    <h2>📋 Issued Books Log</h2>
+                    <h2>📋 Issued Books & Return Requests Log</h2>
+                    <div class="search-bar-group" style="margin-bottom: 15px;">
+                        <input type="text" id="adminIssuedSearchInput" placeholder="🔍 Search by student name, admission ID, or book title...">
+                        <select id="adminIssuedFilter">
+                            <option value="All">All Issued Records</option>
+                            <option value="Pending">📩 Return Approval Requested</option>
+                            <option value="Overdue">⚠️ Overdue Loans</option>
+                            <option value="Active">🟢 Active Loans</option>
+                        </select>
+                    </div>
                     <div id="issuedLogList">
                         <p class="empty-msg">No books currently issued out.</p>
                     </div>
@@ -149,7 +159,23 @@
 
                 <div class="card-container">
                     <h2>⚙️ Library Inventory Management</h2>
+                    <div class="search-bar-group" style="margin-bottom: 15px;">
+                        <input type="text" id="adminSearchInput" placeholder="🔍 Search inventory by title, author, category, or ISBN/ID...">
+                        <select id="adminCategoryFilter">
+                            <option value="All">All Departments / Branches</option>
+                            <option value="Computer Science & Engineering">💻 CSE</option>
+                            <option value="Information Technology">🌐 IT</option>
+                            <option value="Artificial Intelligence & Data Science">🤖 AI & DS</option>
+                            <option value="Electronics & Communication">📡 ECE</option>
+                            <option value="Electrical & Electronics">⚡ EEE</option>
+                            <option value="Mechanical Engineering">⚙️ ME</option>
+                            <option value="Civil Engineering">🏗️ CE</option>
+                            <option value="Basic Sciences & Humanities">📐 BSH</option>
+                            <option value="AKTU Curriculum">📜 AKTU Curriculum (All)</option>
+                        </select>
+                    </div>
                     <div id="adminInventoryList" class="book-grid"></div>
+                    <div id="adminInventoryPagination" class="pagination-container"></div>
                 </div>
             </div>
 
