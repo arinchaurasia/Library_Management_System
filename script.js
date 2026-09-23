@@ -698,7 +698,8 @@ async function sendChatMessage(userText) {
                                 author: bookData.author,
                                 category: bookData.category || "Other",
                                 totalCopies: copies,
-                                availableCopies: copies
+                                availableCopies: copies,
+                                cover: DEFAULT_COVER
                             };
                             books.push(newBook);
                             saveBooks();
@@ -710,6 +711,7 @@ async function sendChatMessage(userText) {
                     rawReply = rawReply.replace(/\[\[ACTION_ADD:\s*\{.*?\}\]\]/g, "").trim();
                 }
 
+                var loadingBubble = document.getElementById(loadingId);
                 if (loadingBubble) {
                     loadingBubble.innerHTML = formatMarkdown(rawReply);
                 }
@@ -718,7 +720,7 @@ async function sendChatMessage(userText) {
             }
         }
     } catch (e) {
-        console.log("Local environment detected (/api/advice serverless route unavailable locally), using smart local AI parser fallback...");
+        console.log("Local environment detected (/api/advice serverless route unavailable locally), using smart local AI parser fallback...", e);
     }
 
     // Smart Local Fallback Parser for Local Testing / Offline Mode
@@ -766,7 +768,8 @@ function handleLocalChatbotResponse(userText, loadingId) {
             author: author,
             category: category,
             totalCopies: copies,
-            availableCopies: copies
+            availableCopies: copies,
+            cover: DEFAULT_COVER
         };
 
         books.push(newBook);
