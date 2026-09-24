@@ -18,11 +18,29 @@
             <h2>ShelfSense Library System</h2>
             <p class="auth-lock-subtitle">AI-Powered Smart Library Portal</p>
             <div class="auth-lock-divider"></div>
-            <p class="auth-lock-desc">🔒 Access Restricted. Please sign in with your Google account to view library catalog, borrow books, or use the AI Assistant.</p>
+            <p class="auth-lock-desc">🔒 Sign in with your Google account to access the library catalog, borrow books, and use the AI Assistant.</p>
             <button id="gateGoogleSignInBtn" class="google-gate-btn" onclick="signInWithGoogle()">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="22" height="22">
                 Sign in with Google
             </button>
+        </div>
+    </div>
+
+    <!-- Admission ID Modal (shown after Google sign-in if ID not yet saved) -->
+    <div id="admissionModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px); z-index:10000; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; max-width:440px; width:100%; border-radius:20px; padding:36px 30px; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.4); animation:authPop 0.35s ease-out;">
+            <div style="font-size:48px; margin-bottom:12px;">🎓</div>
+            <h2 id="admissionModalTitle" style="font-size:22px; color:#1e293b; font-weight:700; margin-bottom:6px;">Welcome!</h2>
+            <p style="font-size:13px; color:#64748b; margin-bottom:22px; line-height:1.5;">Please enter your <strong>Student Admission ID / University Roll Number</strong> to complete your registration and access the library.</p>
+            <input id="admissionIdInput" type="text" placeholder="e.g. AKTU2023001 or 2100123456" autocomplete="off"
+                style="width:100%; padding:13px 16px; border:2px solid #e2e8f0; border-radius:10px; font-size:15px; font-family:'Poppins',sans-serif; outline:none; margin-bottom:8px; text-align:center; letter-spacing:1px; transition:border-color 0.2s;"
+                onkeyup="this.style.borderColor=this.value.trim().length>2?'#10b981':'#e2e8f0'"
+                onkeydown="if(event.key==='Enter') submitAdmissionId()">
+            <p id="admissionIdError" style="font-size:12px; color:#ef4444; margin-bottom:10px; display:none;">⚠️ Please enter a valid Admission ID (minimum 4 characters)</p>
+            <button onclick="submitAdmissionId()" style="width:100%; padding:14px; background:linear-gradient(135deg,#1e3c72,#2563eb); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Poppins',sans-serif; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.92'" onmouseout="this.style.opacity='1'">
+                ✅ Continue to Library
+            </button>
+            <p style="margin-top:14px; font-size:11px; color:#94a3b8;">This ID is stored securely and used to track your borrowed books.</p>
         </div>
     </div>
 

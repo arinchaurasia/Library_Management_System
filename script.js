@@ -75,7 +75,7 @@ function createBookCoverDataUri(title, author, category) {
 
 function handleCoverError(imgEl, title, author, category) {
     if (!imgEl) return;
-    imgEl.onerror = null; // Prevent infinite loops
+    imgEl.onerror = null; // Prevent infinite loops initially
 
     // Try Google Books API as secondary source
     var googleBooksUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
@@ -93,8 +93,12 @@ function handleCoverError(imgEl, title, author, category) {
                  data.items[0].volumeInfo.imageLinks.smallThumbnail);
 
             if (cover) {
-                // Upgrade to higher-resolution Google Books image
-                cover = cover.replace("http://", "https://").replace("&zoom=1", "&zoom=3");
+                // Ensure HTTPS and fallback to SVG if the Google Books URL fails to load
+                cover = cover.replace("http://", "https://");
+                imgEl.onerror = function() {
+                    this.onerror = null;
+                    this.src = createBookCoverDataUri(title, author, category);
+                };
                 imgEl.src = cover;
             } else {
                 imgEl.src = createBookCoverDataUri(title, author, category);
@@ -498,6 +502,8 @@ function generateBookId() {
     return "ENG" + Date.now() + Math.floor(Math.random() * 100);
 }
 
+var _pendingModalUser = null;
+
 function applyLoggedInUser(user, admissionId) {
     if (!user) return;
     currentUser = user;
@@ -505,7 +511,7 @@ function applyLoggedInUser(user, admissionId) {
     var localId = admissionId || localStorage.getItem('user_admission_id_' + uid);
     if (localId && localId.trim()) {
         _sessionRestored = true;
-        _showAppUI(user, localId);
+        _showAppUI(user, localId.trim());
         renderAll();
         if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
             db.ref('users/' + uid).once('value').then(function(snap) {
@@ -523,29 +529,80 @@ async function _applyLoggedInUserAsync(user, uid) {
     var admissionId = null;
     if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
         try {
-            var snapshot = await db.ref('users/' + uid).once('value');
-            var dbUser = snapshot.val();
-            if (dbUser && dbUser.admissionId) admissionId = dbUser.admissionId;
+            var dbPromise = db.ref('users/' + uid).once('value');
+            var timeoutPromise = new Promise(function(resolve) { setTimeout(resolve, 1200); });
+            var snapshot = await Promise.race([dbPromise, timeoutPromise]);
+            if (snapshot && typeof snapshot.val === 'function') {
+                var dbUser = snapshot.val();
+                if (dbUser && dbUser.admissionId) admissionId = dbUser.admissionId;
+            }
         } catch (dbErr) { console.warn('DB fetch error:', dbErr.message); }
     }
     if (!admissionId) admissionId = localStorage.getItem('user_admission_id_' + uid);
-    if (!admissionId || !admissionId.trim()) {
-        var enteredId = null;
-        while (!enteredId || !enteredId.trim()) {
-            enteredId = prompt('COMPULSORY: Welcome ' + (user.displayName || 'User') + '! Please enter your Student Admission ID / University Roll Number to continue:');
-            if (enteredId === null) alert('Admission ID is MANDATORY to access the library system.');
-            else if (!enteredId.trim()) alert('Admission ID cannot be blank.');
-        }
-        admissionId = enteredId.trim();
+    if (admissionId && admissionId.trim()) {
+        localStorage.setItem('user_admission_id_' + uid, admissionId.trim());
+        localStorage.setItem('shelf_current_user', JSON.stringify({ uid: uid, displayName: user.displayName || user.email || 'Student User', email: user.email || '', photoURL: user.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg' }));
+        _sessionRestored = true;
+        _showAppUI(user, admissionId.trim());
+        renderAll();
+        return;
     }
-    localStorage.setItem('user_admission_id_' + uid, admissionId);
-    localStorage.setItem('shelf_current_user', JSON.stringify({ uid: uid, displayName: user.displayName || user.email || 'Student User', email: user.email || '', photoURL: user.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg' }));
+
+    // Show smooth in-page Admission ID modal instead of blocking native prompt
+    _pendingModalUser = { user: user, uid: uid };
+    var modal = document.getElementById('admissionModal');
+    var modalTitle = document.getElementById('admissionModalTitle');
+    var input = document.getElementById('admissionIdInput');
+    var errEl = document.getElementById('admissionIdError');
+    if (modalTitle) modalTitle.innerText = "Welcome, " + (user.displayName || user.email || "Student") + "!";
+    if (input) { input.value = ""; }
+    if (errEl) errEl.style.display = "none";
+    if (modal) modal.style.display = "flex";
+    setTimeout(function() { if (input) input.focus(); }, 100);
+}
+
+function submitAdmissionId() {
+    var input = document.getElementById('admissionIdInput');
+    var errEl = document.getElementById('admissionIdError');
+    var val = input ? input.value.trim() : "";
+
+    if (!val || val.length < 2) {
+        if (errEl) { errEl.innerText = "⚠️ Please enter a valid Admission ID / Roll Number (minimum 2 characters)"; errEl.style.display = "block"; }
+        if (input) input.focus();
+        return;
+    }
+
+    if (errEl) errEl.style.display = "none";
+    var modal = document.getElementById('admissionModal');
+    if (modal) modal.style.display = "none";
+
+    var userObj = _pendingModalUser ? _pendingModalUser.user : currentUser;
+    var uid = (_pendingModalUser && _pendingModalUser.uid) ? _pendingModalUser.uid : (userObj ? userObj.uid : ("usr_" + Date.now()));
+
+    if (!userObj) {
+        userObj = { uid: uid, displayName: "Student", email: "", photoURL: "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" };
+    }
+
+    currentUser = userObj;
+    localStorage.setItem('user_admission_id_' + uid, val);
+    localStorage.setItem('shelf_current_user', JSON.stringify({ uid: uid, displayName: userObj.displayName || userObj.email || 'Student User', email: userObj.email || '', photoURL: userObj.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg' }));
+
     if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
-        try { db.ref('users/' + uid).set({ uid: uid, displayName: user.displayName || user.email || 'Student User', email: user.email || '', photoURL: user.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg', admissionId: admissionId, lastLogin: new Date().toISOString() }); }
-        catch (e) { console.error('Firebase save error:', e); }
+        try {
+            db.ref('users/' + uid).set({
+                uid: uid,
+                displayName: userObj.displayName || userObj.email || 'Student User',
+                email: userObj.email || '',
+                photoURL: userObj.photoURL || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                admissionId: val,
+                lastLogin: new Date().toISOString()
+            });
+        } catch (e) { console.error('Firebase save error:', e); }
     }
+
+    _pendingModalUser = null;
     _sessionRestored = true;
-    _showAppUI(user, admissionId);
+    _showAppUI(userObj, val);
     renderAll();
 }
 
