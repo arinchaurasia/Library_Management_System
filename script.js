@@ -2026,11 +2026,7 @@ function handleLocalChatbotResponse(userText, loadingId) {
         return "• <strong>" + b.title + "</strong> by " + b.author + " (<em>" + b.category + "</em>) — 🟢 <strong>" + b.availableCopies + "/" + b.totalCopies + " Available</strong>";
     }).join("<br>");
 
-    var hasKey = !!localStorage.getItem("gemini_api_key");
-    var keySetupHtml = hasKey ? "" :
-        "<br><br><button onclick=\"promptGeminiApiKey()\" style=\"background: linear-gradient(135deg,#2563eb,#4f46e5); color:white; border:none; border-radius:8px; padding:8px 14px; font-size:11px; font-weight:700; cursor:pointer; width:100%;\">🔑 Connect Gemini AI for smarter answers</button>";
-
-    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI:</strong> I couldn't find an exact match for <em>'" + userText + "'</em>. Try rephrasing or ask me something else!" + keySetupHtml + "<br><br>🔥 <strong>Popular Books Available Now:</strong><br><br>" + popFormatted;
+    loadingBubble.innerHTML = "🤖 <strong>ShelfSense AI:</strong> I couldn't find an exact match for <em>'" + userText + "'</em> in the library database. Try rephrasing or ask about departments (e.g., CSE, IT, ECE)!<br><br>🔥 <strong>Popular Books Available Now:</strong><br><br>" + popFormatted;
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
